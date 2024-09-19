@@ -1,1 +1,0 @@
-# GAMAGORA IA
