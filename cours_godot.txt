@@ -112,7 +112,7 @@ rem : on a à présent un logo script à coté du nœud dans l’arborescence
 
 - modifier le code pour que le logo gamagora grossisse lentement
   avec là aussi un contrôle depuis l'inspecteur   
-
+ 
 7) Agir d'un script à l'autre
 
 - ajouter un script à "niveau"
