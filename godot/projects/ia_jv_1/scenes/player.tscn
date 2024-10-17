@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://bu1c5o5gj2fk0"]
+
+[ext_resource type="Texture2D" uid="uid://yw57ao6skn45" path="res://vehicles/Panzer4_export/hull_sprite_sheet.png" id="1_lsb1b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dv0p"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(750, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egfv4"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(900, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a407"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(1050, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbytc"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(0, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gchhr"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(150, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5uy2b"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(300, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47wsp"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(450, 45, 150, 55)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k55dm"]
+atlas = ExtResource("1_lsb1b")
+region = Rect2(600, 45, 150, 55)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_eh6kg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7dv0p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egfv4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a407")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbytc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gchhr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5uy2b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47wsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k55dm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="player" type="AnimatedSprite2D"]
+position = Vector2(75, 28)
+sprite_frames = SubResource("SpriteFrames_eh6kg")

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc27gyeeehub1"]
+
+[ext_resource type="Texture2D" uid="uid://dh5eiwb4bn167" path="res://img/icon.svg" id="1_1c870"]
+[ext_resource type="Script" path="res://lvl/niveau.gd" id="1_mda0t"]
+[ext_resource type="PackedScene" uid="uid://dyp8blcihqkf8" path="res://lvl/joueur.tscn" id="2_3owrt"]
+
+[node name="niveau" type="Node2D"]
+script = ExtResource("1_mda0t")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 33.0
+offset_top = 17.0
+offset_right = 129.0
+offset_bottom = 41.0
+text = "HEHOOOOO"
+
+[node name="tete" type="Sprite2D" parent="."]
+position = Vector2(576, 319)
+texture = ExtResource("1_1c870")
+
+[node name="joueur" parent="." instance=ExtResource("2_3owrt")]

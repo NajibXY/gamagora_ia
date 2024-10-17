@@ -1,0 +1,164 @@
+Fiche 1 Godot
+
+Moteur de jeux Open source
+
+1) présentation de l'interface
+
+- gestionnaire de projets
+- barre du haut
+- arborescence des scènes
+- fenêtre principale (viewport)
+- docks
+  - tous les fichiers
+  - scène active
+  - inspecteur de nœud
+- panneau de boutons du bas  
+  
+remarque : éditeur de script complet (complétion, doc, glissé de ressources, etc.)
+
+2) documentation intégrée
+
+F1 pour tout
+ctrl + click dans un script pour du contextuel
+
+3) nœuds et scènes et signaux
+
+- Élément de base le nœud -> for une arborescence 
+
+-> évidemment orienté objet, les fils héritent des propriétés et méthodes des parents
+
+- Scène : arborescence qu'on pourra sauver et réutiliser (instancier) comme un nœud
+
+- Signaux : communication entre les nœuds
+
+Remarque : jeu en Godot = éléments qui communiquent plutôt que long code
+
+- outils intégrés : éditeur de script, doc
+                    éditeur animations, tilemap, audio, shader, debugger, profiler, etc.
+                    
+4) À faire :
+
+- créer un projet
+- ajouter un Node2D (ie juste un point) et le renommer en "niveau"
+- ajouter un nœud "Other" -> "label" -> renommer le nœud et jouer avec l'inspecteur
+
+- sauver
+- lancer le jeu
+
+- ajouter un Sprite2D à "niveau" nommé "tete" (pas "tête"),
+  choisir la tête de Godot via l'inspecteur (texture)
+  déplacer le Sprite2D au milieu de l'air de jeu
+  
+- voir ce qui se passe si vous jouez avec rotation sur "niveau" vs "tete"
+  -> "niveau" influence tous ses enfants
+
+- créer une nouvelle scène (le "+" au dessus de la vue principale)
+  à partir d'un Node2D nommée "joueur" et la sauver
+  ajouter un Sprite2D nommé "logo", utiliser un logo carré de gamagora trouvé en ligne
+ 
+- ajouter la nouvelle scène "joueur" à "niveau"
+  -> icône de lien dans dock scène
+
+- remarquer que le joueur est au dessus de la tête, pourquoi ? comment changer ?
+
+5) Code avec GDSript
+
+rem GDExtension : appel de code en C, C++, etc.                   
+
+GDScript vs Python :
+
+- types de base (int, float, bool, strings, dicts)
+- pas de listes ni tuples mais "Arrays"
+- variables et constantes :
+  var vitesse = 200
+  const vmax = 500
+- typage explicite possible :
+  var bouton: bool = true
+  var tableau: Array[int] = [1,2,3]  
+- fonction : "func"
+- un script est toujours ajouté à un noeud donc à une classe
+  => un script attaché à "Node2D" a une position, rotation, échelle, etc.
+  
+- beaucoup de fonctions intégrées à Godot -> elles commencent par _
+  _ready() : lorsque le nœud est ajouté à l'arborescence (eg démarrage)
+  _process() : appelée à chaque frame du jeu
+  
+6) À faire :
+
+- ajouter un script à "joueur" (icône de parchemin en haut du dock scènes)
+  sauver avec un nom pertinent
+  
+rem : on peut passer du script à la scène 2D via la bande du haut
+rem : on a à présent un logo script à coté du nœud dans l’arborescence
+ 
+- afficher "hello world" dans la console au lancement du jeu
+- afficher un compteur qui augmente à chaque frame dans la console
+
+- changer la position de joueur au lancement du jeu (eg 200,200)
+  -> voir dans l'inspecteur le nom de la propriété correspondant
+     -> faire bouton droit dessus pour voir l'aide
+  
+  rem : on peut utiliser la complétion lorsqu'on tape le script
+
+- faire se déplacer "joueur"
+  -> incrémenter la position sur l'axe x dans _process()
+     -> utiliser position.x
+
+- ajouter une variable "vitesse"
+  modifier la vitesse du déplacement en prenant "delta" en compte
+
+- ajouter vitesse dans l'inspecteur (du script) avec :
+  "@export" avant la déclaration de la variable
+
+- modifier le code pour que le logo gamagora grossisse lentement
+  avec là aussi un contrôle depuis l'inspecteur   
+
+7) Agir d'un script à l'autre
+
+- ajouter un script à "niveau"
+
+- modifier la position de départ du logo gamagora dans ce nouveau script
+
+  -> on peut utiliser $nom_du_noeud.propriété ( ou get_node() )
+     par exemple $joueur.position.x
+     
+     rem : on peut utiliser un chemin avec des "/" et ".." si pas juste le fils
+           (ou affecter un nom spécifique (%))
+
+- modifier ce nouveau script pour ramener l'échelle à 0 si le logo devient trop gros
+
+8) Récupérer les commandes du joueur
+
+- créer un "input map" pour les 4 directions
+  -> menu "projet" -> "paramètres" -> "contrôle"
+
+- utiliser Input (ctrl + click sur le code pour voir la doc)
+  -> Input.is_action_pressed semble bien (?)
+     prend en argument le nom dans le mapping (utiliser la complétion)
+     renvoie un booléen
+  -> essayer plutôt avec is_action_just_pressed !
+  
+- contrôler la "tete" avec le clavier
+
+rem : on peut utiliser Input.get_vector pour simplifier le code
+      faire print (Input.get_vecteur("gauche", "droite", "haut", "bas")) pour tester
+
+9) Collision
+
+-> on va utiliser divers nœuds :
+
+Aera2D -> test si un autre body est dans une zone
+StaticBody2D -> donne un body à un objet qui n'est pas supposé bouger
+RigidBody2D -> donne un body contrôlé par la physique
+CharacterBody2D -> donne un body déplacé par le code (joueur ou pnj)
+
+À faire : ajouter un StaticBody2D à un nouvel objet
+          et
+          en ajoutant un nœud fils (eg CollissionShape2D)
+          [!] il faudra préciser la forme (shape)   
+          
+-> il faut à présent utiliser move_and_slide() avec la variable velocity
+ 
+          
+
+
