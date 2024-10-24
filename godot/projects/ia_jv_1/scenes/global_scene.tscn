@@ -1,14 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://bm8xt1l2ygcme"]
+[gd_scene load_steps=6 format=3 uid="uid://bm8xt1l2ygcme"]
 
 [ext_resource type="PackedScene" uid="uid://d3yn5xffxprda" path="res://map/tile_map.tscn" id="1_4mg31"]
 [ext_resource type="Script" path="res://scenes/global_scene.gd" id="1_5x233"]
 [ext_resource type="PackedScene" uid="uid://jadmcawojsmt" path="res://scenes/player_scene.tscn" id="2_0unj6"]
+[ext_resource type="Script" path="res://scenes/game_scene.gd" id="2_tchmf"]
+[ext_resource type="Script" path="res://scenes/tilemap.gd" id="3_pltwj"]
 
 [node name="global_scene_node" type="Node2D"]
-scale = Vector2(2.355, 2.355)
+scale = Vector2(2, 2)
 script = ExtResource("1_5x233")
 
-[node name="TileMap" parent="." instance=ExtResource("1_4mg31")]
+[node name="game_node" type="Node2D" parent="."]
+position = Vector2(225, 175)
+script = ExtResource("2_tchmf")
 
-[node name="player_scene_node" parent="." instance=ExtResource("2_0unj6")]
-position = Vector2(84.0764, 140.552)
+[node name="TileMap" parent="game_node" instance=ExtResource("1_4mg31")]
+position = Vector2(0, 0)
+script = ExtResource("3_pltwj")
+
+[node name="player_node" parent="game_node" instance=ExtResource("2_0unj6")]
+position = Vector2(-57.5, 26.5)

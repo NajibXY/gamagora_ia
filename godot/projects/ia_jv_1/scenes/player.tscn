@@ -1,65 +1,40 @@
-[gd_scene load_steps=11 format=3 uid="uid://bu1c5o5gj2fk0"]
+[gd_scene load_steps=10 format=3 uid="uid://bu1c5o5gj2fk0"]
 
-[ext_resource type="Texture2D" uid="uid://yw57ao6skn45" path="res://vehicles/Panzer4_export/hull_sprite_sheet.png" id="1_lsb1b"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7dv0p"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(750, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_egfv4"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(900, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1a407"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(1050, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mbytc"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(0, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gchhr"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(150, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5uy2b"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(300, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_47wsp"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(450, 45, 150, 55)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k55dm"]
-atlas = ExtResource("1_lsb1b")
-region = Rect2(600, 45, 150, 55)
+[ext_resource type="Texture2D" uid="uid://dh67rfot3tlba" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged1.png" id="1_d82g2"]
+[ext_resource type="Texture2D" uid="uid://7tocqlcy0sgq" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged2.png" id="2_6fepl"]
+[ext_resource type="Texture2D" uid="uid://ddb3es5iuc3jp" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged3.png" id="3_0uc1x"]
+[ext_resource type="Texture2D" uid="uid://co60d4i70lepi" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged4.png" id="4_jnk0c"]
+[ext_resource type="Texture2D" uid="uid://dst88htlp52i3" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged5.png" id="5_gxk31"]
+[ext_resource type="Texture2D" uid="uid://gph2fs35u238" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged6.png" id="6_2hq0j"]
+[ext_resource type="Texture2D" uid="uid://cnby38slh8bgt" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged7.png" id="7_fs3wr"]
+[ext_resource type="Texture2D" uid="uid://kyc03dn3yjp2" path="res://vehicles/Panzer4_export/Merged/german_panzer4_merged8.png" id="8_m5qpk"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_eh6kg"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_7dv0p")
+"texture": ExtResource("6_2hq0j")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_egfv4")
+"texture": ExtResource("7_fs3wr")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1a407")
+"texture": ExtResource("8_m5qpk")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_mbytc")
+"texture": ExtResource("1_d82g2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gchhr")
+"texture": ExtResource("2_6fepl")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_5uy2b")
+"texture": ExtResource("3_0uc1x")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_47wsp")
+"texture": ExtResource("4_jnk0c")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k55dm")
+"texture": ExtResource("5_gxk31")
 }],
 "loop": true,
 "name": &"default",
