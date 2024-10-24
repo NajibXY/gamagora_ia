@@ -10,7 +10,7 @@ var wall_node : TileMapLayer
 var positions_init_values_dict = {} # 1 if possible to go, 0 if not, -10 if targetted by tank, 99 for spawn, 42 for target
 var spawn_local_positions = []
 var goal_local_positions = []
-
+var movement_vector = Vector2(0,0)
 
 ## Consts
 const speed = 25
@@ -50,6 +50,43 @@ func handle_input() -> void:
 	pass
 
 func handle_mouse_input() -> void:
+	### Handle Aim
+	# Get mouse position in main scene
+	var local_mouse_pos = to_local(get_viewport().get_mouse_position())
+	# Calculate direction vector
+	var direction = local_mouse_pos - player_scene_node.transform.origin
+	# Determine which frame of the 8 to use
+	var angle = direction.angle()
+	print(angle)
+	#8 directions
+	if angle < -2.6 :
+		player_model.frame = 5
+		movement_vector = Vector2(-1.0,0)
+	elif angle < -1.8:
+		player_model.frame = 6
+		movement_vector = Vector2(-1.0,-0.517)
+	elif angle < -1.18:
+		player_model.frame = 7
+		movement_vector = Vector2(0,-0.517)
+	elif angle < -0.39:
+		player_model.frame = 0
+		movement_vector = Vector2(1.0,-0.517)
+	elif angle < 0.39:
+		player_model.frame = 1
+		movement_vector = Vector2(1.0,0)
+	elif angle < 0.9:
+		player_model.frame = 2
+		movement_vector = Vector2(1.0,0.517)
+	elif angle < 1.8:
+		player_model.frame = 3
+		movement_vector = Vector2(0,0.517)
+	elif angle < 2.8:
+		player_model.frame = 4
+		movement_vector = Vector2(-1.0,0.517)
+
+	
+
+	
 	### Handle click
 	# if Input.is_action_just_pressed("left_click"):
 	# 	var mouse_position = get_global_mouse_position()
@@ -66,19 +103,33 @@ func handle_mouse_input() -> void:
 	# 			player_scene_node.transform.origin = player_model.position
 	# 		else:
 	# 			print("mouse clicked on a invalid position")
-	
+
 	pass
 
 func handle_movement_input() -> void:
-	var new_position = player_scene_node.transform.origin + Input.get_vector("left", "right", "up", "down") * speed * get_process_delta_time()
-	var new_position_coords_map = tile_map.local_to_map(new_position)
-	if (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
-	   wall_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas) :
-		player_scene_node.transform.origin = new_position
+	# Handle movement
+	# Back or up ?
+	var factor
+	if (Input.is_action_pressed("up") or Input.is_action_pressed("down")):
+		if Input.is_action_pressed("up"):
+			factor = 1
+		else:
+			factor = -1
+		var new_position = player_scene_node.transform.origin + movement_vector * speed * get_process_delta_time() * factor
+		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
+		var new_position_coords_map = tile_map.local_to_map(new_position)
+		if (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
+			wall_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas) :
+			player_scene_node.transform.origin = new_position
 	pass
 
 
 ########################################### TILE MAP DATA FUNCTIONS ###########################################
+# TODO
+# func offset_by_frame_size(position: Vector2) -> Vector2:
+# 	var sprite_frames  = player_model.get_node("AnimatedSprite2D").frames
+# 	return position
+
 func init_positions_dictionnaries() -> void:
 	print("init_dicts")
 	# Get the size of the TileMap (in cells)
