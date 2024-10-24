@@ -1,1 +1,2 @@
 - Path2D node to represent a path in 2D space.
+- Change dict key from vec2 to string or hash
