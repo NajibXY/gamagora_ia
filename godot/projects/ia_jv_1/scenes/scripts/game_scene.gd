@@ -1,5 +1,7 @@
 extends Node2D
 
+signal ready_signal
+
 ## Components
 var player_model
 
@@ -8,6 +10,7 @@ var player_scene_node
 var ground_node : TileMapLayer
 var wall_node : TileMapLayer
 var positions_init_values_dict = {} # 1 if possible to go, 0 if not, -10 if targetted by tank, 99 for spawn, 42 for target
+var links_dict = {}
 var spawn_local_positions = []
 var goal_local_positions = []
 var movement_vector = Vector2(0,0)
@@ -21,6 +24,9 @@ const spawn_tile_atlas = Vector2i(1,6)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	init_components_variables()
+	#emit ready signal
+	print("Game Scene Ready, emiting ready signal")
+	emit_signal("ready_signal")
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -37,8 +43,6 @@ func init_components_variables() -> void:
 	player_scene_node = get_node("player_node")
 	player_model = player_scene_node.get_node("player")
 	init_positions_dictionnaries()
-	for key in positions_init_values_dict.keys():
-		print(key, positions_init_values_dict[key])
 	pass
 
 
@@ -57,7 +61,7 @@ func handle_mouse_input() -> void:
 	var direction = local_mouse_pos - player_scene_node.transform.origin
 	# Determine which frame of the 8 to use
 	var angle = direction.angle()
-	print(angle)
+	#print(angle)
 	#8 directions
 	if angle < -2.6 :
 		player_model.frame = 5
@@ -132,9 +136,10 @@ func handle_movement_input() -> void:
 
 func init_positions_dictionnaries() -> void:
 	print("init_dicts")
+	var links_value
 	# Get the size of the TileMap (in cells)
 	var used_rect = ground_node.get_used_rect()
-	print(used_rect)
+	#print(used_rect)
 	for y in range(int(used_rect.size.y)):
 		for x in range(int(used_rect.size.x)):
 			# Get the tile ID at this position (if any)
@@ -146,12 +151,28 @@ func init_positions_dictionnaries() -> void:
 			var tile_initial_value = 1
 			if ground_atlas == spawn_tile_atlas :
 				tile_initial_value = 99
-				spawn_local_positions.append(vector2i_position)
+				spawn_local_positions.append(str(vector2i_position))
 			elif ground_atlas == goal_tile_atlas :
 				tile_initial_value = 42
+				goal_local_positions.append(str(vector2i_position))
 			elif (ground_atlas == Vector2i(-1,-1) or wall_atlas == water_tile_atlas) :
 				tile_initial_value = 0
-			positions_init_values_dict[vector2i_position] = tile_initial_value
+			positions_init_values_dict[str(vector2i_position)] = tile_initial_value
+			# Initial Links calculations
+			links_value = {}
+			# Check the 8 neightbours values
+			for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var neighbour_position = vector2i_position + offset
+				var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
+				var neighbour_wall_atlas = wall_node.get_cell_atlas_coords(neighbour_position)
+				if neighbour_ground_atlas != Vector2i(-1,-1):
+					var link_initial_value = 0
+					if neighbour_wall_atlas != water_tile_atlas:
+						link_initial_value = 1
+						links_value[str(neighbour_position)] = link_initial_value
+			links_dict[str(vector2i_position)] = links_value
+
+
 		
 			
 		

@@ -1,0 +1,70 @@
+[gd_scene load_steps=11 format=3 uid="uid://cmv42b27gsli2"]
+
+[ext_resource type="Texture2D" uid="uid://c22muujahvole" path="res://vehicles/White_car/red_vehicles.png" id="1_bqusn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfl6t"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fryq"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ov6f"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mal1v"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(96, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4lmcu"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(128, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rb80w"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(160, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o1qya"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(192, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ho33c"]
+atlas = ExtResource("1_bqusn")
+region = Rect2(224, 96, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_eh6kg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rfl6t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fryq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ov6f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mal1v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4lmcu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rb80w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o1qya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ho33c")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="car" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_eh6kg")

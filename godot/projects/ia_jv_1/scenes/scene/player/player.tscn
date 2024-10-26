@@ -42,5 +42,4 @@ animations = [{
 }]
 
 [node name="player" type="AnimatedSprite2D"]
-position = Vector2(75, 28)
 sprite_frames = SubResource("SpriteFrames_eh6kg")
