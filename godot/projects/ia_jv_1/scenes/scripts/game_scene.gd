@@ -128,7 +128,7 @@ func handle_movement_input() -> void:
 	pass
 
 
-########################################### TILE MAP DATA FUNCTIONS ###########################################
+########################################### TILE MAP INITIALISATIPON DATA FUNCTIONS ###########################################
 # TODO
 # func offset_by_frame_size(position: Vector2) -> Vector2:
 # 	var sprite_frames  = player_model.get_node("AnimatedSprite2D").frames
@@ -147,7 +147,8 @@ func init_positions_dictionnaries() -> void:
 			# Get cell ID
 			var ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
 			var wall_atlas = wall_node.get_cell_atlas_coords(vector2i_position)
-
+			
+			# TODO modify if tiles modified
 			var tile_initial_value = 1
 			if ground_atlas == spawn_tile_atlas :
 				tile_initial_value = 99
@@ -160,13 +161,14 @@ func init_positions_dictionnaries() -> void:
 			positions_init_values_dict[str(vector2i_position)] = tile_initial_value
 			# Initial Links calculations
 			links_value = {}
-			# Check the 8 neightbours values
+			# Check the 4 neightbours values
 			for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 				var neighbour_position = vector2i_position + offset
 				var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
 				var neighbour_wall_atlas = wall_node.get_cell_atlas_coords(neighbour_position)
 				if neighbour_ground_atlas != Vector2i(-1,-1):
-					var link_initial_value = 0
+					var link_initial_value = INF
+					# TODO modify if tiles modified
 					if neighbour_wall_atlas != water_tile_atlas:
 						link_initial_value = 1
 						links_value[str(neighbour_position)] = link_initial_value
