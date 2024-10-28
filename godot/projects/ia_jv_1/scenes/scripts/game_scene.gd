@@ -21,6 +21,14 @@ const water_tile_atlas = Vector2i(0,2)
 const goal_tile_atlas = Vector2i(1,0)
 const spawn_tile_atlas = Vector2i(1,6)
 
+var maths_script
+const Maths = preload("res://scenes/scripts/utils/maths.gd")
+
+## Highlight variables
+var targeted_cells = []
+var locked_targeted_cells = []
+var path_cells = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	init_components_variables()
@@ -42,6 +50,7 @@ func init_components_variables() -> void:
 	wall_node = tile_map.get_node("wall")
 	player_scene_node = get_node("player_node")
 	player_model = player_scene_node.get_node("player")
+	maths_script = Maths.new()
 	init_positions_dictionnaries()
 	pass
 
@@ -87,26 +96,12 @@ func handle_mouse_input() -> void:
 	elif angle < 2.8:
 		player_model.frame = 4
 		movement_vector = Vector2(-1.0,0.517)
+	# Highlight tiles
+	refresh_targeted_cells(player_scene_node.transform.origin, local_mouse_pos, 30)
 
-	
-
-	
-	### Handle click
-	# if Input.is_action_just_pressed("left_click"):
-	# 	var mouse_position = get_global_mouse_position()
-	# 	var mouse_position_map = tile_map.global_to_map(mouse_position)
-	# 	var mouse_position_coords_map = tile_map.local_to_map(mouse_position_map)
-	# 	print(mouse_position_coords_map)
-	# 	if positions_init_values_dict.has(mouse_position_coords_map):
-	# 		print("mouse clicked on a valid position")
-	# 		if positions_init_values_dict[mouse_position_coords_map] == 1:
-	# 			print("mouse clicked on a valid position")
-	# 			positions_init_values_dict[mouse_position_coords_map] = -10
-	# 			player_model.play("default")
-	# 			player_model.position = tile_map.map_to_world(mouse_position_map)
-	# 			player_scene_node.transform.origin = player_model.position
-	# 		else:
-	# 			print("mouse clicked on a invalid position")
+	# Lock targetted cells
+	if Input.is_action_just_pressed("left_click") :
+		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos, 30)
 
 	pass
 
@@ -174,7 +169,86 @@ func init_positions_dictionnaries() -> void:
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
 
+########################################### TILE MAP HIGHLIGHT DATA FUNCTIONS ###########################################
 
+func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
+	# Clear previous targeted cells
+	for pos in targeted_cells:
+		var position_coords_map = tile_map.local_to_map(pos)
+		if position_coords_map not in locked_targeted_cells:
+			print("NOT IN LOCKED TARGETED CELLS")
+			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
+			var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
+			if ground_atlas_position != Vector2i(-1,-1):
+				if wall_atlas_position == water_tile_atlas:
+					change_cell_to_its_original(position_coords_map, wall_atlas_position, 1)
+				else:
+					if position_coords_map in path_cells:
+						change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 3)
+						print("IN PATH")
+					else:
+						change_cell_to_its_original(position_coords_map, ground_atlas_position, 0)
+				pass
+
+	# Calculate new targeted cells
+	targeted_cells = maths_script.get_positions_between(start, end, steps)
+	for pos in targeted_cells:
+		var position_coords_map = tile_map.local_to_map(pos)
+		if position_coords_map not in locked_targeted_cells:
+			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
+			var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
+			if ground_atlas_position != Vector2i(-1,-1):
+				if wall_atlas_position == water_tile_atlas:
+					change_cell_to_its_alternate_color(position_coords_map, wall_atlas_position, 1, 1)
+				else:
+					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 1)
+				pass
+	pass
+
+func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
+	# Clear previous targeted cells
+	for position_coords_map in locked_targeted_cells:
+		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
+		var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
+		if ground_atlas_position != Vector2i(-1,-1):
+			if wall_atlas_position == water_tile_atlas:
+				change_cell_to_its_original(position_coords_map, wall_atlas_position, 1)
+			else:
+				if position_coords_map in path_cells:
+					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 3)
+				else:
+					change_cell_to_its_original(position_coords_map, ground_atlas_position, 0)
+			pass
+	locked_targeted_cells = []
+
+	# Calculate new targeted cells
+	for pos in maths_script.get_positions_between(start, end, steps):
+		var position_coords_map = tile_map.local_to_map(pos)
+		locked_targeted_cells.append(position_coords_map)
+		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
+		var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
+		if ground_atlas_position != Vector2i(-1,-1):
+			if wall_atlas_position == water_tile_atlas:
+				change_cell_to_its_alternate_color(position_coords_map, wall_atlas_position, 1, 2)
+			else:
+				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 2)
+			pass
+	pass
+
+func change_cell_to_its_alternate_color(tile_position: Vector2, atlas_position:Vector2, layer:int, alternate_num:int) -> void:
+	if (layer == 0):
+		ground_node.set_cell(tile_position, 0, atlas_position, alternate_num)
+	else:
+		wall_node.set_cell(tile_position, 0, atlas_position, alternate_num)
+	pass
+
+func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2, layer:int) -> void:
+	if (layer == 0):
+		ground_node.set_cell(tile_position, 0, atlas_position, 0)
+	else:
+		wall_node.set_cell(tile_position, 0, atlas_position, 0)
+	pass
+	
 		
 			
 		
