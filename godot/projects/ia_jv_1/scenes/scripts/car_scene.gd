@@ -9,9 +9,10 @@ var djikstra_result
 
 const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
 
-## TODO:
-	# delete after test
-var i = 0
+var is_running 
+const speed = 0.2
+var i = 1
+
 var initial_start_node
 #
 
@@ -30,7 +31,7 @@ func _on_game_script_ready() -> void:
 	goal_nodes = game_node.goal_local_positions
 	nodes_graph = game_node.links_dict
 	print("Car Variables Ready")
-	
+	is_running = false
 	# Init first djisktra
 	do_djikstra_things(nodes_graph, str(start_node), goal_nodes)
 	
@@ -39,16 +40,32 @@ func _on_game_script_ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if not is_running :
+		is_running = true
+		iterate_movements(delta)
+	pass
 
+##################################### Car movement functions #####################################
+func iterate_movements(delta: float) -> void:
+	while (i < djikstra_result["path"].size()):
+		var target_node = djikstra_result["path"][i]
+		target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
+		var target_pos = game_node.tile_map.map_to_local(target_node)
+		# Make it not as precise as the car is not moving on a grid so that it be 0.1 precision
+		target_pos = Vector2(round(target_pos.x), round(target_pos.y))
+		while (self.transform.origin != target_pos):
+			# TODO tune the speed
+			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * speed)
+		await get_tree().create_timer(2.0).timeout
+		i = i+1
+	is_running = false
 	pass
 
 ##################################### Personnal Djikstra functions #####################################
-func do_djikstra_things(nodes_graph, start_node, goal_nodes) -> void:
-	djikstra_result = djikstra_script.dijkstra_multi_goal(nodes_graph, str(start_node), goal_nodes)
+func do_djikstra_things(nodes_gr, start_no, goal_no) -> void:
+	djikstra_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
 	var path = djikstra_result["path"]
 	color_path(path)
-	print(path)
-
 	# Move the car
 	# move_car(djikstra_result.path)
 	pass

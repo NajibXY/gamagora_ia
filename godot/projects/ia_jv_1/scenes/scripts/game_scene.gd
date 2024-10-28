@@ -176,7 +176,6 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
 		if position_coords_map not in locked_targeted_cells:
-			print("NOT IN LOCKED TARGETED CELLS")
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 			var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
@@ -185,7 +184,6 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 				else:
 					if position_coords_map in path_cells:
 						change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 3)
-						print("IN PATH")
 					else:
 						change_cell_to_its_original(position_coords_map, ground_atlas_position, 0)
 				pass
