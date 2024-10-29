@@ -48,15 +48,20 @@ func _process(delta: float) -> void:
 ##################################### Car movement functions #####################################
 func iterate_movements(delta: float) -> void:
 	while (i < djikstra_result["path"].size()):
+		var time_freeze = 2.0
 		var target_node = djikstra_result["path"][i]
 		target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
 		var target_pos = game_node.tile_map.map_to_local(target_node)
 		# Make it not as precise as the car is not moving on a grid so that it be 0.1 precision
 		target_pos = Vector2(round(target_pos.x), round(target_pos.y))
 		while (self.transform.origin != target_pos):
-			# TODO tune the speed
+			# TODO tune the speed and the freeze time
 			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * speed)
-		await get_tree().create_timer(2.0).timeout
+		if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.grass_tile_atlas:
+			# If the car is on grass, it will move slower
+			print("Car is on grass")
+			time_freeze = 4.0
+		await get_tree().create_timer(time_freeze).timeout
 		i = i+1
 	is_running = false
 	pass
