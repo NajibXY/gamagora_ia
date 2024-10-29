@@ -18,6 +18,7 @@ var movement_vector = Vector2(0,0)
 ## Consts
 const speed = 25
 const water_tile_atlas = Vector2i(0,2)
+const wall_tile_atlas = Vector2i(0,3)
 const goal_tile_atlas = Vector2i(1,0)
 const spawn_tile_atlas = Vector2i(1,6)
 
@@ -118,7 +119,8 @@ func handle_movement_input() -> void:
 		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
 		var new_position_coords_map = tile_map.local_to_map(new_position)
 		if (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
-			wall_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas) :
+			wall_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas and  
+			wall_node.get_cell_atlas_coords(new_position_coords_map) != wall_tile_atlas):
 			player_scene_node.transform.origin = new_position
 	pass
 
@@ -151,7 +153,7 @@ func init_positions_dictionnaries() -> void:
 			elif ground_atlas == goal_tile_atlas :
 				tile_initial_value = 42
 				goal_local_positions.append(str(vector2i_position))
-			elif (ground_atlas == Vector2i(-1,-1) or wall_atlas == water_tile_atlas) :
+			elif ground_atlas == Vector2i(-1,-1) or wall_atlas == water_tile_atlas or wall_atlas == wall_tile_atlas :
 				tile_initial_value = 0
 			positions_init_values_dict[str(vector2i_position)] = tile_initial_value
 			# Initial Links calculations
@@ -164,7 +166,7 @@ func init_positions_dictionnaries() -> void:
 				if neighbour_ground_atlas != Vector2i(-1,-1):
 					var link_initial_value = INF
 					# TODO modify if tiles modified
-					if neighbour_wall_atlas != water_tile_atlas:
+					if neighbour_wall_atlas != water_tile_atlas and neighbour_wall_atlas != wall_tile_atlas:
 						link_initial_value = 1
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
@@ -179,7 +181,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 			var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
-				if wall_atlas_position == water_tile_atlas:
+				if wall_atlas_position == water_tile_atlas :
 					change_cell_to_its_original(position_coords_map, wall_atlas_position, 1)
 				else:
 					if position_coords_map in path_cells:
@@ -192,9 +194,11 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 	targeted_cells = maths_script.get_positions_between(start, end, steps)
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
-		if position_coords_map not in locked_targeted_cells:
+		var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
+		if wall_atlas_position == wall_tile_atlas:
+			return
+		elif position_coords_map not in locked_targeted_cells:
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
-			var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
 				if wall_atlas_position == water_tile_atlas:
 					change_cell_to_its_alternate_color(position_coords_map, wall_atlas_position, 1, 1)
@@ -226,7 +230,9 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		var wall_atlas_position = wall_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position != Vector2i(-1,-1):
-			if wall_atlas_position == water_tile_atlas:
+			if wall_atlas_position == wall_tile_atlas:
+				return
+			elif wall_atlas_position == water_tile_atlas or wall_atlas_position == wall_tile_atlas:
 				change_cell_to_its_alternate_color(position_coords_map, wall_atlas_position, 1, 2)
 			else:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 0, 2)
