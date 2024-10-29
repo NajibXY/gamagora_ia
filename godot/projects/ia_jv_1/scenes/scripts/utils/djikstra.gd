@@ -3,14 +3,14 @@ var djikstra_result
 
 func launch_djikstra(start_node, goal_nodes, nodes_graph) -> void:
 
-	print("start_node: ", start_node)
+	# print("start_node: ", start_node)
 	# goal_nodes = game_node.goal_local_positions
 	# nodes_graph = game_node.links_dict
 	## TODO:
 			# use a signal to recall djikstra when things are modified (targets of tank --> nodes_graph, walls moved, etc)
 	djikstra_result = dijkstra_multi_goal(nodes_graph, str(start_node), goal_nodes)
-	print("Shortest distance from ", start_node, " to any of ", goal_nodes, ": ", djikstra_result.distance)
-	print("Path: ", djikstra_result.path)
+	# print("Shortest distance from ", start_node, " to any of ", goal_nodes, ": ", djikstra_result.distance)
+	# print("Path: ", djikstra_result.path)
 	pass
 
 class HeapSort:
@@ -70,15 +70,12 @@ func dijkstra_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dict
 		# It can have BAD consequences on the decision making and the complexity calcualtion of the path
 		if current_node in goals:
 			if return_dict.has("distance"):
-				print("Old shortest path cost: ", return_dict["distance"])
 				if current_cost < return_dict["distance"]:
-					print("New shortest path found cost: ", current_cost)
 					return_dict = {
 						"distance": current_cost,
 						"path": reconstruct_path(previous, start, current_node)
 					}
 			else:
-				print("First shortest path found cost: ", current_cost)
 				return_dict = {
 					"distance": current_cost,
 					"path": reconstruct_path(previous, start, current_node)

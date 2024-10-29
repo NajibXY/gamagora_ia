@@ -15,6 +15,8 @@
 
 
 ## Optimizations
+- Check why djikstra blocks game
+    - Number of points approximating tiles between tank and target should depend on the distance
 - Path2D node to represent a path in 2D space.
 - Shader for color shit, find a way to debug positions.
-- Number of points approximating tiles between tank and target should depend on the distance
+

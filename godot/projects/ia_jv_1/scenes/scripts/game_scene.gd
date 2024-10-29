@@ -248,7 +248,6 @@ func change_links_valuation(vector2i_position: Vector2i) -> void:
 		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
 		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
 			links_dict[str(neighbour_position)][str(vector2i_position)] = 99
-			print("neighbour_position "+ str(neighbour_position)+ " " + str(links_dict[str(neighbour_position)]))
 	pass
 
 func release_links_valuation(vector2i_position: Vector2i) -> void:
@@ -264,7 +263,6 @@ func release_links_valuation(vector2i_position: Vector2i) -> void:
 				if position_ground_atlas == grass_tile_atlas:
 					link_value = grass_value
 				links_dict[str(neighbour_position)][str(vector2i_position)] = link_value
-				print("neighbour_position "+ str(neighbour_position)+ " " + str(links_dict[str(neighbour_position)]))
 	pass
 
 	

@@ -55,14 +55,17 @@ func iterate_movements(delta: float) -> void:
 		# Check if the target node is targetted
 		if target_node in game_node.locked_targeted_cells:
 			# If the target node is targetted, do djikstra again
-			do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+			calculate_path_async(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
 			continue_while = false
 			break
 		# Check if any remaining node from the djikstra is targetted
 		for node_path in djikstra_result["path"]:
 			var node_left = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
 			if node_left in game_node.locked_targeted_cells:
-				do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+				print("Doing djikstra")
+				calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
+				#do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+				print("Ending djikstra")
 				continue_while = false
 				break
 		if not continue_while:
@@ -121,3 +124,14 @@ func color_path(path) -> void:
 		game_node.global_path_cells.append(vec_pos)
 		game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
 	pass
+
+##################################### Async function #####################################
+
+# TODO : Implement async function to calculate the path
+func calculate_path_async(nodes_gr, start_no, goal_no):
+	# Task.create(self, "do_djikstra_things", nodes_gr, start_no, goal_no)
+	do_djikstra_things(nodes_gr, start_no, goal_no)
+	emit_signal("path_calculated")
+
+# Signal to notify when path calculation is done
+signal path_calculated
