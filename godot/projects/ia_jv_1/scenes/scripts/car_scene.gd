@@ -77,5 +77,5 @@ func color_path(path) -> void:
 		# Normally I only have ground tiles in the path
 		var ground_atlas_position = game_node.ground_node.get_cell_atlas_coords(vec_pos)
 		game_node.path_cells.append(vec_pos)
-		game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 0, 3)
+		game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
 	pass
