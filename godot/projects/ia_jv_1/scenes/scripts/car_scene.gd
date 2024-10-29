@@ -1,18 +1,21 @@
 extends Node2D
 
+const speed = 0.2
 var game_node : Node2D
+var initial_start_node
 var start_node
 var goal_nodes
 var nodes_graph
 var djikstra_script
 var djikstra_result
-
 const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
 
+# Thread variables
 var is_running 
-const speed = 0.2
-
-var initial_start_node
+var _thread: Thread = Thread.new()
+var is_calculating_path = false  # Track if path calculation is in progress
+#
+#
 #
 
 # Called when the node enters the scene tree for the first time.
@@ -32,7 +35,7 @@ func _on_game_script_ready() -> void:
 	print("Car Variables Ready")
 	is_running = false
 	# Init first djisktra
-	do_djikstra_things(nodes_graph, str(start_node), goal_nodes)
+	init_djikstra_things(nodes_graph, str(start_node), goal_nodes)
 	
 	pass
 
@@ -55,7 +58,7 @@ func iterate_movements(delta: float) -> void:
 		# Check if the target node is targetted
 		if target_node in game_node.locked_targeted_cells:
 			# If the target node is targetted, do djikstra again
-			calculate_path_async(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+			calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
 			continue_while = false
 			break
 		# Check if any remaining node from the djikstra is targetted
@@ -64,7 +67,6 @@ func iterate_movements(delta: float) -> void:
 			if node_left in game_node.locked_targeted_cells:
 				print("Doing djikstra")
 				calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
-				#do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
 				print("Ending djikstra")
 				continue_while = false
 				break
@@ -97,8 +99,8 @@ func iterate_movements(delta: float) -> void:
 	is_running = false
 	pass
 
-##################################### Personnal Djikstra functions #####################################
-func do_djikstra_things(nodes_gr, start_no, goal_no) -> void:
+##################################### Personal Djikstra functions #####################################
+func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 	# If djikstra path is not empty, reset the cells if not targeted
 	if djikstra_result:
 		for node_path in djikstra_result["path"]:
@@ -125,13 +127,35 @@ func color_path(path) -> void:
 		game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
 	pass
 
-##################################### Async function #####################################
+##################################### Thread functions #####################################
+func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> void:
+	if is_calculating_path:
+		return
+	is_calculating_path = true
+	_thread = Thread.new()
+	_thread.start(Callable(self, "threaded_calculate_path").bind(graph, start, goals))
+	pass
 
-# TODO : Implement async function to calculate the path
-func calculate_path_async(nodes_gr, start_no, goal_no):
-	# Task.create(self, "do_djikstra_things", nodes_gr, start_no, goal_no)
-	do_djikstra_things(nodes_gr, start_no, goal_no)
-	emit_signal("path_calculated")
+func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> void:
+	var result = djikstra_script.dijkstra_multi_goal(graph, start, goals)
 
-# Signal to notify when path calculation is done
-signal path_calculated
+	if djikstra_result:
+		for node_path in djikstra_result["path"]:
+			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
+			game_node.global_path_cells.erase(node_cell)
+			if node_cell not in game_node.locked_targeted_cells:
+				game_node.change_cell_to_its_original(node_cell, game_node.ground_node.get_cell_atlas_coords(node_cell))
+	djikstra_result = result
+	var path = djikstra_result["path"]
+	path.erase(path[0])
+	color_path(path)
+
+	call_deferred("on_path_calculated", result)
+	pass
+
+func on_path_calculated(result) -> void:
+	djikstra_result = result
+	is_calculating_path = false
+	_thread.wait_to_finish()
+	_thread = null
+	pass

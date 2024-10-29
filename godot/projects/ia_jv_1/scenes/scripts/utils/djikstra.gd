@@ -14,8 +14,8 @@ func launch_djikstra(start_node, goal_nodes, nodes_graph) -> void:
 	pass
 
 class HeapSort:
-	static func _sort(a: Array, b: Array) -> int:
-		return -1 if a[0]["cost"] < b[0]["cost"] else 1
+	static func _sort(a: Dictionary, b: Dictionary) -> bool:
+		return a["cost"] < b["cost"]
 
 class Tuple:
 	var x
