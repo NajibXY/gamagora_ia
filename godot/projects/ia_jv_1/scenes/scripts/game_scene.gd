@@ -9,7 +9,6 @@ var tile_map
 var player_scene_node
 var ground_node : TileMapLayer
 var wall_node : TileMapLayer
-var positions_init_values_dict = {} # 1 if possible to go, 0 if not, -10 if targetted by tank, 99 for spawn, 42 for target
 var links_dict = {}
 var spawn_local_positions = []
 var goal_local_positions = []
@@ -145,17 +144,11 @@ func init_positions_dictionnaries() -> void:
 			var ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
 			var wall_atlas = wall_node.get_cell_atlas_coords(vector2i_position)
 			
-			# TODO modify if tiles modified
-			var tile_initial_value = 1
+			# Init spawns, goals
 			if ground_atlas == spawn_tile_atlas :
-				tile_initial_value = 99
 				spawn_local_positions.append(str(vector2i_position))
 			elif ground_atlas == goal_tile_atlas :
-				tile_initial_value = 42
 				goal_local_positions.append(str(vector2i_position))
-			elif ground_atlas == Vector2i(-1,-1) or wall_atlas == water_tile_atlas or wall_atlas == wall_tile_atlas :
-				tile_initial_value = 0
-			positions_init_values_dict[str(vector2i_position)] = tile_initial_value
 			# Initial Links calculations
 			links_value = {}
 			# Check the 4 neightbours values
