@@ -116,18 +116,19 @@ func handle_movement_input() -> void:
 			factor = -1
 		var local_speed = speed
 		if slowed:
-			local_speed = speed/2
+			#TODO : fine tune speed
+			local_speed = speed/3
 		var new_position = player_scene_node.transform.origin + movement_vector * local_speed * get_process_delta_time() * factor
 		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
 		var new_position_coords_map = tile_map.local_to_map(new_position)
-		if (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
+		if ground_node.get_cell_atlas_coords(new_position_coords_map) == grass_tile_atlas:
+			slowed = true
+			player_scene_node.transform.origin = new_position
+		elif (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
 			ground_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas and  
 			ground_node.get_cell_atlas_coords(new_position_coords_map) != wall_tile_atlas):
 			player_scene_node.transform.origin = new_position
 			slowed = false
-		elif ground_node.get_cell_atlas_coords(new_position_coords_map) == grass_tile_atlas:
-			slowed = true
-			player_scene_node.transform.origin = new_position
 	pass
 
 
