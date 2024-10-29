@@ -11,7 +11,6 @@ const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
 
 var is_running 
 const speed = 0.2
-var i = 1
 
 var initial_start_node
 #
@@ -47,29 +46,67 @@ func _process(delta: float) -> void:
 
 ##################################### Car movement functions #####################################
 func iterate_movements(delta: float) -> void:
-	while (i < djikstra_result["path"].size()):
-		var time_freeze = 2.0
-		var target_node = djikstra_result["path"][i]
+	while (djikstra_result["path"].size() != 0):
+		# Get the target node
+		var target_node = djikstra_result["path"][0]
 		target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
-		var target_pos = game_node.tile_map.map_to_local(target_node)
+		
+		var continue_while = true
+		# Check if the target node is targetted
+		if target_node in game_node.locked_targeted_cells:
+			# If the target node is targetted, do djikstra again
+			do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+			continue_while = false
+			break
+		# Check if any remaining node from the djikstra is targetted
+		for node_path in djikstra_result["path"]:
+			var node_left = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
+			if node_left in game_node.locked_targeted_cells:
+				do_djikstra_things(game_node.links_dict, game_node.tile_map.local_to_map(self.transform.origin), goal_nodes)
+				continue_while = false
+				break
+		if not continue_while:
+			is_running = false
+			break
+
 		# Make it not as precise as the car is not moving on a grid so that it be 0.1 precision
+		var target_pos = game_node.tile_map.map_to_local(target_node)
 		target_pos = Vector2(round(target_pos.x), round(target_pos.y))
 		while (self.transform.origin != target_pos):
 			# TODO tune the speed and the freeze time
 			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * speed)
+		
+		# Pop the first element of the path from djikstra and global path
+		# TODO might have a problem if two cars are on the same path
+		djikstra_result["path"].erase(djikstra_result["path"][0])
+		game_node.global_path_cells.erase(target_node)
+		if target_node not in game_node.locked_targeted_cells:
+			game_node.change_cell_to_its_original(target_node, game_node.ground_node.get_cell_atlas_coords(target_node))
+		
+		# Freeze the car for a while
+		var time_freeze = 2.0
 		if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.grass_tile_atlas:
 			# If the car is on grass, it will move slower
 			print("Car is on grass")
 			time_freeze = 4.0
 		await get_tree().create_timer(time_freeze).timeout
-		i = i+1
+
 	is_running = false
 	pass
 
 ##################################### Personnal Djikstra functions #####################################
 func do_djikstra_things(nodes_gr, start_no, goal_no) -> void:
+	# If djikstra path is not empty, reset the cells if not targeted
+	if djikstra_result:
+		for node_path in djikstra_result["path"]:
+			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
+			game_node.global_path_cells.erase(node_cell)
+			if node_cell not in game_node.locked_targeted_cells:
+				game_node.change_cell_to_its_original(node_cell, game_node.ground_node.get_cell_atlas_coords(node_cell))
+	# Get new path
 	djikstra_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
 	var path = djikstra_result["path"]
+	path.erase(path[0])
 	color_path(path)
 	# Move the car
 	# move_car(djikstra_result.path)
@@ -81,6 +118,6 @@ func color_path(path) -> void:
 		var vec_pos = Vector2i(node.split(",")[0].to_int(), node.split(",")[1].to_int())
 		# Normally I only have ground tiles in the path
 		var ground_atlas_position = game_node.ground_node.get_cell_atlas_coords(vec_pos)
-		game_node.path_cells.append(vec_pos)
+		game_node.global_path_cells.append(vec_pos)
 		game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
 	pass

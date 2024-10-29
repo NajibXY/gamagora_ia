@@ -21,6 +21,8 @@ const wall_tile_atlas = Vector2i(0,3)
 const grass_tile_atlas = Vector2i(1,7)
 const goal_tile_atlas = Vector2i(1,0)
 const spawn_tile_atlas = Vector2i(1,6)
+# TODO : fine tune ?
+const grass_value = 3
 
 var maths_script
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
@@ -28,7 +30,7 @@ const Maths = preload("res://scenes/scripts/utils/maths.gd")
 ## Highlight variables
 var targeted_cells = []
 var locked_targeted_cells = []
-var path_cells = []
+var global_path_cells = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -162,15 +164,14 @@ func init_positions_dictionnaries() -> void:
 			for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 				var neighbour_position = vector2i_position + offset
 				var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
-				var neighbour_wall_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
 				if neighbour_ground_atlas != Vector2i(-1,-1):
 					var link_initial_value = INF
 					# TODO modify if tiles modified
-					if neighbour_wall_atlas != water_tile_atlas and neighbour_wall_atlas != wall_tile_atlas:
+					if neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
 						link_initial_value = 1
-						if neighbour_wall_atlas == grass_tile_atlas:
+						if neighbour_ground_atlas == grass_tile_atlas:
 							# TODO : fine tune ?
-							link_initial_value = 3
+							link_initial_value = grass_value
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
 
@@ -183,7 +184,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 		if position_coords_map not in locked_targeted_cells:
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
-				if position_coords_map in path_cells:
+				if position_coords_map in global_path_cells:
 					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
 				else:
 					change_cell_to_its_original(position_coords_map, ground_atlas_position)
@@ -207,10 +208,12 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 	for position_coords_map in locked_targeted_cells:
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position != Vector2i(-1,-1):
-			if position_coords_map in path_cells:
+			if position_coords_map in global_path_cells:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
 			else:
 				change_cell_to_its_original(position_coords_map, ground_atlas_position)
+			# Update links valuation to original
+			release_links_valuation(position_coords_map)
 			pass
 	locked_targeted_cells = []
 
@@ -224,6 +227,8 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 				return
 			else:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 2)
+				# Update links valuation to 99
+				change_links_valuation(position_coords_map)
 			pass
 	pass
 
@@ -234,6 +239,34 @@ func change_cell_to_its_alternate_color(tile_position: Vector2, atlas_position:V
 func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2) -> void:
 	ground_node.set_cell(tile_position, 0, atlas_position, 0)
 	pass
+
+########################################### LINKS VALUATION FUNCTIONS ###########################################
+
+func change_links_valuation(vector2i_position: Vector2i) -> void:
+	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var neighbour_position = vector2i_position + offset
+		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
+		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
+			links_dict[str(neighbour_position)][str(vector2i_position)] = 99
+			print("neighbour_position "+ str(neighbour_position)+ " " + str(links_dict[str(neighbour_position)]))
+	pass
+
+func release_links_valuation(vector2i_position: Vector2i) -> void:
+	var position_ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
+	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var neighbour_position = vector2i_position + offset
+		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
+		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
+			var link_value = INF
+			# TODO modify if tiles modified
+			if position_ground_atlas != water_tile_atlas:
+				link_value = 1
+				if position_ground_atlas == grass_tile_atlas:
+					link_value = grass_value
+				links_dict[str(neighbour_position)][str(vector2i_position)] = link_value
+				print("neighbour_position "+ str(neighbour_position)+ " " + str(links_dict[str(neighbour_position)]))
+	pass
+
 	
 		
 			
