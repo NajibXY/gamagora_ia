@@ -3,13 +3,13 @@ class HeapSort:
 		return a["cost"] < b["cost"]
 			  
 # Manhattan distance heuristic
-func manhattan_distance(node_pos: String, goal_pos: String) -> int:
+func manhattan_distance(node_pos: String, goal_pos: String, HEURISTIC_RATIO:int) -> int:
 	var node_vec = Vector2i(node_pos.split(",")[0].to_int(), node_pos.split(",")[1].to_int())
 	var goal_vec = Vector2i(goal_pos.split(",")[0].to_int(), goal_pos.split(",")[1].to_int())
-	return abs(node_vec.x - goal_vec.x) + abs(node_vec.y - goal_vec.y)
+	return (abs(node_vec.x - goal_vec.x) + abs(node_vec.y - goal_vec.y)) / HEURISTIC_RATIO
 
 # A* algorithm with Manhattan distance heuristic
-func a_star_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dictionary:
+func a_star_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_RATIO:int) -> Dictionary:
 	# Return dictionary
 	var return_dict = {}
 	# Priority queue
@@ -44,7 +44,7 @@ func a_star_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dictio
 				# Calculate heuristic and add cost to the priority queue 
 				var heuristic = INF
 				for goal in goals:
-					heuristic = min(heuristic, manhattan_distance(neighbor, goal))
+					heuristic = min(heuristic, manhattan_distance(neighbor, goal, HEURISTIC_RATIO))
 				queue.append({"cost": new_cost + heuristic, "node": neighbor})
 
 		#################### A* is a heuristic based algorithm, it is the shortest path to a goal with a heuristic based approach... ####################

@@ -13,7 +13,6 @@ const GOAL_TILE_ATLAS = Vector2i(1,0)
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
 # TODO : fine tune ?
 const GRASS_VALUE = 3
-const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
 
 ## Utils
 var maths_script

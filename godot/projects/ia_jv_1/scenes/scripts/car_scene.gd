@@ -1,12 +1,15 @@
 extends Node2D
 
 var unique_id: int
-
+const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
 
 const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
 const AStar = preload("res://scenes/scripts/utils/a_star.gd")
-const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
-# TODO fine tune ?
+
+# TODO fine tune, maybe change from division to optimize calculation
+const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
+
+# TODO fine tune, use speed ?
 const SPEED = 0.2
 const TIME_FREEZE = 2.0
 const TIME_FREEZE_SLOWED = 4.0
@@ -120,7 +123,7 @@ func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
-	djikstra_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no)
+	djikstra_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
 	var path = djikstra_result["path"]
 	path.erase(path[0])
 	color_path(path)
@@ -152,7 +155,7 @@ func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> voi
 	pass
 
 func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> void:
-	var result = astar_script.a_star_multi_goal(graph, start, goals)
+	var result = astar_script.a_star_multi_goal(graph, start, goals, HEURISTIC_RATIO)
 	call_deferred("on_path_calculated", result)
 	pass
 
