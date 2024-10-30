@@ -235,8 +235,9 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 				return
 			else:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 2)
-				# Update links valuation to 99
-				change_links_valuation(position_coords_map)
+				if ground_atlas_position != WATER_TILE_ATLAS:
+					# Update links valuation to 99
+					change_links_valuation(position_coords_map)
 			pass
 	pass
 
@@ -283,7 +284,7 @@ func release_links_valuation(vector2i_position: Vector2i) -> void:
 		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
 			var link_value = INF
 			# TODO modify if tiles modified
-			if position_ground_atlas != WATER_TILE_ATLAS:
+			if position_ground_atlas != WATER_TILE_ATLAS and position_ground_atlas != WALL_TILE_ATLAS:
 				link_value = 1
 				if position_ground_atlas == GRASS_TILE_ATLAS:
 					link_value = GRASS_VALUE
