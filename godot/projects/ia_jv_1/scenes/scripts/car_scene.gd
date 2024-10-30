@@ -79,9 +79,9 @@ func iterate_movements(delta: float) -> void:
 		for node_path in djikstra_result["path"]:
 			var node_left = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
 			if node_left in game_node.locked_targeted_cells:
-				print("Doing djikstra")
+				# print("Doing djikstra")
 				calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
-				print("Ending djikstra")
+				# print("Ending djikstra")
 				continue_while = false
 				break
 		if not continue_while:

@@ -112,7 +112,7 @@ func handle_mouse_input() -> void:
 	# Lock targetted cells
 	if Input.is_action_just_pressed("left_click") :
 		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos, 30)
-
+		print(car_path_cells)
 	pass
 
 func handle_movement_input() -> void:
