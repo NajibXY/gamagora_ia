@@ -244,6 +244,23 @@ func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2)
 	ground_node.set_cell(tile_position, 0, atlas_position, 0)
 	pass
 
+func erase_if_not_in_others_path(node: Vector2i, unique_id: int) -> void:
+	# Erase from id car
+	car_path_cells[str(unique_id)].erase(node)
+	# Chech others
+	var z = 0
+	var is_on_another_car_path = false
+	while z < car_increment :
+		if z != unique_id and node in car_path_cells[str(z)]:
+			is_on_another_car_path = true
+			break
+		z += 1
+	if not is_on_another_car_path:
+		global_path_cells.erase(node)
+		if node not in locked_targeted_cells:
+			change_cell_to_its_original(node, ground_node.get_cell_atlas_coords(node))
+	pass
+
 ########################################### LINKS VALUATION FUNCTIONS ###########################################
 
 func change_links_valuation(vector2i_position: Vector2i) -> void:

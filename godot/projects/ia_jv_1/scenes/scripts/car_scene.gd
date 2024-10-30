@@ -88,10 +88,9 @@ func iterate_movements(delta: float) -> void:
 			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * speed)
 		
 		# Pop the first element of the path from djikstra and global path
-		# TODO might have a problem if two cars are on the same path
 		djikstra_result["path"].erase(djikstra_result["path"][0])
-		# Before erasing we check if it's on another car's path
-		erase_if_not_in_others_path(target_node)
+		## Checking if in another car's path before erasing
+		game_node.erase_if_not_in_others_path(target_node, unique_id)
 		
 		# Freeze the car for a while
 		var time_freeze = 2.0
@@ -111,7 +110,7 @@ func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 		for node_path in djikstra_result["path"]:
 			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
 			## Checking if in another car's path before erasing
-			erase_if_not_in_others_path(node_cell)
+			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
 	djikstra_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
 	var path = djikstra_result["path"]
@@ -135,22 +134,6 @@ func color_path(path) -> void:
 		game_node.car_path_cells[str(unique_id)].append(vec_pos)
 	pass
 
-func erase_if_not_in_others_path(node: Vector2i) -> void:
-	# Erase from mine
-	game_node.car_path_cells[str(unique_id)].erase(node)
-	# Chech others
-	var z = 0
-	var is_on_another_car_path = false
-	while z < game_node.car_increment :
-		if z != unique_id and node in game_node.car_path_cells[str(z)]:
-			is_on_another_car_path = true
-			break
-		z += 1
-	if not is_on_another_car_path:
-		game_node.global_path_cells.erase(node)
-		if node not in game_node.locked_targeted_cells:
-			game_node.change_cell_to_its_original(node, game_node.ground_node.get_cell_atlas_coords(node))
-	pass
 ##################################### Thread functions #####################################
 func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> void:
 	if is_calculating_path:
@@ -167,11 +150,11 @@ func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> 
 
 func on_path_calculated(result) -> void:
 	# Thread results
-	# TODO maybe tweek for the case of multiple cars and for the erasing of first cell
 	if djikstra_result:
 		for node_path in djikstra_result["path"]:
 			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
-			erase_if_not_in_others_path(node_cell)
+			## Checking if in another car's path before erasing
+			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	djikstra_result = result
 	var path = djikstra_result["path"]
 	path.erase(path[0])
