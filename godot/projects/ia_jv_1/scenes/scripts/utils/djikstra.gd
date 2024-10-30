@@ -1,17 +1,4 @@
 ########################################### Djikstra Components ###########################################
-var djikstra_result
-
-func launch_djikstra(start_node, goal_nodes, nodes_graph) -> void:
-
-	# print("start_node: ", start_node)
-	# goal_nodes = game_node.goal_local_positions
-	# nodes_graph = game_node.links_dict
-	## TODO:
-			# use a signal to recall djikstra when things are modified (targets of tank --> nodes_graph, walls moved, etc)
-	djikstra_result = dijkstra_multi_goal(nodes_graph, str(start_node), goal_nodes)
-	# print("Shortest distance from ", start_node, " to any of ", goal_nodes, ": ", djikstra_result.distance)
-	# print("Path: ", djikstra_result.path)
-	pass
 
 class HeapSort:
 	static func _sort(a: Dictionary, b: Dictionary) -> bool:
