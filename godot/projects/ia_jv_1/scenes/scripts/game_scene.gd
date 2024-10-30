@@ -2,9 +2,17 @@ extends Node2D
 
 signal ready_signal
 
-## Components
-var player_model
+## Car variables
+var car_increment = 0
+var car_path_cells = {}
 
+## Highlight variables
+var targeted_cells = []
+var locked_targeted_cells = []
+var global_path_cells = []
+
+## Components variables
+var player_model
 var tile_map
 var player_scene_node
 var ground_node : TileMapLayer
@@ -24,13 +32,9 @@ const spawn_tile_atlas = Vector2i(1,6)
 # TODO : fine tune ?
 const grass_value = 3
 
+## Utils
 var maths_script
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
-
-## Highlight variables
-var targeted_cells = []
-var locked_targeted_cells = []
-var global_path_cells = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

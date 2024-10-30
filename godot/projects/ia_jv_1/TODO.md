@@ -9,13 +9,15 @@
 
 - add two invisible block line that blocks targetting and movement for player for goals and spawns
 - change map
+- change path tiles
+- add sprites for cars and directions / switch from moveto to translate
 - if you change 4 times the path of an ennemy it dies ?
 - "Objection" when locking target
 
 
 
 ## Optimizations
-- Check why djikstra blocks game
++ Check why djikstra blocks game -- Threading done, maybe use Semaphor for further more improvement ?
     - Number of points approximating tiles between tank and target should depend on the distance
 - Path2D node to represent a path in 2D space.
 - Shader for color shit, find a way to debug positions.
