@@ -2,30 +2,35 @@ extends Node2D
 
 var unique_id: int
 
-const speed = 0.2
+
+const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
+const AStar = preload("res://scenes/scripts/utils/a_star.gd")
+const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
+# TODO fine tune ?
+const SPEED = 0.2
+const TIME_FREEZE = 2.0
+const TIME_FREEZE_SLOWED = 4.0
+
 var game_node : Node2D
+
 var initial_start_node
 var start_node
 var goal_nodes
 var nodes_graph
+
 var djikstra_result
 var djikstra_script
 var astar_script
-const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
-const AStar = preload("res://scenes/scripts/utils/a_star.gd")
-const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
+
 # Thread variables
 var is_running 
 var _thread: Thread = Thread.new()
 var is_calculating_path = false  # Track if path calculation is in progress
-#
-#
-#
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Game scene node ready signal
-	print("Assigned unique ID:", unique_id)
 	game_node = get_node("/root/global_scene_node/game_node")
 	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	djikstra_script = Djisktra.new()
@@ -88,7 +93,7 @@ func iterate_movements(delta: float) -> void:
 		target_pos = Vector2(round(target_pos.x), round(target_pos.y))
 		while (self.transform.origin != target_pos):
 			# TODO tune the speed and the freeze time
-			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * speed)
+			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * SPEED)
 		
 		# Pop the first element of the path from djikstra and global path
 		djikstra_result["path"].erase(djikstra_result["path"][0])
@@ -96,12 +101,12 @@ func iterate_movements(delta: float) -> void:
 		game_node.erase_if_not_in_others_path(target_node, unique_id)
 		
 		# Freeze the car for a while
-		var time_freeze = 2.0
-		if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.grass_tile_atlas:
+		if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.GRASS_TILE_ATLAS:
 			# If the car is on grass, it will move slower
 			print("Car is on grass")
-			time_freeze = 4.0
-		await get_tree().create_timer(time_freeze).timeout
+			await get_tree().create_timer(TIME_FREEZE_SLOWED).timeout
+		else:
+			await get_tree().create_timer(TIME_FREEZE).timeout
 
 	is_running = false
 	pass

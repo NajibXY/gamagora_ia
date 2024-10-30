@@ -2,6 +2,23 @@ extends Node2D
 
 signal ready_signal
 
+## Consts
+#TODO : fine tune SPEED
+const SPEED = 25
+const SPEED_SLOWED = SPEED / 3
+const WATER_TILE_ATLAS = Vector2i(0,7)
+const WALL_TILE_ATLAS = Vector2i(0,3)
+const GRASS_TILE_ATLAS = Vector2i(1,7)
+const GOAL_TILE_ATLAS = Vector2i(1,0)
+const SPAWN_TILE_ATLAS = Vector2i(1,6)
+# TODO : fine tune ?
+const GRASS_VALUE = 3
+const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
+
+## Utils
+var maths_script
+const Maths = preload("res://scenes/scripts/utils/maths.gd")
+
 ## Car variables
 var car_increment = 0
 var car_path_cells = {}
@@ -16,25 +33,12 @@ var player_model
 var tile_map
 var player_scene_node
 var ground_node : TileMapLayer
-var links_dict = {}
-var spawn_local_positions = []
-var goal_local_positions = []
 var movement_vector = Vector2(0,0)
 var slowed = false
 
-## Consts
-const speed = 25
-const water_tile_atlas = Vector2i(0,7)
-const wall_tile_atlas = Vector2i(0,3)
-const grass_tile_atlas = Vector2i(1,7)
-const goal_tile_atlas = Vector2i(1,0)
-const spawn_tile_atlas = Vector2i(1,6)
-# TODO : fine tune ?
-const grass_value = 3
-
-## Utils
-var maths_script
-const Maths = preload("res://scenes/scripts/utils/maths.gd")
+var links_dict = {}
+var spawn_local_positions = []
+var goal_local_positions = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -120,19 +124,20 @@ func handle_movement_input() -> void:
 			factor = 1
 		else:
 			factor = -1
-		var local_speed = speed
+		var new_position
 		if slowed:
-			#TODO : fine tune speed
-			local_speed = speed/3
-		var new_position = player_scene_node.transform.origin + movement_vector * local_speed * get_process_delta_time() * factor
+			new_position = player_scene_node.transform.origin + movement_vector * SPEED_SLOWED * get_process_delta_time() * factor
+		else:
+			new_position = player_scene_node.transform.origin + movement_vector * SPEED * get_process_delta_time() * factor
+		# TODO use offset ?
 		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
 		var new_position_coords_map = tile_map.local_to_map(new_position)
-		if ground_node.get_cell_atlas_coords(new_position_coords_map) == grass_tile_atlas:
+		if ground_node.get_cell_atlas_coords(new_position_coords_map) == GRASS_TILE_ATLAS:
 			slowed = true
 			player_scene_node.transform.origin = new_position
 		elif (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
-			ground_node.get_cell_atlas_coords(new_position_coords_map) != water_tile_atlas and  
-			ground_node.get_cell_atlas_coords(new_position_coords_map) != wall_tile_atlas):
+			ground_node.get_cell_atlas_coords(new_position_coords_map) != WATER_TILE_ATLAS and  
+			ground_node.get_cell_atlas_coords(new_position_coords_map) != WALL_TILE_ATLAS):
 			player_scene_node.transform.origin = new_position
 			slowed = false
 	pass
@@ -158,9 +163,9 @@ func init_positions_dictionnaries() -> void:
 			var ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
 			
 			# Init spawns, goals
-			if ground_atlas == spawn_tile_atlas :
+			if ground_atlas == SPAWN_TILE_ATLAS :
 				spawn_local_positions.append(str(vector2i_position))
-			elif ground_atlas == goal_tile_atlas :
+			elif ground_atlas == GOAL_TILE_ATLAS :
 				goal_local_positions.append(str(vector2i_position))
 			# Initial Links calculations
 			links_value = {}
@@ -171,11 +176,11 @@ func init_positions_dictionnaries() -> void:
 				if neighbour_ground_atlas != Vector2i(-1,-1):
 					var link_initial_value = INF
 					# TODO modify if tiles modified
-					if neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
+					if neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
 						link_initial_value = 1
-						if neighbour_ground_atlas == grass_tile_atlas:
+						if neighbour_ground_atlas == GRASS_TILE_ATLAS:
 							# TODO : fine tune ?
-							link_initial_value = grass_value
+							link_initial_value = GRASS_VALUE
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
 
@@ -199,7 +204,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
-		if ground_atlas_position == wall_tile_atlas:
+		if ground_atlas_position == WALL_TILE_ATLAS:
 			return
 		elif position_coords_map not in locked_targeted_cells:
 			if ground_atlas_position != Vector2i(-1,-1):
@@ -227,7 +232,7 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 		locked_targeted_cells.append(position_coords_map)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position != Vector2i(-1,-1):
-			if ground_atlas_position == wall_tile_atlas:
+			if ground_atlas_position == WALL_TILE_ATLAS:
 				return
 			else:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 2)
@@ -267,8 +272,8 @@ func change_links_valuation(vector2i_position: Vector2i) -> void:
 	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 		var neighbour_position = vector2i_position + offset
 		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
-		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
-			links_dict[str(neighbour_position)][str(vector2i_position)] = 99
+		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
+			links_dict[str(neighbour_position)][str(vector2i_position)] = INF
 	pass
 
 func release_links_valuation(vector2i_position: Vector2i) -> void:
@@ -276,13 +281,13 @@ func release_links_valuation(vector2i_position: Vector2i) -> void:
 	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 		var neighbour_position = vector2i_position + offset
 		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
-		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != water_tile_atlas and neighbour_ground_atlas != wall_tile_atlas:
+		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
 			var link_value = INF
 			# TODO modify if tiles modified
-			if position_ground_atlas != water_tile_atlas:
+			if position_ground_atlas != WATER_TILE_ATLAS:
 				link_value = 1
-				if position_ground_atlas == grass_tile_atlas:
-					link_value = grass_value
+				if position_ground_atlas == GRASS_TILE_ATLAS:
+					link_value = GRASS_VALUE
 				links_dict[str(neighbour_position)][str(vector2i_position)] = link_value
 	pass
 

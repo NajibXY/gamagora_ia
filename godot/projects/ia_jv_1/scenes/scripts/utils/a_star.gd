@@ -34,6 +34,20 @@ func a_star_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dictio
 		var current_node = queue[0]["node"]
 		queue.remove_at(0)
 
+		# Explore neighbors
+		for neighbor in graph[current_node].keys():
+			var new_cost = current_cost + graph[current_node][neighbor]
+			if new_cost < distances[neighbor]:
+				distances[neighbor] = new_cost
+				# Track the previous node for the path
+				previous[neighbor] = current_node
+				# Calculate heuristic and add cost to the priority queue 
+				var heuristic = INF
+				for goal in goals:
+					heuristic = min(heuristic, manhattan_distance(neighbor, goal))
+				queue.append({"cost": new_cost + heuristic, "node": neighbor})
+
+		#################### A* is a heuristic based algorithm, it is the shortest path to a goal with a heuristic based approach... ####################
 		# If the current node is one of the goals, update return_dict with the shortest path and cost
 		if current_node in goals:
 			if return_dict.has("distance"):
@@ -47,21 +61,6 @@ func a_star_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dictio
 					"distance": current_cost,
 					"path": reconstruct_path(previous, start, current_node)
 				}
-			# If a goal is found, continue to find potentially shorter paths to other goals
-			continue
-
-		# Explore neighbors
-		for neighbor in graph[current_node].keys():
-			var new_cost = current_cost + graph[current_node][neighbor]
-			if new_cost < distances[neighbor]:
-				distances[neighbor] = new_cost
-				# Track the previous node for the path
-				previous[neighbor] = current_node
-				# Calculate heuristic and add cost to the priority queue 
-				var heuristic = INF
-				for goal in goals:
-					heuristic = min(heuristic, manhattan_distance(neighbor, goal))
-				queue.append({"cost": new_cost + heuristic, "node": neighbor})
 
 	# Return the shortest path cost and the path
 	if return_dict.has("distance"):
