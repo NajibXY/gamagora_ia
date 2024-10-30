@@ -8,9 +8,11 @@ var initial_start_node
 var start_node
 var goal_nodes
 var nodes_graph
-var djikstra_script
 var djikstra_result
+var djikstra_script
+var astar_script
 const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
+const AStar = preload("res://scenes/scripts/utils/a_star.gd")
 const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
 # Thread variables
 var is_running 
@@ -27,6 +29,7 @@ func _ready() -> void:
 	game_node = get_node("/root/global_scene_node/game_node")
 	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	djikstra_script = Djisktra.new()
+	astar_script = AStar.new()
 	pass # Replace with function body.
 
 func _on_game_script_ready() -> void:
@@ -112,7 +115,7 @@ func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
-	djikstra_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
+	djikstra_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no)
 	var path = djikstra_result["path"]
 	path.erase(path[0])
 	color_path(path)
@@ -144,7 +147,7 @@ func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> voi
 	pass
 
 func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> void:
-	var result = djikstra_script.dijkstra_multi_goal(graph, start, goals)
+	var result = astar_script.a_star_multi_goal(graph, start, goals)
 	call_deferred("on_path_calculated", result)
 	pass
 
