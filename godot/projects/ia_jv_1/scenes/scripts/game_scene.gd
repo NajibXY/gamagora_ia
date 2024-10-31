@@ -6,6 +6,9 @@ signal ready_signal
 #TODO : fine tune SPEED
 const SPEED = 25
 const SPEED_SLOWED = SPEED / 3
+#TODO Change depending on map size
+const AIM_STEPS = 30
+
 const WATER_TILE_ATLAS = Vector2i(0,7)
 const WALL_TILE_ATLAS = Vector2i(0,3)
 const GRASS_TILE_ATLAS = Vector2i(1,7)
@@ -106,11 +109,11 @@ func handle_mouse_input() -> void:
 		player_model.frame = 4
 		movement_vector = Vector2(-1.0,0.517)
 	# Highlight tiles
-	refresh_targeted_cells(player_scene_node.transform.origin, local_mouse_pos, 30)
+	refresh_targeted_cells(player_scene_node.transform.origin, local_mouse_pos)
 
 	# Lock targetted cells
 	if Input.is_action_just_pressed("left_click") :
-		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos, 30)
+		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos)
 		print(car_path_cells)
 	pass
 
@@ -185,7 +188,7 @@ func init_positions_dictionnaries() -> void:
 
 ########################################### TILE MAP HIGHLIGHT DATA FUNCTIONS ###########################################
 
-func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
+func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 	# Clear previous targeted cells
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
@@ -199,8 +202,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 				pass
 
 	# Calculate new targeted cells
-	targeted_cells = maths_script.get_positions_between(start, end, steps)
-	for pos in targeted_cells:
+	for pos in maths_script.get_positions_between(start, end, AIM_STEPS):
 		var position_coords_map = tile_map.local_to_map(pos)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position == WALL_TILE_ATLAS:
@@ -211,7 +213,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
 				pass
 	pass
 
-func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> void:
+func refresh_locked_targeted_cells(start: Vector2, end: Vector2) -> void:
 	# Clear previous targeted cells
 	for position_coords_map in locked_targeted_cells:
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
@@ -226,7 +228,7 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2, steps: int) -> 
 	locked_targeted_cells = []
 
 	# Calculate new targeted cells
-	for pos in maths_script.get_positions_between(start, end, steps):
+	for pos in maths_script.get_positions_between(start, end, AIM_STEPS):
 		var position_coords_map = tile_map.local_to_map(pos)
 		locked_targeted_cells.append(position_coords_map)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
