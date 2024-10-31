@@ -114,7 +114,6 @@ func handle_mouse_input() -> void:
 	# Lock targetted cells
 	if Input.is_action_just_pressed("left_click") :
 		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos)
-		print(car_path_cells)
 	pass
 
 func handle_movement_input() -> void:
@@ -202,7 +201,9 @@ func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 				pass
 
 	# Calculate new targeted cells
-	for pos in maths_script.get_positions_between(start, end, AIM_STEPS):
+	targeted_cells = maths_script.get_positions_between(start, end, AIM_STEPS)
+	
+	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position == WALL_TILE_ATLAS:
@@ -225,6 +226,7 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2) -> void:
 			# Update links valuation to original
 			release_links_valuation(position_coords_map)
 			pass
+
 	locked_targeted_cells = []
 
 	# Calculate new targeted cells
