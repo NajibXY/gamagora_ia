@@ -16,6 +16,9 @@ const GOAL_TILE_ATLAS = Vector2i(1,0)
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
 # TODO : fine tune ?
 const GRASS_VALUE = 3
+#TODO : fine tune
+const INTERVAL: float = 4.0 # x seconds
+const MAX_CARS = 5
 
 ## Utils
 var maths_script
@@ -43,8 +46,6 @@ var spawn_local_positions = []
 var goal_local_positions = []
 
 ## Flag for instanciation
-#TODO : fine tune
-const INTERVAL: float = 15.0 # x seconds
 var time_passed: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
@@ -60,7 +61,7 @@ func _process(delta: float) -> void:
 	handle_input()
 	# Instantiate car_scene every 5 seconds in one of the spawn points
 	time_passed += delta
-	if time_passed >= INTERVAL:
+	if car_increment < MAX_CARS and time_passed >= INTERVAL:
 		time_passed = 0.0
 		var random_spawn = spawn_local_positions[randi() % spawn_local_positions.size()]
 		var car_scene = load("res://scenes/scene/car/car_scene.tscn").instantiate()
