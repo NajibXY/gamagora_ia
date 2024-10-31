@@ -11,6 +11,7 @@ const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by t
 
 # TODO fine tune, use speed ?
 const SPEED = 0.2
+const TIME_FREEZE_START = 5.0
 const TIME_FREEZE = 2.0
 const TIME_FREEZE_SLOWED = 4.0
 
@@ -36,13 +37,14 @@ var is_calculating_path = false  # Track if path calculation is in progress
 func _ready() -> void:
 	# Game scene node ready signal
 	game_node = get_node("/root/global_scene_node/game_node")
-	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	djikstra_script = Djisktra.new()
 	astar_script = AStar.new()
+	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	pass # Replace with function body.
 
 func _on_game_script_ready() -> void:
 	unique_id = IDManager.get_new_id()
+	print(unique_id)
 	game_node.car_increment += 1
 	game_node.car_path_cells[str(unique_id)] = []
 	# Initialize car variables for djikstra : start_node, goal_nodes, nodes_graph
@@ -54,8 +56,9 @@ func _on_game_script_ready() -> void:
 	is_running = false
 	goal_reached = false
 	# Init first djisktra
-	init_djikstra_things(nodes_graph, str(start_node), goal_nodes)
-	
+	# init_djikstra_things(nodes_graph, str(start_node), goal_nodes)
+	path_result = {"distance": INF, "path": []}
+	game_node.disconnect("ready_signal", Callable(self, "_on_game_script_ready"))
 	pass
 
 
@@ -72,17 +75,20 @@ func iterate_movements(delta: float) -> void:
 	if str(game_node.tile_map.local_to_map(self.transform.origin)) in goal_nodes:
 		goal_reached = true
 		print("Goal reached")
-		# TODO things !!!
+		# TODO things !!! ERASE ALL THINGS from dicts etc too
 	# If not, construct path or walk through path
 	else:
 		if (path_result["path"].size() == 0 and not goal_reached):
 			calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
 		else:
 			while (path_result["path"].size() != 0):
+				if start_node == game_node.tile_map.local_to_map(self.transform.origin) :
+					await get_tree().create_timer(TIME_FREEZE_START).timeout
+
 				# Get the target node
 				var target_node = path_result["path"][0]
 				target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
-				
+
 				var continue_while = true
 				# Check if the target node is targetted
 				if target_node in game_node.locked_targeted_cells:
