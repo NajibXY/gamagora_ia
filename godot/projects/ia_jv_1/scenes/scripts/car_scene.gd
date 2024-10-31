@@ -11,7 +11,7 @@ const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by t
 
 # TODO fine tune, use speed ?
 const SPEED = 0.2
-const TIME_FREEZE_START = 5.0
+const TIME_FREEZE_START = 4.0
 const TIME_FREEZE = 2.0
 const TIME_FREEZE_SLOWED = 4.0
 

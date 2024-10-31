@@ -44,7 +44,7 @@ var goal_local_positions = []
 
 ## Flag for instanciation
 #TODO : fine tune
-const INTERVAL: float = 10.0 # x seconds
+const INTERVAL: float = 15.0 # x seconds
 var time_passed: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
