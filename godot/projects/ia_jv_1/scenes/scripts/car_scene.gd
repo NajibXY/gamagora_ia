@@ -21,12 +21,13 @@ var start_node
 var goal_nodes
 var nodes_graph
 
-var djikstra_result
+var path_result
 var djikstra_script
 var astar_script
 
 # Thread variables
 var is_running 
+var goal_reached
 var _thread: Thread = Thread.new()
 var is_calculating_path = false  # Track if path calculation is in progress
 
@@ -51,6 +52,7 @@ func _on_game_script_ready() -> void:
 	nodes_graph = game_node.links_dict
 	print("Car Variables Ready")
 	is_running = false
+	goal_reached = false
 	# Init first djisktra
 	init_djikstra_things(nodes_graph, str(start_node), goal_nodes)
 	
@@ -66,69 +68,74 @@ func _process(delta: float) -> void:
 
 ##################################### Car movement functions #####################################
 func iterate_movements(delta: float) -> void:
-	while (djikstra_result["path"].size() != 0):
-		# Get the target node
-		var target_node = djikstra_result["path"][0]
-		target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
-		
-		var continue_while = true
-		# Check if the target node is targetted
-		if target_node in game_node.locked_targeted_cells:
-			# If the target node is targetted, do djikstra again
-			calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
-			continue_while = false
-			break
-		# Check if any remaining node from the djikstra is targetted
-		for node_path in djikstra_result["path"]:
-			var node_left = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
-			if node_left in game_node.locked_targeted_cells:
-				# print("Doing djikstra")
+	if (path_result["path"].size() == 0 and not goal_reached):
+		calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
+	else:
+		while (path_result["path"].size() != 0):
+			# Get the target node
+			var target_node = path_result["path"][0]
+			target_node = Vector2i(target_node.split(",")[0].to_int(), target_node.split(",")[1].to_int())
+			
+			var continue_while = true
+			# Check if the target node is targetted
+			if target_node in game_node.locked_targeted_cells:
+				# If the target node is targetted, do djikstra again
 				calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
-				# print("Ending djikstra")
 				continue_while = false
 				break
-		if not continue_while:
-			is_running = false
-			break
+			# Check if any remaining node from the djikstra is targetted
+			for node_path in path_result["path"]:
+				var node_left = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
+				if node_left in game_node.locked_targeted_cells:
+					# print("Doing djikstra")
+					calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
+					# print("Ending djikstra")
+					continue_while = false
+					break
+			if not continue_while:
+				is_running = false
+				break
 
-		# Make it not as precise as the car is not moving on a grid so that it be 0.1 precision
-		var target_pos = game_node.tile_map.map_to_local(target_node)
-		target_pos = Vector2(round(target_pos.x), round(target_pos.y))
-		while (self.transform.origin != target_pos):
-			# TODO tune the speed and the freeze time
-			self.transform.origin = self.transform.origin.move_toward(target_pos, delta * SPEED)
-		
-		# Pop the first element of the path from djikstra and global path
-		djikstra_result["path"].erase(djikstra_result["path"][0])
-		## Checking if in another car's path before erasing
-		game_node.erase_if_not_in_others_path(target_node, unique_id)
-		
-		# Freeze the car for a while
-		if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.GRASS_TILE_ATLAS:
-			# If the car is on grass, it will move slower
-			print("Car is on grass")
-			await get_tree().create_timer(TIME_FREEZE_SLOWED).timeout
-		else:
-			await get_tree().create_timer(TIME_FREEZE).timeout
-
+			# Make it not as precise as the car is not moving on a grid so that it be 0.1 precision
+			var target_pos = game_node.tile_map.map_to_local(target_node)
+			target_pos = Vector2(round(target_pos.x), round(target_pos.y))
+			while (self.transform.origin != target_pos):
+				# TODO tune the speed and the freeze time
+				self.transform.origin = self.transform.origin.move_toward(target_pos, delta * SPEED)
+			
+			# Pop the first element of the path from djikstra and global path
+			path_result["path"].erase(path_result["path"][0])
+			## Checking if in another car's path before erasing
+			game_node.erase_if_not_in_others_path(target_node, unique_id)
+			
+			# Freeze the car for a while
+			if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.GRASS_TILE_ATLAS:
+				# If the car is on grass, it will move slower
+				print("Car is on grass")
+				await get_tree().create_timer(TIME_FREEZE_SLOWED).timeout
+			else:
+				await get_tree().create_timer(TIME_FREEZE).timeout
+				
+	# TODO Check if the goal is reached
 	is_running = false
 	pass
 
 ##################################### Personal Djikstra functions #####################################
 func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 	# If djikstra path is not empty, reset the cells if not targeted
-	if djikstra_result:
-		for node_path in djikstra_result["path"]:
+	if path_result:
+		for node_path in path_result["path"]:
 			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
-	djikstra_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
-	var path = djikstra_result["path"]
-	path.erase(path[0])
+	path_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
+	var path = path_result["path"]
+	if path.size() > 0:	
+		path.erase(path[0])
 	color_path(path)
 	# Move the car
-	# move_car(djikstra_result.path)
+	# move_car(path_result.path)
 	pass
 
 func color_path(path) -> void:
@@ -161,14 +168,15 @@ func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> 
 
 func on_path_calculated(result) -> void:
 	# Thread results
-	if djikstra_result:
-		for node_path in djikstra_result["path"]:
+	if path_result:
+		for node_path in path_result["path"]:
 			var node_cell = Vector2i(node_path.split(",")[0].to_int(), node_path.split(",")[1].to_int())
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
-	djikstra_result = result
-	var path = djikstra_result["path"]
-	path.erase(path[0])
+	path_result = result
+	var path = path_result["path"]
+	if path.size() > 0:	
+		path.erase(path[0])
 	color_path(path)
 
 	# Thread kill
