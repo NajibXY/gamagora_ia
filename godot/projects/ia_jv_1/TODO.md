@@ -8,18 +8,19 @@
 + if a cell is in global_paths it comes back to path nature after aiming..
 
 - ! Instantiate !
-- ! A star !
++ ! A star !
 - Sheep game ? Multiple colors for multiple goals ?
-- add heuristics
 - add two invisible block line that blocks targetting and movement for player for goals and spawns
 - change map
+
+- add multiple heuristics ?
 - change path tiles color etc
 - add sprites for cars and directions / switch from moveto to translate
 - if you change 4 times the path of an ennemy it dies ?
 - "Objection" when locking target
 
-
 - Maybe switch djikstra users to taking first goal, since there should be an efficiency difference between it and a star
+    -- Well there is one, since A star sometimes chooses fastly the a heuristically correct path
 
 
 ## Optimizations
