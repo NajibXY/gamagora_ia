@@ -6,7 +6,7 @@ signal ready_signal
 #TODO : fine tune SPEED
 const SPEED = 25
 const SPEED_SLOWED = SPEED / 3
-#TODO Change depending on map size
+#TODO : fine tune depending on map size
 const AIM_STEPS = 30
 
 const WATER_TILE_ATLAS = Vector2i(0,7)
@@ -130,7 +130,7 @@ func handle_movement_input() -> void:
 			new_position = player_scene_node.transform.origin + movement_vector * SPEED_SLOWED * get_process_delta_time() * factor
 		else:
 			new_position = player_scene_node.transform.origin + movement_vector * SPEED * get_process_delta_time() * factor
-		# TODO use offset ?
+		# TODO : use offset ?
 		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
 		var new_position_coords_map = tile_map.local_to_map(new_position)
 		if ground_node.get_cell_atlas_coords(new_position_coords_map) == GRASS_TILE_ATLAS:
@@ -180,7 +180,6 @@ func init_positions_dictionnaries() -> void:
 					if neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
 						link_initial_value = 1
 						if neighbour_ground_atlas == GRASS_TILE_ATLAS:
-							# TODO : fine tune ?
 							link_initial_value = GRASS_VALUE
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
@@ -202,7 +201,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 
 	# Calculate new targeted cells
 	targeted_cells = maths_script.get_positions_between(start, end, AIM_STEPS)
-	
+
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
