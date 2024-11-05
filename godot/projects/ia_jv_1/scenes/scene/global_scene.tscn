@@ -1,18 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://bm8xt1l2ygcme"]
+[gd_scene load_steps=6 format=3 uid="uid://bm8xt1l2ygcme"]
 
 [ext_resource type="PackedScene" uid="uid://d3yn5xffxprda" path="res://scenes/map/tile_map.tscn" id="1_4mg31"]
 [ext_resource type="Script" path="res://scenes/scripts/global_scene.gd" id="1_5x233"]
 [ext_resource type="PackedScene" uid="uid://jadmcawojsmt" path="res://scenes/scene/player/player_scene.tscn" id="2_0unj6"]
 [ext_resource type="Script" path="res://scenes/scripts/game_scene.gd" id="2_tchmf"]
 [ext_resource type="Script" path="res://scenes/scripts/tilemap.gd" id="3_pltwj"]
-[ext_resource type="PackedScene" uid="uid://dpoh2r1m6uk5e" path="res://scenes/scene/car/car_scene.tscn" id="6_yees1"]
 
 [node name="global_scene_node" type="Node2D"]
 scale = Vector2(2, 2)
 script = ExtResource("1_5x233")
 
 [node name="game_node" type="Node2D" parent="."]
-position = Vector2(225, 175)
+position = Vector2(465.5, 213)
 script = ExtResource("2_tchmf")
 
 [node name="TileMap" parent="game_node" instance=ExtResource("1_4mg31")]
@@ -20,7 +19,4 @@ position = Vector2(0, 0)
 script = ExtResource("3_pltwj")
 
 [node name="player_node" parent="game_node" instance=ExtResource("2_0unj6")]
-position = Vector2(-59, 28.5)
-
-[node name="car_node_0" parent="game_node" instance=ExtResource("6_yees1")]
-position = Vector2(31, -138.5)
+position = Vector2(-45, 22)
