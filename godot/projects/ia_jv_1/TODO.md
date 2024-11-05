@@ -11,7 +11,7 @@
 + ! A star !
 + Sheep game ? Multiple colors for multiple goals ?
 
-- change path tiles color etc
++ change path tiles color etc
 - add sprites for cars and directions / switch from moveto to translate
 - add two invisible block line that blocks targetting and movement for player for goals and spawns
 - upgrade map

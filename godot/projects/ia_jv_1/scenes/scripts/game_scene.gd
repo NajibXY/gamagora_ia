@@ -2,13 +2,17 @@ extends Node2D
 
 signal ready_signal
 
-## Consts
-#TODO : fine tune SPEED
+var LIFES = 3
+var SCORE = 0
+
+################################################ Consts ###########################################################################################
+# Difficulty Consts 
 const SPEED = 40
 const SPEED_SLOWED = SPEED / 3
-#TODO : fine tune depending on map size
 const AIM_STEPS = 30
+const SPAWN_INTERVAL: float = 4.0 # x seconds
 
+# Tile Atlases
 const WATER_TILE_ATLAS = Vector2i(0,7)
 const WALL_TILE_ATLAS = Vector2i(0,3)
 const GRASS_TILE_ATLAS = Vector2i(1,7)
@@ -16,31 +20,21 @@ const GOAL_TILE_ATLAS_YELLOW = Vector2i(1,0)
 const GOAL_TILE_ATLAS_YELLOW_ALT = 3
 const GOAL_TILE_ATLAS_GREEN = Vector2i(1,0)
 const GOAL_TILE_ATLAS_GREEN_ALT = 4
-
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
-# TODO : fine tune ?
+const HIGHLIGHT_ATLAS_ALT = 1
+const LOCKED_ATLAS_ALT = 2
+const PATH_ATLAS_ALT = 3
+
+# Path finding consts
 const GRASS_VALUE = 3
-#TODO : fine tune
-const INTERVAL: float = 4.0 # x seconds
-const MAX_CARS = 5
+const MAX_CARS = 4
 
-var LIFES = 3
-var SCORE = 0
-
-## Utils
+################################################ Variables ###########################################################################################
+# Utils
 var maths_script
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
 
-## Car variables
-var car_increment = 0
-var car_path_cells = {}
-
-## Highlight variables
-var targeted_cells = []
-var locked_targeted_cells = []
-var global_path_cells = []
-
-## Components variables
+## Components
 var player_model
 var tile_map
 var player_scene_node
@@ -48,6 +42,16 @@ var ground_node : TileMapLayer
 var movement_vector = Vector2(0,0)
 var slowed = false
 
+## Car instances
+var car_increment = 0
+var car_path_cells = {}
+
+## Highlighted tiles data
+var targeted_cells = []
+var locked_targeted_cells = []
+var global_path_cells = []
+
+## Links, spawns and goals data
 var links_dict = {}
 var spawn_local_positions = []
 var goal_yellow_positions = []
@@ -60,17 +64,16 @@ var time_passed: float = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	init_components_variables()
-	#emit ready signal
-	print("Game Scene Ready, emiting ready signal")
+	# print("Game Scene Ready, emiting ready signal")
 	emit_signal("ready_signal")
-	pass # Replace with function body.
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	handle_input()
-	# Instantiate car_scene every 5 seconds in one of the spawn points
+	# Instantiate car_scene every X seconds in one of the spawn points
 	time_passed += delta
-	if car_increment < MAX_CARS and time_passed >= INTERVAL:
+	if car_increment < MAX_CARS and time_passed >= SPAWN_INTERVAL:
 		time_passed = 0.0
 		var random_spawn = spawn_local_positions[randi() % spawn_local_positions.size()]
 		var car_scene = load("res://scenes/scene/car/car_scene.tscn").instantiate()
@@ -79,8 +82,9 @@ func _process(delta: float) -> void:
 		emit_signal("ready_signal")	
 	pass
 
-########################################### COMPONENTS FUNCTIONS ###########################################
+########################################### COMPONENTS FUNCTIONS ######################################################################################
 
+# Init all components variables and maths utils
 func init_components_variables() -> void:
 	tile_map = $TileMap
 	ground_node = tile_map.get_node("ground")
@@ -91,7 +95,7 @@ func init_components_variables() -> void:
 	pass
 
 
-########################################### INPUT FUNCTIONS ###########################################
+########################################### INPUT FUNCTIONS ######################################################################################
 
 func handle_input() -> void:
 	handle_mouse_input()
@@ -135,14 +139,14 @@ func handle_mouse_input() -> void:
 	# Highlight tiles
 	refresh_targeted_cells(player_scene_node.transform.origin, local_mouse_pos)
 
-	# Lock targetted cells
+	# Lock targetted cells on left click
 	if Input.is_action_just_pressed("left_click") :
 		refresh_locked_targeted_cells(player_scene_node.transform.origin, local_mouse_pos)
 	pass
 
 func handle_movement_input() -> void:
 	# Handle movement
-	# Back or up ?
+	# Only up or down pressed, no left or right
 	var factor
 	if (Input.is_action_pressed("up") or Input.is_action_pressed("down")):
 		if Input.is_action_pressed("up"):
@@ -155,31 +159,31 @@ func handle_movement_input() -> void:
 		else:
 			new_position = player_scene_node.transform.origin + movement_vector * SPEED * get_process_delta_time() * factor
 		# TODO : use offset ?
-		# var new_position_coords_map = tile_map.local_to_map(offset_by_frame_size(new_position))
 		var new_position_coords_map = tile_map.local_to_map(new_position)
 		if ground_node.get_cell_atlas_coords(new_position_coords_map) == GRASS_TILE_ATLAS:
+			# If the player is on grass, it will move slower
 			slowed = true
 			player_scene_node.transform.origin = new_position
 		elif (ground_node.get_cell_atlas_coords(new_position_coords_map) != Vector2i(-1,-1) and 
 			ground_node.get_cell_atlas_coords(new_position_coords_map) != WATER_TILE_ATLAS and  
 			ground_node.get_cell_atlas_coords(new_position_coords_map) != WALL_TILE_ATLAS):
+			# If the player is not on grass, and is not blocked by water, wall or void, it will move at normal speed
 			player_scene_node.transform.origin = new_position
 			slowed = false
 	pass
 
 
-########################################### TILE MAP INITIALISATIPON DATA FUNCTIONS ###########################################
+########################################### TILE MAP DATA INITIALISATIPON FUNCTIONS ##########################################################
 # TODO
 # func offset_by_frame_size(position: Vector2) -> Vector2:
 # 	var sprite_frames  = player_model.get_node("AnimatedSprite2D").frames
 # 	return position
 
 func init_positions_dictionnaries() -> void:
-	print("init_dicts")
+	# print("init_dicts")
 	var links_value
 	# Get the size of the TileMap (in cells)
 	var used_rect = ground_node.get_used_rect()
-	#print(used_rect)
 	for y in range(int(used_rect.size.y)):
 		for x in range(int(used_rect.size.x)):
 			# Get the tile ID at this position (if any)
@@ -205,17 +209,20 @@ func init_positions_dictionnaries() -> void:
 				var neighbour_position = vector2i_position + offset
 				var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
 				if neighbour_ground_atlas != Vector2i(-1,-1):
+					# Init to INF if not void
 					var link_initial_value = INF
-					# TODO modify if tiles modified
 					if neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
+						# Init to 1 if not water or wall
 						link_initial_value = 1
 						if neighbour_ground_atlas == GRASS_TILE_ATLAS:
+							# Init to GRASS_VALUE if grass
 							link_initial_value = GRASS_VALUE
 						links_value[str(neighbour_position)] = link_initial_value
 			links_dict[str(vector2i_position)] = links_value
 
-########################################### TILE MAP HIGHLIGHT DATA FUNCTIONS ###########################################
+########################################### TILE MAP HIGHLIGHT DATA FUNCTIONS #####################################################################
 
+# Function called when aiming
 func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 	# Clear previous targeted cells
 	for pos in targeted_cells:
@@ -223,33 +230,39 @@ func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 		if position_coords_map not in locked_targeted_cells:
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
+				# If not void, not a goal and it's a path cell, it is swapped to its alternate path color
 				if str(position_coords_map) not in goal_local_positions and position_coords_map in global_path_cells:
-					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
+					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, PATH_ATLAS_ALT)
+				# Else, it is swapped to its original color (if it's a goal or not a path cell)
 				else:
 					change_cell_to_its_original(position_coords_map, ground_atlas_position)
 				pass
 
 	# Calculate new targeted cells
 	targeted_cells = maths_script.get_positions_between(start, end, AIM_STEPS)
-
+	
+	# For every targetted cell
 	for pos in targeted_cells:
 		var position_coords_map = tile_map.local_to_map(pos)
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position == WALL_TILE_ATLAS:
+			# Wall blocks the path
 			return
 		elif position_coords_map not in locked_targeted_cells:
+			# If not locked, it is highlighted
 			if ground_atlas_position != Vector2i(-1,-1):
-				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 1)
+				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, HIGHLIGHT_ATLAS_ALT)
 				pass
 	pass
 
+# Function called when locking target, works kinda like the one above, with some tweaks
 func refresh_locked_targeted_cells(start: Vector2, end: Vector2) -> void:
 	# Clear previous targeted cells
 	for position_coords_map in locked_targeted_cells:
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position != Vector2i(-1,-1):
 			if str(position_coords_map) not in goal_local_positions and position_coords_map in global_path_cells:
-				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
+				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, PATH_ATLAS_ALT)
 			else:
 				change_cell_to_its_original(position_coords_map, ground_atlas_position)
 			# Update links valuation to original
@@ -267,34 +280,37 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2) -> void:
 			if ground_atlas_position == WALL_TILE_ATLAS:
 				return
 			else:
-				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 2)
+				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, LOCKED_ATLAS_ALT)
 				if ground_atlas_position != WATER_TILE_ATLAS:
 					# Update links valuation to 99
 					change_links_valuation(position_coords_map)
 			pass
 	pass
 
+# Changing dinamically an atlas cell to its alternate color
 func change_cell_to_its_alternate_color(tile_position: Vector2, atlas_position:Vector2, alternate_num:int) -> void:
 	ground_node.set_cell(tile_position, 0, atlas_position, alternate_num)
 	pass
 
+# Changing dinamically an atlas cell to its original color, unless it's a goal, then it's changed to its alternate goal color
 func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2) -> void:
 	if str(tile_position) in goal_yellow_positions:
 		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_YELLOW_ALT)
 	elif str(tile_position) in goal_green_positions:
-		# TOZ
 		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_GREEN_ALT)
 	else: 
 		ground_node.set_cell(tile_position, 0, atlas_position, 0)
 	pass
 
+# Resetting a cell and checking if it's not in another car's path, changing the data in consequence
 func erase_if_not_in_others_path(node: Vector2i, unique_id: int) -> void:
 	# Erase from id car
 	car_path_cells[str(unique_id)].erase(node)
-	# Chech others
+	# Checking others
 	var z = 0
 	var is_on_another_car_path = false
 	while z < car_increment :
+		# Note : Needed to check if the key is still in the Dict
 		if z != unique_id and str(z) in car_path_cells.keys() and node in car_path_cells[str(z)]:
 			is_on_another_car_path = true
 			break
@@ -305,8 +321,9 @@ func erase_if_not_in_others_path(node: Vector2i, unique_id: int) -> void:
 			change_cell_to_its_original(node, ground_node.get_cell_atlas_coords(node))
 	pass
 
-########################################### LINKS VALUATION FUNCTIONS ###########################################
+########################################### LINKS VALUATION FUNCTIONS ########################################################################
 
+# Changing the links valuation to INF if a cell is blocked
 func change_links_valuation(vector2i_position: Vector2i) -> void:
 	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 		var neighbour_position = vector2i_position + offset
@@ -315,6 +332,7 @@ func change_links_valuation(vector2i_position: Vector2i) -> void:
 			links_dict[str(neighbour_position)][str(vector2i_position)] = INF
 	pass
 
+# Changing the links valuation to its original value if a cell is released
 func release_links_valuation(vector2i_position: Vector2i) -> void:
 	var position_ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
 	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
@@ -322,7 +340,9 @@ func release_links_valuation(vector2i_position: Vector2i) -> void:
 		var neighbour_ground_atlas = ground_node.get_cell_atlas_coords(neighbour_position)
 		if neighbour_ground_atlas != Vector2i(-1,-1) and neighbour_ground_atlas != WATER_TILE_ATLAS and neighbour_ground_atlas != WALL_TILE_ATLAS:
 			var link_value = INF
-			# TODO modify if tiles modified
+			# Same calculus than in the initialisation, but less targetted links : 
+			# Since we only check those who where blocked and are not void, water, wall.
+			# Because they are the only one that could have been targetted by the previous function
 			if position_ground_atlas != WATER_TILE_ATLAS and position_ground_atlas != WALL_TILE_ATLAS:
 				link_value = 1
 				if position_ground_atlas == GRASS_TILE_ATLAS:
