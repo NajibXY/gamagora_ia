@@ -86,7 +86,6 @@ func iterate_movements(delta: float) -> void:
 	var current_map_coords = game_node.tile_map.local_to_map(self.transform.origin)
 	if str(current_map_coords) in goal_nodes:
 		goal_reached = true
-		print("Goal reached")
 		if str(current_map_coords) in game_node.goal_yellow_positions and GOAL_ALTERNATIVE_ID == GOAL_ALTERNATIVE_ID_GREEN:
 			game_node.LIFES -= 1
 			print("Life lost")
@@ -97,6 +96,9 @@ func iterate_movements(delta: float) -> void:
 			game_node.SCORE += 1
 			print("Scored")
 		# TODO things !!! ERASE ALL THINGS from dicts etc too
+		game_node.car_path_cells.erase(str(unique_id))
+		game_node.car_increment -= 1
+		queue_free()
 	# If not, construct path or walk through path
 	else:
 		if (path_result["path"].size() == 0 and not goal_reached):
@@ -181,7 +183,10 @@ func color_path(path) -> void:
 		if (vec_pos not in game_node.global_path_cells):
 			game_node.global_path_cells.append(vec_pos)
 			if node not in game_node.goal_yellow_positions and node not in game_node.goal_green_positions:
-				game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, GOAL_ALTERNATIVE_ID)
+				game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
+			else:
+				print("goal")
+
 		# Adding to car path cells
 		game_node.car_path_cells[str(unique_id)].append(vec_pos)
 	pass

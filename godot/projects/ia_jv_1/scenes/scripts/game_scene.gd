@@ -223,7 +223,7 @@ func refresh_targeted_cells(start: Vector2, end: Vector2) -> void:
 		if position_coords_map not in locked_targeted_cells:
 			var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 			if ground_atlas_position != Vector2i(-1,-1):
-				if position_coords_map in global_path_cells:
+				if str(position_coords_map) not in goal_local_positions and position_coords_map in global_path_cells:
 					change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
 				else:
 					change_cell_to_its_original(position_coords_map, ground_atlas_position)
@@ -248,7 +248,7 @@ func refresh_locked_targeted_cells(start: Vector2, end: Vector2) -> void:
 	for position_coords_map in locked_targeted_cells:
 		var ground_atlas_position = ground_node.get_cell_atlas_coords(position_coords_map)
 		if ground_atlas_position != Vector2i(-1,-1):
-			if position_coords_map in global_path_cells:
+			if str(position_coords_map) not in goal_local_positions and position_coords_map in global_path_cells:
 				change_cell_to_its_alternate_color(position_coords_map, ground_atlas_position, 3)
 			else:
 				change_cell_to_its_original(position_coords_map, ground_atlas_position)
@@ -282,6 +282,7 @@ func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2)
 	if str(tile_position) in goal_yellow_positions:
 		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_YELLOW_ALT)
 	elif str(tile_position) in goal_green_positions:
+		# TOZ
 		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_GREEN_ALT)
 	else: 
 		ground_node.set_cell(tile_position, 0, atlas_position, 0)
@@ -294,7 +295,7 @@ func erase_if_not_in_others_path(node: Vector2i, unique_id: int) -> void:
 	var z = 0
 	var is_on_another_car_path = false
 	while z < car_increment :
-		if z != unique_id and node in car_path_cells[str(z)]:
+		if z != unique_id and str(z) in car_path_cells.keys() and node in car_path_cells[str(z)]:
 			is_on_another_car_path = true
 			break
 		z += 1
