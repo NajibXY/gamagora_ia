@@ -37,6 +37,7 @@ const GOAL_ALTERNATIVE_ID_GREEN = 4
 
 ## Components
 var game_node : Node2D
+var car_model
 
 ## Path finding variables
 var start_node
@@ -46,6 +47,7 @@ var path_script
 var path_result
 var position_going_to
 var moving_to
+var been_freezed = false
 
 ## Threading variables
 var is_running 
@@ -69,6 +71,8 @@ func _ready() -> void:
 		child_car.queue_free()
 		var car_scene2 = car2_scene_path.instantiate()
 		add_child(car_scene2)
+
+	car_model = get_child(0)
 
 	# Game scene node ready signal reception
 	game_node = get_node("/root/global_scene_node/game_node")
@@ -106,15 +110,29 @@ func _process(delta: float) -> void:
 
 ##################################### Car movement functions ###########################################################################################
 func move_car() -> void:
+	# Change model orientation
+	var target_pos = game_node.tile_map.map_to_local(position_going_to)
+	var direction = target_pos - self.transform.origin
+	# Use the angle between the direction and the x axis to determine the frame of the model
+	var angle = direction.angle()
+	if angle < -1.8:
+		car_model.frame = 2
+	elif angle < -0.39:
+		car_model.frame = 4
+	elif angle < 0.9:
+		car_model.frame = 6
+	elif angle < 2.8:
+		car_model.frame = 0
+
 	# Move the car
 	if game_node.ground_node.get_cell_atlas_coords(position_going_to) == game_node.GRASS_TILE_ATLAS:
-		self.transform.origin = self.transform.origin.lerp(position_going_to, SPEED_SLOWED)
+		self.transform.origin = self.transform.origin.lerp(target_pos, SPEED_SLOWED)
 	else:
-		self.transform.origin = self.transform.origin.lerp(position_going_to, SPEED)
-
+		self.transform.origin = self.transform.origin.lerp(target_pos, SPEED)
+	
 	# If the car is close enough to the target position, stop moving
-	if self.transform.origin.distance_to(position_going_to) < 1:
-		self.transform.origin = position_going_to
+	if self.transform.origin.distance_to(target_pos) < 1:
+		self.transform.origin = target_pos
 		moving_to = false
 
 func iterate_movements(delta: float) -> void:
@@ -144,7 +162,8 @@ func iterate_movements(delta: float) -> void:
 		else:
 			while (path_result["path"].size() != 0):
 				# Freeze at spawn
-				if start_node == game_node.tile_map.local_to_map(self.transform.origin) :
+				if not been_freezed :
+					been_freezed = true
 					await get_tree().create_timer(TIME_FREEZE_START).timeout
 
 				# Get the target node
@@ -173,8 +192,7 @@ func iterate_movements(delta: float) -> void:
 					break
 
 				# Move to next position
-				var target_pos = game_node.tile_map.map_to_local(target_node)
-				position_going_to = Vector2(round(target_pos.x), round(target_pos.y))
+				position_going_to = target_node
 				moving_to = true
 
 				# Pop the first element of the path from path result and game path cells data
