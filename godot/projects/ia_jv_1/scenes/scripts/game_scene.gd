@@ -12,7 +12,11 @@ const AIM_STEPS = 30
 const WATER_TILE_ATLAS = Vector2i(0,7)
 const WALL_TILE_ATLAS = Vector2i(0,3)
 const GRASS_TILE_ATLAS = Vector2i(1,7)
-const GOAL_TILE_ATLAS = Vector2i(1,0)
+const GOAL_TILE_ATLAS_YELLOW = Vector2i(1,0)
+const GOAL_TILE_ATLAS_YELLOW_ALT = 3
+const GOAL_TILE_ATLAS_PURPLE = Vector2i(1,0)
+const GOAL_TILE_ATLAS_PURPLE_ALT = 4
+
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
 # TODO : fine tune ?
 const GRASS_VALUE = 3
@@ -43,6 +47,8 @@ var slowed = false
 
 var links_dict = {}
 var spawn_local_positions = []
+var goal_yellow_positions = []
+var goal_purple_positions = []
 var goal_local_positions = []
 
 ## Flag for instanciation
@@ -177,12 +183,18 @@ func init_positions_dictionnaries() -> void:
 			var vector2i_position = Vector2i(used_rect.position.x + x, used_rect.position.y + y)
 			# Get cell atlas
 			var ground_atlas = ground_node.get_cell_atlas_coords(vector2i_position)
+			var ground_alternate = ground_node.get_cell_alternative_tile(vector2i_position)
 			
 			# Init spawns, goals
 			if ground_atlas == SPAWN_TILE_ATLAS :
 				spawn_local_positions.append(str(vector2i_position))
-			elif ground_atlas == GOAL_TILE_ATLAS :
+			elif ground_atlas == GOAL_TILE_ATLAS_YELLOW and ground_alternate == GOAL_TILE_ATLAS_YELLOW_ALT:
+				goal_yellow_positions.append(str(vector2i_position))
 				goal_local_positions.append(str(vector2i_position))
+			elif ground_atlas == GOAL_TILE_ATLAS_PURPLE and ground_alternate == GOAL_TILE_ATLAS_PURPLE_ALT:
+				goal_yellow_positions.append(str(vector2i_position))
+				goal_local_positions.append(str(vector2i_position))
+
 			# Initial Links calculations
 			links_value = {}
 			# Check the 4 neightbours values
@@ -264,7 +276,14 @@ func change_cell_to_its_alternate_color(tile_position: Vector2, atlas_position:V
 	pass
 
 func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2) -> void:
-	ground_node.set_cell(tile_position, 0, atlas_position, 0)
+	print(goal_yellow_positions)
+	if str(tile_position) in goal_yellow_positions:
+		print("yellow")
+		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_YELLOW_ALT)
+	elif str(tile_position) in goal_purple_positions:
+		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_PURPLE_ALT)
+	else: 
+		ground_node.set_cell(tile_position, 0, atlas_position, 0)
 	pass
 
 func erase_if_not_in_others_path(node: Vector2i, unique_id: int) -> void:
