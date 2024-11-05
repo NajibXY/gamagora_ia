@@ -11,6 +11,9 @@ const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by t
 
 # TODO fine tune, use speed ?
 const SPEED = 0.2
+# const TIME_FREEZE_START = 1.0
+# const TIME_FREEZE = 1.0
+# const TIME_FREEZE_SLOWED = 2.0
 const TIME_FREEZE_START = 4.0
 const TIME_FREEZE = 2.0
 const TIME_FREEZE_SLOWED = 4.0
@@ -140,6 +143,7 @@ func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
+	# path_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
 	path_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
 	var path = path_result["path"]
 	if path.size() > 0:	
@@ -174,6 +178,7 @@ func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> voi
 
 func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> void:
 	var result = astar_script.a_star_multi_goal(graph, start, goals, HEURISTIC_RATIO)
+	# var result = djikstra_script.dijkstra_multi_goal(graph, start, goals)
 	call_deferred("on_path_calculated", result)
 	pass
 
