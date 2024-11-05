@@ -1,3 +1,5 @@
+########################################### ID Manager for cars ###########################################
+
 extends Node
 
 # Static variable to keep track of the ID counter

@@ -6,13 +6,14 @@ var LIFES = 3
 var SCORE = 0
 
 ################################################ Consts ###########################################################################################
-# Difficulty Consts 
+
+## Difficulty Consts 
 const SPEED = 40
 const SPEED_SLOWED = SPEED / 3
 const AIM_STEPS = 30
 const SPAWN_INTERVAL: float = 4.0 # x seconds
 
-# Tile Atlases
+## Tile Atlases
 const WATER_TILE_ATLAS = Vector2i(0,7)
 const WALL_TILE_ATLAS = Vector2i(0,3)
 const GRASS_TILE_ATLAS = Vector2i(1,7)
@@ -21,18 +22,22 @@ const GOAL_TILE_ATLAS_YELLOW_ALT = 3
 const GOAL_TILE_ATLAS_GREEN = Vector2i(1,0)
 const GOAL_TILE_ATLAS_GREEN_ALT = 4
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
+
 const HIGHLIGHT_ATLAS_ALT = 1
 const LOCKED_ATLAS_ALT = 2
 const PATH_ATLAS_ALT = 3
 
-# Path finding consts
+## Path finding consts
 const GRASS_VALUE = 3
 const MAX_CARS = 4
 
-################################################ Variables ###########################################################################################
-# Utils
-var maths_script
+## Utils
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
+
+################################################ Variables ###########################################################################################
+
+## Utils
+var maths_script
 
 ## Components
 var player_model

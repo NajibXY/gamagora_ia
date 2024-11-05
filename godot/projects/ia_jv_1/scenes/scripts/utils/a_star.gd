@@ -1,3 +1,5 @@
+########################################### A* Components ###########################################
+
 class HeapSort:
 	static func _sort(a: Dictionary, b: Dictionary) -> bool:
 		return a["cost"] < b["cost"]

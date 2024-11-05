@@ -1,6 +1,5 @@
 ########################################### Geometric Functions ###########################################
 
-
 func get_positions_between(start: Vector2, end: Vector2, steps: int) -> Array:
     var positions = []
     for i in range(steps + 1):

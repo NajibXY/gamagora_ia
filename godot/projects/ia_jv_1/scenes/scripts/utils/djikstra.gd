@@ -33,12 +33,8 @@ func path_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_R
 		var current_node = queue[0]["node"]
 		queue.remove_at(0)
 
-		# if visited.has(current_node):
-		# 	continue
-
-		# visited[current_node] = true
+		# Explore neighbors
 		for neighbor in graph[current_node].keys():
-			# if not visited.has(neighbor):
 			var new_cost = current_cost + graph[current_node][neighbor]
 			if new_cost < distances[neighbor]:
 				distances[neighbor] = new_cost
@@ -47,6 +43,7 @@ func path_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_R
 				queue.append({"cost": new_cost, "node": neighbor})  
 				
 		################## Djisktra is a greedy algorithm, it is the shortest path to a goal with a non heuristic based approach... ##################
+		
 		# It can have BAD consequences on the decision making and the complexity calcualtion of the path
 		if current_node in goals:
 			if return_dict.has("distance"):
