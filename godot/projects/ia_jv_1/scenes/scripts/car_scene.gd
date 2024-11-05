@@ -9,6 +9,11 @@ const AStar = preload("res://scenes/scripts/utils/a_star.gd")
 # TODO fine tune, maybe change from division to optimize calculation
 const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
 
+# Goal values
+var GOAL_ALTERNATIVE_ID
+const GOAL_ALTERNATIVE_ID_YELLOW = 3
+const GOAL_ALTERNATIVE_ID_GREEN = 4
+
 # TODO fine tune, use speed ?
 const SPEED = 0.2
 const TIME_FREEZE_START = 1.0
@@ -40,8 +45,11 @@ var is_calculating_path = false  # Track if path calculation is in progress
 func _ready() -> void:
 	# Game scene node ready signal
 	game_node = get_node("/root/global_scene_node/game_node")
+	# TODO Switch between both
 	djikstra_script = Djisktra.new()
 	astar_script = AStar.new()
+	GOAL_ALTERNATIVE_ID = GOAL_ALTERNATIVE_ID_YELLOW
+
 	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	pass # Replace with function body.
 
@@ -75,14 +83,24 @@ func _process(delta: float) -> void:
 ##################################### Car movement functions #####################################
 func iterate_movements(delta: float) -> void:
 	# Check if the goal is reached
-	if str(game_node.tile_map.local_to_map(self.transform.origin)) in goal_nodes:
+	var current_map_coords = game_node.tile_map.local_to_map(self.transform.origin)
+	if str(current_map_coords) in goal_nodes:
 		goal_reached = true
 		print("Goal reached")
+		if str(current_map_coords) in game_node.goal_yellow_positions and GOAL_ALTERNATIVE_ID == GOAL_ALTERNATIVE_ID_GREEN:
+			game_node.LIFES -= 1
+			print("Life lost")
+		elif str(current_map_coords) in game_node.goal_green_positions and GOAL_ALTERNATIVE_ID == GOAL_ALTERNATIVE_ID_YELLOW:
+			game_node.LIFES -= 1
+			print("Life lost")
+		else:
+			game_node.SCORE += 1
+			print("Scored")
 		# TODO things !!! ERASE ALL THINGS from dicts etc too
 	# If not, construct path or walk through path
 	else:
 		if (path_result["path"].size() == 0 and not goal_reached):
-			calculate_path_async(game_node.links_dict, str(game_node.tile_map.local_to_map(self.transform.origin)), goal_nodes)
+			calculate_path_async(game_node.links_dict, str(current_map_coords), goal_nodes)
 		else:
 			while (path_result["path"].size() != 0):
 				if start_node == game_node.tile_map.local_to_map(self.transform.origin) :
@@ -162,7 +180,8 @@ func color_path(path) -> void:
 		# Adding to global path cells
 		if (vec_pos not in game_node.global_path_cells):
 			game_node.global_path_cells.append(vec_pos)
-			game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, 3)
+			if node not in game_node.goal_yellow_positions and node not in game_node.goal_green_positions:
+				game_node.change_cell_to_its_alternate_color(vec_pos, ground_atlas_position, GOAL_ALTERNATIVE_ID)
 		# Adding to car path cells
 		game_node.car_path_cells[str(unique_id)].append(vec_pos)
 	pass

@@ -14,8 +14,8 @@ const WALL_TILE_ATLAS = Vector2i(0,3)
 const GRASS_TILE_ATLAS = Vector2i(1,7)
 const GOAL_TILE_ATLAS_YELLOW = Vector2i(1,0)
 const GOAL_TILE_ATLAS_YELLOW_ALT = 3
-const GOAL_TILE_ATLAS_PURPLE = Vector2i(1,0)
-const GOAL_TILE_ATLAS_PURPLE_ALT = 4
+const GOAL_TILE_ATLAS_GREEN = Vector2i(1,0)
+const GOAL_TILE_ATLAS_GREEN_ALT = 4
 
 const SPAWN_TILE_ATLAS = Vector2i(1,6)
 # TODO : fine tune ?
@@ -23,6 +23,9 @@ const GRASS_VALUE = 3
 #TODO : fine tune
 const INTERVAL: float = 4.0 # x seconds
 const MAX_CARS = 5
+
+var LIFES = 3
+var SCORE = 0
 
 ## Utils
 var maths_script
@@ -48,7 +51,7 @@ var slowed = false
 var links_dict = {}
 var spawn_local_positions = []
 var goal_yellow_positions = []
-var goal_purple_positions = []
+var goal_green_positions = []
 var goal_local_positions = []
 
 ## Flag for instanciation
@@ -191,8 +194,8 @@ func init_positions_dictionnaries() -> void:
 			elif ground_atlas == GOAL_TILE_ATLAS_YELLOW and ground_alternate == GOAL_TILE_ATLAS_YELLOW_ALT:
 				goal_yellow_positions.append(str(vector2i_position))
 				goal_local_positions.append(str(vector2i_position))
-			elif ground_atlas == GOAL_TILE_ATLAS_PURPLE and ground_alternate == GOAL_TILE_ATLAS_PURPLE_ALT:
-				goal_yellow_positions.append(str(vector2i_position))
+			elif ground_atlas == GOAL_TILE_ATLAS_GREEN and ground_alternate == GOAL_TILE_ATLAS_GREEN_ALT:
+				goal_green_positions.append(str(vector2i_position))
 				goal_local_positions.append(str(vector2i_position))
 
 			# Initial Links calculations
@@ -276,12 +279,10 @@ func change_cell_to_its_alternate_color(tile_position: Vector2, atlas_position:V
 	pass
 
 func change_cell_to_its_original(tile_position: Vector2, atlas_position:Vector2) -> void:
-	print(goal_yellow_positions)
 	if str(tile_position) in goal_yellow_positions:
-		print("yellow")
 		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_YELLOW_ALT)
-	elif str(tile_position) in goal_purple_positions:
-		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_PURPLE_ALT)
+	elif str(tile_position) in goal_green_positions:
+		change_cell_to_its_alternate_color(tile_position, atlas_position, GOAL_TILE_ATLAS_GREEN_ALT)
 	else: 
 		ground_node.set_cell(tile_position, 0, atlas_position, 0)
 	pass
