@@ -9,7 +9,7 @@ func manhattan_distance(node_pos: String, goal_pos: String, HEURISTIC_RATIO:int)
 	return (abs(node_vec.x - goal_vec.x) + abs(node_vec.y - goal_vec.y)) / HEURISTIC_RATIO
 
 # A* algorithm with Manhattan distance heuristic
-func a_star_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_RATIO:int) -> Dictionary:
+func path_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_RATIO:int) -> Dictionary:
 	# Return dictionary
 	var return_dict = {}
 	# Priority queue

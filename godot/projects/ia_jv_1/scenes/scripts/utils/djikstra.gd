@@ -5,7 +5,7 @@ class HeapSort:
 		return a["cost"] < b["cost"]
 
 # Dijkstra's algorithm implementation with multiple goals and path recalling
-func dijkstra_multi_goal(graph: Dictionary, start: String, goals: Array) -> Dictionary:
+func path_multi_goal(graph: Dictionary, start: String, goals: Array, HEURISTIC_RATIO:int) -> Dictionary:
 	# Return dictionary
 	var return_dict = {}
 	# Priority queue

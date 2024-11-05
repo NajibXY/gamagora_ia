@@ -1,10 +1,15 @@
 extends Node2D
 
+
+var random_seed
 var unique_id: int
 const IDManager = preload("res://scenes/scripts/utils/IDManager.gd")
 
 const Djisktra = preload("res://scenes/scripts/utils/djikstra.gd")
 const AStar = preload("res://scenes/scripts/utils/a_star.gd")
+
+const car1_scene_path = preload("res://scenes/scene/car/car.tscn")
+const car2_scene_path = preload("res://scenes/scene/car/car2.tscn")
 
 # TODO fine tune, maybe change from division to optimize calculation
 const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
@@ -31,8 +36,7 @@ var goal_nodes
 var nodes_graph
 
 var path_result
-var djikstra_script
-var astar_script
+var path_script
 
 # Thread variables
 var is_running 
@@ -43,12 +47,24 @@ var is_calculating_path = false  # Track if path calculation is in progress
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# random between yellow and green
+	random_seed = randi() % 2
+	if random_seed == 0:
+		GOAL_ALTERNATIVE_ID = GOAL_ALTERNATIVE_ID_YELLOW
+		path_script = AStar.new()
+	else:
+		GOAL_ALTERNATIVE_ID = GOAL_ALTERNATIVE_ID_GREEN
+		path_script = Djisktra.new()
+		var child_car = get_child(0)
+		remove_child(child_car)
+		child_car.queue_free()
+		var car_scene2 = car2_scene_path.instantiate()
+		add_child(car_scene2)
+
+		
+
 	# Game scene node ready signal
 	game_node = get_node("/root/global_scene_node/game_node")
-	# TODO Switch between both
-	djikstra_script = Djisktra.new()
-	astar_script = AStar.new()
-	GOAL_ALTERNATIVE_ID = GOAL_ALTERNATIVE_ID_YELLOW
 
 	game_node.connect("ready_signal", Callable(self, "_on_game_script_ready"))
 	pass # Replace with function body.
@@ -163,8 +179,7 @@ func init_djikstra_things(nodes_gr, start_no, goal_no) -> void:
 			## Checking if in another car's path before erasing
 			game_node.erase_if_not_in_others_path(node_cell, unique_id)
 	# Get new path
-	# path_result = djikstra_script.dijkstra_multi_goal(nodes_gr, str(start_no), goal_no)
-	path_result = astar_script.a_star_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
+	path_result = path_script.path_multi_goal(nodes_gr, str(start_no), goal_no, HEURISTIC_RATIO)
 	var path = path_result["path"]
 	if path.size() > 0:	
 		path.erase(path[0])
@@ -201,8 +216,7 @@ func calculate_path_async(graph: Dictionary, start: String, goals: Array) -> voi
 	pass
 
 func threaded_calculate_path(graph: Dictionary, start: String, goals: Array) -> void:
-	var result = astar_script.a_star_multi_goal(graph, start, goals, HEURISTIC_RATIO)
-	# var result = djikstra_script.dijkstra_multi_goal(graph, start, goals)
+	var result = path_script.path_multi_goal(graph, start, goals, HEURISTIC_RATIO)
 	call_deferred("on_path_calculated", result)
 	pass
 

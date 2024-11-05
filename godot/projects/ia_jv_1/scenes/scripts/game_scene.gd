@@ -4,7 +4,7 @@ signal ready_signal
 
 ## Consts
 #TODO : fine tune SPEED
-const SPEED = 25
+const SPEED = 24
 const SPEED_SLOWED = SPEED / 3
 #TODO : fine tune depending on map size
 const AIM_STEPS = 30
