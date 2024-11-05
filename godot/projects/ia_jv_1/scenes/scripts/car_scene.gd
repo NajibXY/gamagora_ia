@@ -7,10 +7,11 @@ var unique_id: int
 ################################################ Consts ###########################################################################################
 
 ## Difficulty Consts
-const SPEED = 0.2
-const TIME_FREEZE_START = 1.0
-const TIME_FREEZE = 1.0
-const TIME_FREEZE_SLOWED = 2.0
+const SPEED = 0.05
+const SPEED_SLOWED = SPEED / 3
+const TIME_FREEZE_START = 3.0
+# const TIME_FREEZE = 4.0
+# const TIME_FREEZE_SLOWED = 2.0
 # const TIME_FREEZE_START = 4.0
 # const TIME_FREEZE = 2.0
 # const TIME_FREEZE_SLOWED = 4.0
@@ -43,6 +44,8 @@ var goal_nodes
 var nodes_graph
 var path_script
 var path_result
+var position_going_to
+var moving_to
 
 ## Threading variables
 var is_running 
@@ -93,12 +96,26 @@ func _on_game_script_ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# If the path finding is not launched and goal not reached we enter our main path finding function loop
-	if not is_running and not goal_reached:
+	if moving_to:
+		move_car()
+	elif not is_running and not goal_reached:
+		moving_to = false
 		is_running = true
 		iterate_movements(delta)
 	pass
 
 ##################################### Car movement functions ###########################################################################################
+func move_car() -> void:
+	# Move the car
+	if game_node.ground_node.get_cell_atlas_coords(position_going_to) == game_node.GRASS_TILE_ATLAS:
+		self.transform.origin = self.transform.origin.lerp(position_going_to, SPEED_SLOWED)
+	else:
+		self.transform.origin = self.transform.origin.lerp(position_going_to, SPEED)
+
+	# If the car is close enough to the target position, stop moving
+	if self.transform.origin.distance_to(position_going_to) < 1:
+		self.transform.origin = position_going_to
+		moving_to = false
 
 func iterate_movements(delta: float) -> void:
 	# Check if the goal is reached
@@ -157,22 +174,21 @@ func iterate_movements(delta: float) -> void:
 
 				# Move to next position
 				var target_pos = game_node.tile_map.map_to_local(target_node)
-				target_pos = Vector2(round(target_pos.x), round(target_pos.y))
-				while (self.transform.origin != target_pos):
-					self.transform.origin = self.transform.origin.move_toward(target_pos, delta * SPEED)
-				
+				position_going_to = Vector2(round(target_pos.x), round(target_pos.y))
+				moving_to = true
+
 				# Pop the first element of the path from path result and game path cells data
 				path_result["path"].erase(path_result["path"][0])
 				## Checking if in another car's path before erasing
 				game_node.erase_if_not_in_others_path(target_node, unique_id)
+				break
 				
-				# Freeze the car for a while
-				if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.GRASS_TILE_ATLAS:
-					# If the car is on grass, it moves slower, so it will freeze for a longer time
-					await get_tree().create_timer(TIME_FREEZE_SLOWED).timeout
-				else:
-					await get_tree().create_timer(TIME_FREEZE).timeout
-
+				# # Freeze the car for a while
+				# if game_node.ground_node.get_cell_atlas_coords(target_node) == game_node.GRASS_TILE_ATLAS:
+				# 	# If the car is on grass, it moves slower, so it will freeze for a longer time
+				# 	await get_tree().create_timer(TIME_FREEZE_SLOWED).timeout
+				# else:
+				# 	await get_tree().create_timer(TIME_FREEZE).timeout
 	is_running = false
 	pass
 
