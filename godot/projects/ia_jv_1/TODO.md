@@ -34,11 +34,12 @@
 + Score
 + Controls
 + Highest Score stored in three files per difficulty
++ Press R to reload
++ Menu with difficulties 
++ escape to pause/go to menu
 - Background 
 - Music
-- Press R to reload
-- Menu with difficulties ?
-- Intro
-- Readme de rendu avec explications des scripts etc
+- Intro ?
+- Readme de rendu avec explications des scripts etc ET VIDEO !!
 
 

@@ -6,11 +6,20 @@ signal high_score_signal
 
 ################################################ Consts ###########################################################################################
 
-## Difficulty Consts 
-const SPEED = 60
-const SPEED_SLOWED = SPEED / 3
 const AIM_STEPS = 30
-const SPAWN_INTERVAL: float = 4.0 # x seconds
+const SPEED = 60
+## Difficulty Consts 
+const SPEED_SLOWED_EASY = SPEED / 2
+const SPEED_SLOWED_NORMAL = SPEED / 3
+const SPEED_SLOWED_HARD = SPEED / 5
+const SPAWN_INTERVAL_EASY: float = 7.0 # x seconds
+const SPAWN_INTERVAL_NORMAL: float = 4.0 # x seconds
+const SPAWN_INTERVAL_HARD: float = 1.0 # x seconds
+
+## Score files
+const SCORE_FILE_EASY = "res://ext/highscore_easy.txt"
+const SCORE_FILE_NORMAL = "res://ext/highscore_normal.txt"
+const SCORE_FILE_HARD = "res://ext/highscore_hard.txt"
 
 ## Tile Atlases
 const WATER_TILE_ATLAS = Vector2i(0,7)
@@ -33,16 +42,17 @@ const MAX_CARS = 4
 ## Utils
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
 
-## Score files
-const SCORE_FILE_EASY = "res://ext/highscore_easy.txt"
-const SCORE_FILE_NORMAL = "res://ext/highscore_normal.txt"
-const SCORE_FILE_HARD = "res://ext/highscore_hard.txt"
+
 
 ################################################ Variables ###########################################################################################
 
-## Score
+## Score and difficulty
+var Controls
+var game_difficulty
 var high_score;
 var current_score;
+var spawn_interval = SPAWN_INTERVAL_NORMAL
+var speed_slowed = SPEED_SLOWED_NORMAL
 
 ## Utils
 var maths_script
@@ -89,7 +99,7 @@ func _process(delta: float) -> void:
 	handle_input()
 	# Instantiate car_scene every X seconds in one of the spawn points
 	time_passed += delta
-	if car_increment < MAX_CARS and time_passed >= SPAWN_INTERVAL:
+	if car_increment < MAX_CARS and time_passed >= spawn_interval:
 		time_passed = 0.0
 		var random_spawn = spawn_local_positions[randi() % spawn_local_positions.size()]
 		var car_scene = load("res://scenes/scene/car/car_scene.tscn").instantiate()
@@ -131,8 +141,9 @@ func update_score(modifier: int) -> void:
 
 # Init all components variables and maths utils
 func init_components_variables() -> void:
+	Controls = get_node("/root/Control")
+	set_difficulty()
 	current_score = 0
-	score_file = SCORE_FILE_NORMAL
 	tile_map = $TileMap
 	ground_node = tile_map.get_node("ground")
 	player_scene_node = get_node("player_node")
@@ -143,6 +154,24 @@ func init_components_variables() -> void:
 	read_update_score()
 	pass
 
+func set_difficulty() -> void:
+	# print("difficulty in controls : ", Controls.difficulty)
+	if Controls.difficulty == 0:
+		game_difficulty = 0
+		spawn_interval = SPAWN_INTERVAL_EASY
+		speed_slowed = SPEED_SLOWED_EASY
+		score_file = SCORE_FILE_EASY
+	elif Controls.difficulty == 2:
+		game_difficulty = 2
+		spawn_interval = SPAWN_INTERVAL_HARD
+		speed_slowed = SPEED_SLOWED_HARD
+		score_file = SCORE_FILE_HARD
+	else:
+		game_difficulty = 1
+		spawn_interval = SPAWN_INTERVAL_NORMAL
+		speed_slowed = SPEED_SLOWED_NORMAL
+		score_file = SCORE_FILE_NORMAL
+	pass
 
 ########################################### INPUT FUNCTIONS ######################################################################################
 
@@ -151,6 +180,15 @@ func handle_input() -> void:
 	handle_movement_input()
 	if Input.is_action_just_pressed("retry"):
 		get_tree().reload_current_scene()
+		pass
+	elif Input.is_action_just_pressed("quit"):
+		get_tree().quit()
+		pass
+	elif Input.is_action_just_pressed("p"):
+		get_tree().root.remove_child(Controls)
+		get_tree().root.add_child(Controls)
+		# Remove this scene
+		get_parent().queue_free()
 		pass
 	pass
 
@@ -207,7 +245,7 @@ func handle_movement_input() -> void:
 			factor = -1
 		var new_position
 		if slowed:
-			new_position = player_scene_node.transform.origin + movement_vector * SPEED_SLOWED * get_process_delta_time() * factor
+			new_position = player_scene_node.transform.origin + movement_vector * speed_slowed * get_process_delta_time() * factor
 		else:
 			new_position = player_scene_node.transform.origin + movement_vector * SPEED * get_process_delta_time() * factor
 		# TODO : use offset ?

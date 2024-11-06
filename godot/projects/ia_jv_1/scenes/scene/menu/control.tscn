@@ -1,0 +1,124 @@
+[gd_scene load_steps=8 format=3 uid="uid://m8v50iugybep"]
+
+[ext_resource type="Theme" uid="uid://cv68jhmg47eg7" path="res://ext/fonts/global_scene_2.tres" id="1_6v3na"]
+[ext_resource type="Script" path="res://scenes/scripts/control.gd" id="1_851wc"]
+[ext_resource type="Theme" uid="uid://dr3rtyq66mlfd" path="res://ext/fonts/global_scene.tres" id="2_no1v1"]
+[ext_resource type="FontFile" uid="uid://bf3adb71cmif" path="res://ext/fonts/Dashhorizon-eZ5wg.otf" id="4_hwb4s"]
+[ext_resource type="Theme" uid="uid://b4kihnccy3oy4" path="res://ext/fonts/global_scene_green.tres" id="5_sso8o"]
+[ext_resource type="Theme" uid="uid://stbc6iqgrt37" path="res://ext/fonts/global_scene_yellow.tres" id="6_4p772"]
+
+[sub_resource type="Theme" id="Theme_u0558"]
+default_font = ExtResource("4_hwb4s")
+default_font_size = 22
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_851wc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -384.0
+offset_top = -221.0
+offset_right = -95.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2.565, 2.565)
+
+[node name="EasyButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_6v3na")
+text = "Easy mode
+"
+
+[node name="MediumButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_6v3na")
+text = "Normal mode"
+
+[node name="HardButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_no1v1")
+text = "Impossible mode"
+
+[node name="label_explications_score" type="Label" parent="."]
+offset_left = 537.5
+offset_top = 323.5
+offset_right = 679.5
+offset_bottom = 394.5
+theme = ExtResource("1_6v3na")
+text = "-3 per mistake
++1 per success"
+
+[node name="label_explications_controles" type="Label" parent="."]
+offset_left = 1146.5
+offset_top = 243.0
+offset_right = 1435.5
+offset_bottom = 385.0
+theme = SubResource("Theme_u0558")
+text = "Z or W to go forward
+S to go backward
+Mouse to aim
+R to retry
+Left click to "
+
+[node name="label_fear" type="Label" parent="."]
+offset_left = 1251.5
+offset_top = 346.0
+offset_right = 1428.5
+offset_bottom = 378.0
+theme = ExtResource("2_no1v1")
+text = "MAKE THEM FEAR"
+
+[node name="label_those" type="Label" parent="."]
+offset_left = 1111.0
+offset_top = 645.0
+offset_right = 1412.0
+offset_bottom = 716.0
+theme = ExtResource("1_6v3na")
+text = "    Those people are just like sheep,
+They need guiding..."
+
+[node name="label_green" type="Label" parent="."]
+offset_left = 518.0
+offset_top = 658.0
+offset_right = 809.0
+offset_bottom = 684.0
+theme = ExtResource("5_sso8o")
+text = "Green cars belong to green goals"
+
+[node name="label_green2" type="Label" parent="."]
+offset_left = 534.5
+offset_top = 689.0
+offset_right = 828.5
+offset_bottom = 715.0
+theme = ExtResource("6_4p772")
+text = "Yellow cars belong to yellow goals"
+
+[node name="label_change" type="Label" parent="."]
+offset_left = 550.0
+offset_top = 247.0
+offset_right = 943.0
+offset_bottom = 287.0
+theme = ExtResource("1_6v3na")
+text = "P to change the difficulty & Esc  to quit"
+
+[connection signal="pressed" from="VBoxContainer/EasyButton" to="." method="_on_easy_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/MediumButton" to="." method="_on_medium_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HardButton" to="." method="_on_hard_button_pressed"]

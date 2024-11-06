@@ -9,19 +9,19 @@ var unique_id: int
 ## Difficulty Consts
 
 # Easy
-# const SPEED = 0.02
-# const SPEED_SLOWED = SPEED / 5
-# const TIME_FREEZE_START = 5.0
+const SPEED_EASY = 0.04
+const SPEED_SLOWED_EASY = SPEED_EASY / 5
+const TIME_FREEZE_START_EASY = 3.0
 
 # Normal
-const SPEED = 0.05
-const SPEED_SLOWED = SPEED / 3
-const TIME_FREEZE_START = 3.0
+const SPEED_NORMAL = 0.07
+const SPEED_SLOWED_NORMAL = SPEED_NORMAL / 3
+const TIME_FREEZE_START_NORMAL = 2
 
 # Impossible
-# const SPEED = 0.5
-# const SPEED_SLOWED = SPEED / 3
-# const TIME_FREEZE_START = 0
+const SPEED_HARD = 0.5
+const SPEED_SLOWED_HARD = SPEED_HARD / 3
+const TIME_FREEZE_START_HARD = 0
 
 # const TIME_FREEZE = 4.0
 # const TIME_FREEZE_SLOWED = 2.0
@@ -51,6 +51,11 @@ const GOAL_ALTERNATIVE_ID_YELLOW = 3
 const GOAL_ALTERNATIVE_ID_GREEN = 4
 
 ################################################ Variables ###########################################################################################
+
+## Difficulty
+var speed = SPEED_NORMAL
+var speed_slowed = SPEED_SLOWED_NORMAL
+var time_freeze_start = TIME_FREEZE_START_NORMAL
 
 ## Components
 var game_node : Node2D
@@ -97,6 +102,7 @@ func _ready() -> void:
 	pass 
 
 func _on_game_script_ready() -> void:
+	set_difficulty()
 	unique_id = IDManager.get_new_id()
 	# print(unique_id)
 	game_node.car_increment += 1
@@ -114,6 +120,22 @@ func _on_game_script_ready() -> void:
 	game_node.disconnect("ready_signal", Callable(self, "_on_game_script_ready"))
 	pass
 
+func set_difficulty() -> void:
+	if game_node.game_difficulty == 0:
+		speed = SPEED_EASY
+		speed_slowed = SPEED_SLOWED_EASY
+		time_freeze_start = TIME_FREEZE_START_EASY
+	elif game_node.game_difficulty == 2:
+		speed = SPEED_HARD
+		speed_slowed = SPEED_SLOWED_HARD
+		time_freeze_start = TIME_FREEZE_START_HARD
+	else:
+		game_node.game_difficulty = 1
+		speed = SPEED_NORMAL
+		speed_slowed = SPEED_SLOWED_NORMAL
+		time_freeze_start = TIME_FREEZE_START_NORMAL
+	pass
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# If the path finding is not launched and goal not reached we enter our main path finding function loop
@@ -122,7 +144,7 @@ func _process(delta: float) -> void:
 	elif not is_running and not goal_reached:
 		moving_to = false
 		is_running = true
-		iterate_movements(delta)
+		iterate_movements()
 	pass
 
 ##################################### Car movement functions ###########################################################################################
@@ -143,16 +165,16 @@ func move_car() -> void:
 
 	# Move the car
 	if game_node.ground_node.get_cell_atlas_coords(position_going_to) == game_node.GRASS_TILE_ATLAS:
-		self.transform.origin = self.transform.origin.lerp(target_pos, SPEED_SLOWED)
+		self.transform.origin = self.transform.origin.lerp(target_pos, speed_slowed)
 	else:
-		self.transform.origin = self.transform.origin.lerp(target_pos, SPEED)
+		self.transform.origin = self.transform.origin.lerp(target_pos, speed)
 	
 	# If the car is close enough to the target position, stop moving
 	if self.transform.origin.distance_to(target_pos) < 1:
 		self.transform.origin = target_pos
 		moving_to = false
 
-func iterate_movements(delta: float) -> void:
+func iterate_movements() -> void:
 	# Check if the goal is reached
 	var current_map_coords = game_node.tile_map.local_to_map(self.transform.origin)
 	# TODO display score and lifes
@@ -178,7 +200,7 @@ func iterate_movements(delta: float) -> void:
 				# Freeze at spawn
 				if not been_freezed :
 					been_freezed = true
-					await get_tree().create_timer(TIME_FREEZE_START).timeout
+					await get_tree().create_timer(time_freeze_start).timeout
 
 				# Get the target node
 				var target_node = path_result["path"][0]

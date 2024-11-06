@@ -104,3 +104,11 @@ offset_right = 348.0
 offset_bottom = 495.0
 theme = ExtResource("12_ck8vq")
 text = "Yellow cars belong to yellow goals"
+
+[node name="label_change" type="Label" parent="."]
+offset_left = 271.5
+offset_top = 14.0
+offset_right = 664.5
+offset_bottom = 54.0
+theme = ExtResource("6_5dvo0")
+text = "P to change the difficulty & Esc  to quit"
