@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://bm8xt1l2ygcme"]
+[gd_scene load_steps=8 format=3 uid="uid://bm8xt1l2ygcme"]
 
 [ext_resource type="PackedScene" uid="uid://d3yn5xffxprda" path="res://scenes/map/tile_map.tscn" id="1_4mg31"]
 [ext_resource type="Script" path="res://scenes/scripts/global_scene.gd" id="1_5x233"]
 [ext_resource type="PackedScene" uid="uid://jadmcawojsmt" path="res://scenes/scene/player/player_scene.tscn" id="2_0unj6"]
 [ext_resource type="Script" path="res://scenes/scripts/game_scene.gd" id="2_tchmf"]
 [ext_resource type="Script" path="res://scenes/scripts/tilemap.gd" id="3_pltwj"]
+[ext_resource type="Script" path="res://scenes/scripts/score_label.gd" id="6_q4cdo"]
+[ext_resource type="Script" path="res://scenes/scripts/high_score_label.gd" id="7_lyclb"]
 
 [node name="global_scene_node" type="Node2D"]
 scale = Vector2(2, 2)
@@ -20,3 +22,27 @@ script = ExtResource("3_pltwj")
 
 [node name="player_node" parent="game_node" instance=ExtResource("2_0unj6")]
 position = Vector2(-45, 22)
+
+[node name="ScoreLabel" type="Label" parent="game_node"]
+offset_left = -348.5
+offset_top = -139.0
+offset_right = -206.5
+offset_bottom = -80.0
+text = "Score : 0"
+script = ExtResource("6_q4cdo")
+
+[node name="HighScoreLabel" type="Label" parent="game_node"]
+offset_left = -214.5
+offset_top = -139.0
+offset_right = -72.5
+offset_bottom = -80.0
+text = "Score : 0"
+script = ExtResource("7_lyclb")
+
+[node name="label_explications" type="Label" parent="."]
+offset_left = 117.0
+offset_top = 102.5
+offset_right = 259.0
+offset_bottom = 161.5
+text = "-3 per mistake
++1 per success"

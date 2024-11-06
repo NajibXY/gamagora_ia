@@ -16,6 +16,10 @@ const TIME_FREEZE_START = 3.0
 # const TIME_FREEZE = 2.0
 # const TIME_FREEZE_SLOWED = 4.0
 
+## Scoring consts
+const POSITIVE_SCORING = 1
+const NEGATIVE_SCORING = -3
+
 ## Path finding Consts
 const HEURISTIC_RATIO = 2 # Heuristic cost for A* algorithm will be divided by this value
 
@@ -142,14 +146,11 @@ func iterate_movements(delta: float) -> void:
 	if str(current_map_coords) in goal_nodes:
 		goal_reached = true
 		if str(current_map_coords) in game_node.goal_yellow_positions and GOAL_ALTERNATIVE_ID == GOAL_ALTERNATIVE_ID_GREEN:
-			game_node.LIFES -= 1
-			print("Life lost")
+			game_node.update_score(NEGATIVE_SCORING)
 		elif str(current_map_coords) in game_node.goal_green_positions and GOAL_ALTERNATIVE_ID == GOAL_ALTERNATIVE_ID_YELLOW:
-			game_node.LIFES -= 1
-			print("Life lost")
+			game_node.update_score(NEGATIVE_SCORING)
 		else:
-			game_node.SCORE += 1
-			print("Scored")
+			game_node.update_score(POSITIVE_SCORING)
 		# Erasing car data from game_node variables
 		game_node.car_path_cells.erase(str(unique_id))
 		game_node.car_increment -= 1

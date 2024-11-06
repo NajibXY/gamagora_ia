@@ -1,14 +1,13 @@
 extends Node2D
 
 signal ready_signal
-
-var LIFES = 3
-var SCORE = 0
+signal score_signal
+signal high_score_signal
 
 ################################################ Consts ###########################################################################################
 
 ## Difficulty Consts 
-const SPEED = 40
+const SPEED = 60
 const SPEED_SLOWED = SPEED / 3
 const AIM_STEPS = 30
 const SPAWN_INTERVAL: float = 4.0 # x seconds
@@ -34,12 +33,24 @@ const MAX_CARS = 4
 ## Utils
 const Maths = preload("res://scenes/scripts/utils/maths.gd")
 
+## Score files
+const SCORE_FILE_EASY = "res://ext/highscore_easy.txt"
+const SCORE_FILE_NORMAL = "res://ext/highscore_normal.txt"
+const SCORE_FILE_HARD = "res://ext/highscore_hard.txt"
+
 ################################################ Variables ###########################################################################################
+
+## Score
+var high_score;
+var current_score;
 
 ## Utils
 var maths_script
 
 ## Components
+var score_file
+var current_score_node
+var high_score_node
 var player_model
 var tile_map
 var player_scene_node
@@ -87,16 +98,49 @@ func _process(delta: float) -> void:
 		emit_signal("ready_signal")	
 	pass
 
-########################################### COMPONENTS FUNCTIONS ######################################################################################
+########################################### COMPONENTS AND SCORE FUNCTIONS ######################################################################################
+func read_update_score() -> void:
+	var file = FileAccess.open(score_file, FileAccess.READ)
+	if FileAccess.file_exists(score_file):
+		# read first line
+		high_score = file.get_as_text().to_int()
+		file.close()
+		emit_signal("high_score_signal")
+	else:
+		high_score = 0
+		file.close()
+	pass
+
+func write_update_score() -> void:
+	var file = FileAccess.open(score_file, FileAccess.WRITE_READ)
+	# replace first line
+	file.store_string(str(high_score))
+	pass
+
+func update_score(modifier: int) -> void:
+	current_score = current_score + modifier
+	if current_score < 0:
+		current_score = 0
+	if current_score > high_score:
+		high_score = current_score
+		write_update_score()
+		emit_signal("high_score_signal")
+
+	emit_signal("score_signal")
+	pass
 
 # Init all components variables and maths utils
 func init_components_variables() -> void:
+	current_score = 0
+	score_file = SCORE_FILE_NORMAL
 	tile_map = $TileMap
 	ground_node = tile_map.get_node("ground")
 	player_scene_node = get_node("player_node")
 	player_model = player_scene_node.get_node("player")
+	current_score_node = $ScoreLabel
 	maths_script = Maths.new()
 	init_positions_dictionnaries()
+	read_update_score()
 	pass
 
 
