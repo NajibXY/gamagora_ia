@@ -149,6 +149,9 @@ func init_components_variables() -> void:
 func handle_input() -> void:
 	handle_mouse_input()
 	handle_movement_input()
+	if Input.is_action_just_pressed("retry"):
+		get_tree().reload_current_scene()
+		pass
 	pass
 
 func handle_mouse_input() -> void:
