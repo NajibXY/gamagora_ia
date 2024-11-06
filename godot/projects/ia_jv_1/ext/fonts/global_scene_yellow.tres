@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://stbc6iqgrt37"]
+
+[ext_resource type="FontFile" uid="uid://bf3adb71cmif" path="res://ext/fonts/Dashhorizon-eZ5wg.otf" id="1_nhv4n"]
+
+[resource]
+default_font = ExtResource("1_nhv4n")
+default_font_size = 25
+Label/colors/font_color = Color(1, 1, 0, 1)

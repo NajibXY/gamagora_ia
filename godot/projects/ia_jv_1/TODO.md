@@ -31,13 +31,13 @@
 
 ## TODO rendu
 
-- Score
-- Controls
-- Highest Score stored in three files per difficulty
-- Press R to reload
-- Menu with difficulties ?
++ Score
++ Controls
++ Highest Score stored in three files per difficulty
 - Background 
 - Music
+- Press R to reload
+- Menu with difficulties ?
 - Intro
 - Readme de rendu avec explications des scripts etc
 
