@@ -9,19 +9,19 @@ var unique_id: int
 ## Difficulty Consts
 
 # Easy
-const SPEED_EASY = 0.04
+const SPEED_EASY = 0.03
 const SPEED_SLOWED_EASY = SPEED_EASY / 5
 const TIME_FREEZE_START_EASY = 3.0
 
 # Normal
-const SPEED_NORMAL = 0.07
+const SPEED_NORMAL = 0.06
 const SPEED_SLOWED_NORMAL = SPEED_NORMAL / 3
-const TIME_FREEZE_START_NORMAL = 2
+const TIME_FREEZE_START_NORMAL = 2.0
 
 # Impossible
-const SPEED_HARD = 0.5
+const SPEED_HARD = 0.18
 const SPEED_SLOWED_HARD = SPEED_HARD / 3
-const TIME_FREEZE_START_HARD = 0
+const TIME_FREEZE_START_HARD = 0.0
 
 # const TIME_FREEZE = 4.0
 # const TIME_FREEZE_SLOWED = 2.0
