@@ -1,6 +1,6 @@
 # MAKE THEM FEAR
 
-## English Version [README](https://github.com/NajibXY/gamagora_ia/blob/b9b40df2f3f82b49f14e7ee8e62809284ee98d51/godot/projects/ia_jv_1/README-eng.md)
+## English Version [README-eng](https://github.com/NajibXY/gamagora_ia/blob/93992c574a0228af7837e398cb8148ba4e16693f/godot/projects/ia_jv_1/README-eng.md)
 
 ## Auteur : Najib EL KHADIR
 https://github.com/NajibXY
@@ -52,6 +52,6 @@ Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul m
 
 ## Musiques par Scott Buckley
 - Licence Creative Commons
-- Scott Buckley "Freedon"
+- Scott Buckley "Freedom"
 - Scottt Buckley "Legionnaire"
 https://www.youtube.com/@ScottBuckley
