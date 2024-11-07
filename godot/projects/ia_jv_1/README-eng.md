@@ -1,6 +1,6 @@
 # MAKE THEM FEAR
 
-## French Version : [README-eng](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/README.md)
+## French Version : [README](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/README.md)
 
 ## Author: Najib EL KHADIR
 [https://github.com/NajibXY](https://github.com/NajibXY)
