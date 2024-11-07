@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dicbq5gs02vsd"]
+
+[ext_resource type="Script" path="res://main/main_scene.gd" id="1_aeqew"]
+[ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
+
+[node name="main_scene" type="Node2D"]
+script = ExtResource("1_aeqew")
+
+[node name="BoidParticles" parent="." instance=ExtResource("2_r3d1y")]
