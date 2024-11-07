@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="IA_JV_1"
+config/name="MAKE_THEM_FEAR"
 run/main_scene="res://scenes/scene/menu/control.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"

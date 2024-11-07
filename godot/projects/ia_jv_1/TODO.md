@@ -37,9 +37,10 @@
 + Press R to reload
 + Menu with difficulties 
 + escape to pause/go to menu
-- Background 
 + Music
-- Intro ?
++ Demo video
++ Export
+- Background ?
 - Readme de rendu avec explications des scripts etc ET VIDEO !!
 - Add music copyright to readme
 
