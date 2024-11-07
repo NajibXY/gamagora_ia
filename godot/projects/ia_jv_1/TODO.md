@@ -41,5 +41,6 @@
 - Music
 - Intro ?
 - Readme de rendu avec explications des scripts etc ET VIDEO !!
+- Add music copyright to readme
 
 
