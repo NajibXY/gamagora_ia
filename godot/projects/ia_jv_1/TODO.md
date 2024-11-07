@@ -38,7 +38,7 @@
 + Menu with difficulties 
 + escape to pause/go to menu
 - Background 
-- Music
++ Music
 - Intro ?
 - Readme de rendu avec explications des scripts etc ET VIDEO !!
 - Add music copyright to readme
