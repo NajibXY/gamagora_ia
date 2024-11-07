@@ -1,6 +1,6 @@
 # MAKE THEM FEAR
 
-## French Version : [README-eng](https://github.com/NajibXY/gamagora_ia/blob/93992c574a0228af7837e398cb8148ba4e16693f/godot/projects/ia_jv_1/README.md)
+## French Version : [README-eng](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/README.md)
 
 ## Author: Najib EL KHADIR
 [https://github.com/NajibXY](https://github.com/NajibXY)
@@ -12,8 +12,8 @@ For this course module, we needed to develop a video game prototype by coding pa
 
 ### Prerequisites and Repository Structure
 - The code is accessible and reusable in Godot, preferably version 4.3.
-- Pathfinding algorithms are available in the folder [IA_JV1/scenes/scripts/utils](https://github.com/NajibXY/gamagora_ia/tree/b9b40df2f3f82b49f14e7ee8e62809284ee98d51/godot/projects/ia_jv_1/scenes/scripts/utils).
-- A demo video is available [here](https://github.com/NajibXY/gamagora_ia/blob/b9b40df2f3f82b49f14e7ee8e62809284ee98d51/godot/projects/ia_jv_1/MAKE_THEM_FEAR_demo.mp4).
+- Pathfinding algorithms are available in the folder [IA_JV1/scenes/scripts/utils](https://github.com/NajibXY/gamagora_ia/tree/main/godot/projects/ia_jv_1/scenes/scripts/utils).
+- A demo video is available [here](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/MAKE_THEM_FEAR_demo.mp4).
 - An executable for directly testing the game: [MAKE_THEM_FEAR.exe](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/MAKE_THEM_FEAR.exe).
 
 ### Game Concept
@@ -21,7 +21,7 @@ The idea behind MAKE THEM FEAR is simple: you are a tank facing an army of vehic
 
 You have no ammunition or verbal communication tools. Your only way to redirect vehicles is by threatening them, targeting a point on their current path to force them to recalculate a new route, ideally toward the goal that matches their color.
   
-<img src="https://github.com/NajibXY/gamagora_ia/blob/f38e7725803899a804433d780e81a0b88f352142/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+<img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
 
 ## Key Game Details
 

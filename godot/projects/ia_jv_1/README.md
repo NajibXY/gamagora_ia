@@ -1,6 +1,6 @@
 # MAKE THEM FEAR
 
-## English Version [README-eng](https://github.com/NajibXY/gamagora_ia/blob/93992c574a0228af7837e398cb8148ba4e16693f/godot/projects/ia_jv_1/README-eng.md)
+## English Version [README-eng](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/README-eng.md)
 
 ## Auteur : Najib EL KHADIR
 https://github.com/NajibXY
@@ -12,8 +12,8 @@ Dans le cadre de cet UE, il fallait développer un prototype de jeu vidéo en co
 
 ### Pré-requis et structure du dépôt
 - Le code est ouvrable et réutilisable dans Godot, de préférence la version 4.3
-- Les algorithmes de recherche de chemin sont disponibles dans le dossier [IA_JV1/scenes/scripts/utils](https://github.com/NajibXY/gamagora_ia/tree/b9b40df2f3f82b49f14e7ee8e62809284ee98d51/godot/projects/ia_jv_1/scenes/scripts/utils)
-- Une vidéo de démo est disponible [ici](https://github.com/NajibXY/gamagora_ia/blob/b9b40df2f3f82b49f14e7ee8e62809284ee98d51/godot/projects/ia_jv_1/MAKE_THEM_FEAR_demo.mp4)
+- Les algorithmes de recherche de chemin sont disponibles dans le dossier [IA_JV1/scenes/scripts/utils](https://github.com/NajibXY/gamagora_ia/tree/main/godot/projects/ia_jv_1/scenes/scripts/utils)
+- Une vidéo de démo est disponible [ici](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/MAKE_THEM_FEAR_demo.mp4)
 - Ainsi qu'un exécutable pour tester directement le jeu : [MAKE_THEM_FEAR.exe](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/MAKE_THEM_FEAR.exe)
 
 
@@ -21,7 +21,7 @@ Dans le cadre de cet UE, il fallait développer un prototype de jeu vidéo en co
 L'idée derrière MAKE THEM FEAR est simple, vous êtes un tank qui fait face à une armée de véhicules qu'il doit rediriger. Ces véhicules apparaissent à deux points différents de la carte et cherchent le plus court chemin vers l'un des objectifs. Or, il y a des véhicules VERTS qui doivent être orientés vers des objectifs VERTS, et respectivement des véhicules JAUNES qui doivent être orientés vers des objectifs JAUNES.</br></br>
 Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul moyen de rediriger les véhicules et de les menacer en ciblant un point de leur chemin actuel pour les forcer à recalculer un nouveau chemin, de préférence vers l'objectif qui correpond à leur couleur.
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/f38e7725803899a804433d780e81a0b88f352142/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
 </br>
 
 ## Détails clés du jeu
