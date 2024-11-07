@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bm8xt1l2ygcme"]
+[gd_scene load_steps=15 format=3 uid="uid://bm8xt1l2ygcme"]
 
 [ext_resource type="PackedScene" uid="uid://d3yn5xffxprda" path="res://scenes/map/tile_map.tscn" id="1_4mg31"]
 [ext_resource type="Script" path="res://scenes/scripts/global_scene.gd" id="1_5x233"]
@@ -12,6 +12,7 @@
 [ext_resource type="Theme" uid="uid://dr3rtyq66mlfd" path="res://ext/fonts/global_scene.tres" id="10_co4xb"]
 [ext_resource type="Theme" uid="uid://b4kihnccy3oy4" path="res://ext/fonts/global_scene_green.tres" id="11_28r1h"]
 [ext_resource type="Theme" uid="uid://stbc6iqgrt37" path="res://ext/fonts/global_scene_yellow.tres" id="12_ck8vq"]
+[ext_resource type="AudioStream" uid="uid://c28bs8hjhm0m0" path="res://ext/music/Scott_Buckley_Legionnaire.mp3" id="13_q0ojp"]
 
 [sub_resource type="Theme" id="Theme_o3re8"]
 default_font = ExtResource("6_n50rg")
@@ -112,3 +113,9 @@ offset_right = 664.5
 offset_bottom = 54.0
 theme = ExtResource("6_5dvo0")
 text = "P to change the difficulty & Esc  to quit"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_q0ojp")
+volume_db = -9.0
+autoplay = true
+parameters/looping = true
