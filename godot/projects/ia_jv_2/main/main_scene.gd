@@ -8,7 +8,7 @@ extends Node2D
 @export_range(0,100) var cohesion_factor : float = 1.0
 @export_range(0,100) var separation_factor : float = 2.0
 
-const NUMBER_OF_BOIDS = 200 
+const NUMBER_OF_BOIDS = 10000
 
 var boids_positions = []
 var boids_velocities = []
