@@ -35,7 +35,7 @@ Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul m
 
 ### Rejouabilité
 - Il y a 3 modes de difficultés, permettant de changer : la vitesse de déplacement des véhicules / leur temps d'attente à leur case de départ / leur interval d'apparition / la vitesse du joueur et des véhicules sur les cases pénalisantes (couleur herbe)
-- Le but est de scorer un maximum de points positifs (véhicule arrivant à l'objectif de sa couleur) et d'exploser les recors dans les trois modes de jeu
+- Le but est de scorer un maximum de points positifs (véhicule arrivant à l'objectif de sa couleur) et d'exploser les records dans les trois modes de jeu
 
 ### Carte et noeuds
 - Je suis parti sur une TileMap en vue 2D isométrique
