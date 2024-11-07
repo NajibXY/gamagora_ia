@@ -1,3 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+ext/highscore_easy.txt
+ext/highscore_normal.txt
+ext/highscore_hard.txt
