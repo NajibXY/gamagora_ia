@@ -21,7 +21,7 @@ Dans le cadre de cet UE, il fallait développer un prototype de jeu vidéo en co
 L'idée derrière MAKE THEM FEAR est simple, vous êtes un tank qui fait face à une armée de véhicules qu'il doit rediriger. Ces véhicules apparaissent à deux points différents de la carte et cherchent le plus court chemin vers l'un des objectifs. Or, il y a des véhicules VERTS qui doivent être orientés vers des objectifs VERTS, et respectivement des véhicules JAUNES qui doivent être orientés vers des objectifs JAUNES.</br></br>
 Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul moyen de rediriger les véhicules et de les menacer en ciblant un point de leur chemin actuel pour les forcer à recalculer un nouveau chemin, de préférence vers l'objectif qui correpond à leur couleur.
 </br>
-  <img src="https://github.com/NajibXY/ViZDoom-Deep-Q-Learning-implementation/blob/master/assets/basic_conf_fullscreen.gif" width="600">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/f38e7725803899a804433d780e81a0b88f352142/godot/projects/ia_jv_1/readme_assets/capture1.png" width="600">
 </br>
 
 ## Détails clés du jeu
