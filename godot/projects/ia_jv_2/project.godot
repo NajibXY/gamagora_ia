@@ -15,6 +15,10 @@ run/main_scene="res://main/main_scene.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/vsync/vsync_mode=0
+
 [filesystem]
 
 import/blender/enabled=false
