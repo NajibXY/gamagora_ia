@@ -21,7 +21,7 @@ Dans le cadre de cet UE, il fallait développer un prototype de jeu vidéo en co
 
 ### Concept du jeu
 L'idée derrière MAKE THEM FEAR est simple, vous êtes un tank qui fait face à une armée de véhicules qu'il doit rediriger. Ces véhicules apparaissent à deux points différents de la carte et cherchent le plus court chemin vers l'un des objectifs. Or, il y a des véhicules VERTS qui doivent être orientés vers des objectifs VERTS, et respectivement des véhicules JAUNES qui doivent être orientés vers des objectifs JAUNES.</br></br>
-Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul moyen de rediriger les véhicules et de les menacer en ciblant un point de leur chemin actuel pour les forcer à recalculer un nouveau chemin, de préférence vers l'objectif qui correpond à leur couleur.
+Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul moyen de rediriger les véhicules est de les menacer en ciblant un point de leur chemin actuel pour les forcer à recalculer un nouveau chemin, de préférence vers l'objectif qui correpond à leur couleur.
 </br>
   <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
 </br>
@@ -29,9 +29,9 @@ Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul m
 ## Détails clés du jeu
 
 ### Utilisation des algorithmes de recherche de chemin
-- Les véhicules vertes utilisent Djikstra
+- Les véhicules verts utilisent Djikstra
 - Les véhicules jaunes utilisent A*
-- L'heuristique utilisé pour A* est la distance de Manhattan avec un poids de 0.5 (modifiable dans le code)
+- L'heuristique utilisée pour A* est la distance de Manhattan avec un poids de 0.5 (modifiable dans le code)
 
 ### Rejouabilité
 - Il y a 3 modes de difficultés, permettant de changer : la vitesse de déplacement des véhicules / leur temps d'attente à leur case de départ / leur interval d'apparition / la vitesse du joueur et des véhicules sur les cases pénalisantes (couleur herbe)
@@ -39,18 +39,18 @@ Vous n'avez pas de munitions, ni de moyen de communication verbale. Votre seul m
 
 ### Carte et noeuds
 - Je suis parti sur une TileMap en vue 2D isométrique
-- Il y a deux points d'apparition, deux objectifs verts et deux objectifs jaunes.
+- Il y a deux points d'apparition, deux objectifs verts et deux objectifs jaunes
 - Des blocs noirs obstruent la ligne de mire du joueur
 - Des flaques d'eau rendent des parties du terrain non navigables par le joueur et les véhicules
-- Des cases d'herbe rendent les déplacement plus lents pour le joueur et les véhicules
-- Les transisitons entre vers les cases normales valent 1, vers les cases ralentissantes valent 3 ; et celles vers les murs, les flaques d'eau ou les cases ciblés par le joueur valent +INF
+- Des cases d'herbe rendent les déplacements plus lents pour le joueur et les véhicules
+- Les transisitons vers les cases normales valent 1, vers les cases ralentissantes valent 3 ; et celles vers les murs, les flaques d'eau ou les cases ciblées par le joueur valent +INF
 
 ### Calcul des chemins, threading et influence du joueur 
 - Les chemins de tous les véhicules instanciés sont montrés sur la carte (cela peut être parfois un peu fouillis, mais on s'y habitue en jouant) 
 - Les véhicules se déplacent case par case, alors que le joueur peut se déplacer sur le terrain en continu
-- Un véhicule recalcule son plus court chemin s'il est ciblé par la nouvelle ligne de mire que le joueur a défini sur la carte en cliquant
-- Les transitions vers les cases nouvellement ciblés passent à +INF, celles vers les cases anciennement ciblés sont remises à leur valeur de base
-- Du multi-threading a été implémenté pour fluidifier le tout, cela peut être amélioré en sémaphores
+- Un véhicule recalcule son plus court chemin si son ancien chemin est ciblé par la nouvelle ligne de mire que le joueur a défini sur la carte en cliquant
+- Les transitions vers les cases nouvellement ciblées passent à +INF, celles vers les cases anciennement ciblées sont remises à leur valeur de base
+- Du multi-threading a été implémenté pour fluidifier le tout, cela peut être amélioré en implémentant des sémaphores
 
 ## Musiques par Scott Buckley
 - Licence Creative Commons
