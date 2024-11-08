@@ -1,14 +1,28 @@
 extends Node2D
 
-@export_range(0,100) var max_velocity : float = 50.0
+@export_range(1,300) var max_velocity : float = 50.0
 @export_range(0,100) var min_velocity : float = 10.0
 @export_range(0,50) var friendly_radius : float = 30.0
 @export_range(0,50) var avoiding_radius : float = 15.0
-@export_range(0,100) var alignment_factor : float = 10.0
-@export_range(0,100) var cohesion_factor : float = 1.0
-@export_range(0,100) var separation_factor : float = 2.0
+@export_range(0,50) var alignment_factor : float = 10.0
+@export_range(0,10) var cohesion_factor : float = 1.0
+@export_range(0,50) var separation_factor : float = 2.0
 
-const NUMBER_OF_BOIDS = 10000
+@export_range(0,10) var Multiplier : float = 5.0
+@export var kick_frequency_min = 50.0  # Minimum frequency for kick
+@export var kick_frequency_max = 150.0  # Maximum frequency for kick
+@export var kick_threshold = 0.1  # Adjust this based on sensitivity
+var is_kick = false
+
+# @export_range(0,100) var max_velocity : float = 50.0
+# @export_range(0,100) var min_velocity : float = 10.0
+# @export_range(0,50) var friendly_radius : float = 30.0
+# @export_range(0,50) var avoiding_radius : float = 15.0
+# @export_range(0,100) var alignment_factor : float = 10.0
+# @export_range(0,100) var cohesion_factor : float = 1.0
+# @export_range(0,100) var separation_factor : float = 2.0
+
+const NUMBER_OF_BOIDS = 2000
 
 var boids_positions = []
 var boids_velocities = []
@@ -31,6 +45,8 @@ var params_buffer: RID
 var params_uniform : RDUniform
 var boid_data_buffer : RID
 
+var last_delta = 0.0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -49,7 +65,14 @@ func _ready() -> void:
 		setup_computer_shader()
 		update_boids_on_gpu(0)
 
+	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
+	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
 	pass # Replace with function body.
+
+func _on_spectrum_data_received(effects):
+	print("received")
+	is_kick = true
+	pass
 
 func generate_boids():
 	for i in range(NUMBER_OF_BOIDS):
@@ -59,6 +82,7 @@ func generate_boids():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(NUMBER_OF_BOIDS)
 	
 	if SIMULATE_GPU:
@@ -201,22 +225,61 @@ func generate_parameter_buffer(delta):
 	
 	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
+func generate_parameter_buffer_reaction_kick(delta):
+	#todo clamp values
+	var kick_avoiding_radius = 2 * avoiding_radius
+	var kick_min_velocity = 3 * min_velocity
+	var kick_max_velocity = 3 * max_velocity
+	var kick_separation_factor = 5 * separation_factor
+	var params_buffer_bytes : PackedByteArray = PackedFloat32Array(
+		[NUMBER_OF_BOIDS, 
+		IMAGE_SIZE, 
+		friendly_radius,
+		kick_avoiding_radius,
+		kick_min_velocity, 
+		kick_max_velocity,
+		alignment_factor,
+		cohesion_factor,
+		kick_separation_factor,
+		get_viewport_rect().size.x,
+		get_viewport_rect().size.y,
+		delta
+		# , pause, boid_color_mode
+		]).to_byte_array()
+	
+	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
 ############################################## RUN COMPUTE SHADER ##############################################
 func update_boids_on_gpu(delta):
-	rd.free_rid(params_buffer)
-	params_buffer = generate_parameter_buffer(delta)
-	params_uniform.clear_ids()
-	params_uniform.add_id(params_buffer)
-	uniform_set = rd.uniform_set_create(bindings, boid_compute_shader, 0)
+	if is_kick:
+		rd.free_rid(params_buffer)
+		params_buffer = generate_parameter_buffer_reaction_kick(delta)
+		params_uniform.clear_ids()
+		params_uniform.add_id(params_buffer)
+		uniform_set = rd.uniform_set_create(bindings, boid_compute_shader, 0)
 
-	var compute_list := rd.compute_list_begin()
-	rd.compute_list_bind_compute_pipeline(compute_list, boid_pipeline)
-	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
+		var compute_list := rd.compute_list_begin()
+		rd.compute_list_bind_compute_pipeline(compute_list, boid_pipeline)
+		rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
 
-	rd.compute_list_dispatch(compute_list, ceil(NUMBER_OF_BOIDS/1024.), 1, 1)
-	rd.compute_list_end()
-	rd.submit()
+		rd.compute_list_dispatch(compute_list, ceil(NUMBER_OF_BOIDS/1024.), 1, 1)
+		rd.compute_list_end()
+		rd.submit()
+		is_kick = false
+	else:
+		rd.free_rid(params_buffer)
+		params_buffer = generate_parameter_buffer(delta)
+		params_uniform.clear_ids()
+		params_uniform.add_id(params_buffer)
+		uniform_set = rd.uniform_set_create(bindings, boid_compute_shader, 0)
+
+		var compute_list := rd.compute_list_begin()
+		rd.compute_list_bind_compute_pipeline(compute_list, boid_pipeline)
+		rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
+
+		rd.compute_list_dispatch(compute_list, ceil(NUMBER_OF_BOIDS/1024.), 1, 1)
+		rd.compute_list_end()
+		rd.submit()
 
 func sync_boids_on_gpu():
 	rd.sync()
