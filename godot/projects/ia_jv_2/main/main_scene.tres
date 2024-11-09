@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dpqw51icpu1na"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q1dg6"]
+bg_color = Color(1, 1, 1, 0.678431)
+
+[resource]
+HSlider/colors/col = Color(0.833261, 0.933364, 0.964713, 1)
+HSlider/colors/color = Color(0.558684, 0.0376247, 0, 1)
+Label/colors/font_color = Color(0.723636, 0, 0.104668, 1)
+Label/colors/font_shadow_color = Color(0.41726, 1.46799e-06, 0.258139, 1)
+Label/styles/normal = SubResource("StyleBoxFlat_q1dg6")

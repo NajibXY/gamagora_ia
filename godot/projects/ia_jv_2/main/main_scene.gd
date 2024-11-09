@@ -115,7 +115,7 @@ func _on_file_selected(path: String):
 	pass
 
 func _on_spectrum_data_received(effects):
-	print("received")
+	# print("received")
 	is_kick = true
 	pass
 

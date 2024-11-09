@@ -1,17 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dicbq5gs02vsd"]
+[gd_scene load_steps=6 format=3 uid="uid://dicbq5gs02vsd"]
 
 [ext_resource type="Script" path="res://main/main_scene.gd" id="1_aeqew"]
 [ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
 [ext_resource type="Script" path="res://main/audio_spectrum_helper.gd" id="4_4uuoc"]
 [ext_resource type="Script" path="res://main/canvas_layer.gd" id="4_mpmnp"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q1dg6"]
-bg_color = Color(1, 1, 1, 0.756863)
-
-[sub_resource type="Theme" id="Theme_urbna"]
-Label/colors/font_color = Color(0.723914, 0.0172664, 2.88785e-07, 1)
-Label/colors/font_shadow_color = Color(0.145098, 0.258824, 0.109804, 1)
-Label/styles/normal = SubResource("StyleBoxFlat_q1dg6")
+[ext_resource type="Theme" uid="uid://dpqw51icpu1na" path="res://main/main_scene.tres" id="5_wwd6s"]
 
 [node name="main_scene" type="Node2D"]
 script = ExtResource("1_aeqew")
@@ -36,19 +29,17 @@ access = 2
 script = ExtResource("4_mpmnp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
-custom_minimum_size = Vector2(500, 600)
-offset_left = 3.0
-offset_top = 1.0
-offset_right = 503.0
-offset_bottom = 601.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("5_wwd6s")
 
 [node name="HBoxMaxVel" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-modulate = Color(0.922089, 0.265091, 0.127147, 1)
-top_level = true
+modulate = Color(0, 1, 0, 0.972549)
 layout_mode = 2
-theme = SubResource("Theme_urbna")
+theme = ExtResource("5_wwd6s")
 
 [node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxMaxVel"]
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
 theme_override_constants/line_spacing = 0
@@ -56,12 +47,371 @@ theme_override_font_sizes/font_size = 19
 text = "maximum velocity"
 horizontal_alignment = 3
 vertical_alignment = 1
+justification_flags = 161
 
 [node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxMaxVel"]
 custom_minimum_size = Vector2(200, 10)
 layout_direction = 1
 layout_mode = 2
 size_flags_vertical = 4
+theme = ExtResource("5_wwd6s")
 min_value = 1.0
 max_value = 300.0
+step = 0.5
 value = 50.0
+
+[node name="HBoxMinVel" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxMinVel"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "minimum velocity"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxMinVel"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+step = 0.4
+value = 10.0
+
+[node name="HBoxFriRad" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxFriRad"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "friendly radius"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxFriRad"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 50.0
+step = 0.2
+value = 30.0
+
+[node name="HBoxAvoRad" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxAvoRad"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "avoiding radius"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxAvoRad"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 50.0
+step = 0.2
+value = 15.0
+
+[node name="HBoxAliFac" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxAliFac"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "alignment factor"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxAliFac"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 50.0
+step = 0.2
+value = 10.0
+
+[node name="HBoxCohFac" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxCohFac"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "cohesion factor"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxCohFac"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="HBoxSepFac" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxSepFac"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "separation factor"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxSepFac"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 50.0
+step = 0.2
+value = 2.0
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="HBoxMaxVelMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxMaxVelMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "max velocity mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxMaxVelMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("5_wwd6s")
+min_value = 1.0
+max_value = 20.0
+step = 0.5
+value = 10.0
+
+[node name="HBoxMinVelMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxMinVelMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "min velocity mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxMinVelMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxFriRadMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxFriRadMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "friend. radius mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxFriRadMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxAvoRadMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxAvoRadMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "avoid. radius mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxAvoRadMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxAliFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxAliFacMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "align. factor mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxAliFacMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxCohFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxCohFacMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "cohes. factor mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxCohFacMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxSepFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxSepFacMul"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "separ. factor mult."
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxSepFacMul"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+step = 0.5
+value = 1.0
+
+[node name="HBoxStuOnKick" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxStuOnKick"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "stutter on kick
+"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/VBoxContainer/HBoxStuOnKick"]
+layout_mode = 2
