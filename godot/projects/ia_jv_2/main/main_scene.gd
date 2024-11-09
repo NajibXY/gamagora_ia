@@ -12,7 +12,7 @@ extends Node2D
 
 # Audio reaction parameters
 @export_category("Audio Reaction Parameters")
-@export_range(1,10) var audio_mult_maxv : int = 1
+@export_range(1,10) var audio_mult_maxv : int = 10
 @export_range(1,10) var audio_mult_minv : int = 1
 @export_range(1,10) var audio_mult_friendly : int = 1
 @export_range(1,10) var audio_mult_avoiding : int = 1
@@ -81,20 +81,37 @@ func _ready() -> void:
 		update_boids_on_gpu(0)
 
 	file_dialog.popup_centered()
-	file_dialog.filters = ["*.mp3 ; MP3 Files", "*.wav ; WAV Files"]
+	file_dialog.filters = ["*.ogg ; OGG Files"]
 	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
 	file_dialog.show()
+
+	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
+	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
 
 	pass # Replace with function body.
 
 func _on_file_selected(path: String):
+	# Add support for mp3 and wav files
+	# if path.ends_with(".mp3"):
+
 	# Load and play the selected audio file
-	var audio_stream = load(path) as AudioStream
-	if audio_stream:
-		audio_stream_player.stream = audio_stream
-		audio_stream_player.play()
-		var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
-		audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
+	# var audio_stream
+	# if path.ends_with(".mp3"):
+	# 	audio_stream = load(path) as AudioStreamMP3
+	# elif path.ends_with(".wav"):
+	# 	audio_stream = load(path) as AudioStreamWAV
+	# else:
+	# 	audio_stream = load(path) as AudioStream
+	# var audio_loader = AudioLoader.new()
+	# audio_stream_player.set_stream(audio_loader.loadfile(path))
+	# audio_stream_player.volume_db = 1
+	# audio_stream_player.pitch_scale = 1
+	# audio_stream_player.play()
+	# var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
+	# audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
+	
+	audio_stream_player.stream = AudioStreamOggVorbis.load_from_file(path)
+	audio_stream_player.play()
 	pass
 
 func _on_spectrum_data_received(effects):
@@ -114,8 +131,7 @@ func _process(delta: float) -> void:
 	# Changing File menu ?
 	if Input.is_action_just_pressed("ui_file"):
 		file_dialog.popup_centered()
-		file_dialog.filters = ["*.mp3 ; MP3 Files", "*.wav ; WAV Files"]
-		file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
+		file_dialog.filters = ["*.ogg ; OGG Files"]
 		file_dialog.show()
 
 	last_delta = delta
@@ -268,6 +284,7 @@ func generate_parameter_buffer_reaction_kick(delta):
 		[NUMBER_OF_BOIDS, 
 		IMAGE_SIZE, 
 		friendly_radius / audio_mult_friendly,
+		#todo maybe divide for avoid radius ?
 		avoiding_radius * audio_mult_avoiding,
 		min_velocity * audio_mult_minv, 
 		max_velocity * audio_mult_maxv,

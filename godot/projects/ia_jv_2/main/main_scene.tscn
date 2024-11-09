@@ -6,7 +6,6 @@
 
 [node name="main_scene" type="Node2D"]
 script = ExtResource("1_aeqew")
-audio_mult_maxv = 10
 
 [node name="BoidParticles" parent="." instance=ExtResource("2_r3d1y")]
 
@@ -22,3 +21,4 @@ title = "Open a File"
 size = Vector2i(275, 350)
 ok_button_text = "Open"
 file_mode = 0
+access = 2
