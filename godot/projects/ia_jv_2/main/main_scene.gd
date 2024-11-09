@@ -1,6 +1,7 @@
 extends Node2D
 
 # Boid parameters
+@export_category("Boid Parameters")
 @export_range(1,300) var max_velocity : float = 50.0
 @export_range(0,100) var min_velocity : float = 10.0
 @export_range(0,50) var friendly_radius : float = 30.0
@@ -10,6 +11,7 @@ extends Node2D
 @export_range(0,50) var separation_factor : float = 2.0
 
 # Audio reaction parameters
+@export_category("Audio Reaction Parameters")
 @export_range(1,10) var audio_mult_maxv : int = 1
 @export_range(1,10) var audio_mult_minv : int = 1
 @export_range(1,10) var audio_mult_friendly : int = 1
@@ -33,7 +35,7 @@ var is_kick = false
 # @export_range(0,100) var cohesion_factor : float = 1.0
 # @export_range(0,100) var separation_factor : float = 2.0
 
-const NUMBER_OF_BOIDS = 20000
+const NUMBER_OF_BOIDS = 40000
 
 var boids_positions = []
 var boids_velocities = []

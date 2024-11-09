@@ -41,6 +41,7 @@ void main() {
     int num_friends = 0;
     int num_avoids = 0;
 
+    // TODO: Optimize this by using a spatial data structure, Grid ?
     for (int i=0; i < params.number_of_boids; i++) {
         if (i != index) {
             vec2 other_boid_pos = boid_pos.data[i];
@@ -57,7 +58,8 @@ void main() {
             }
         }
     }
-
+    
+    
     if (num_friends > 0) {
         avg_vel /= num_friends;
         velocity += normalize(avg_vel) * params.alignment_factor;
@@ -69,7 +71,6 @@ void main() {
         }
     }
 
-    // Wall !
     float rotation = 0.0;
     rotation = acos(dot(normalize(velocity), vec2(1.0, 0.0)));
     if (isnan(rotation)) {
