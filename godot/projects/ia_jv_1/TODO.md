@@ -1,4 +1,5 @@
 ## Base
+- Compile and export web
 + Change valuations for targetted cells and links
 - Refactor initialization of valuations
 + global_path_nodes in game_scene
