@@ -1,19 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://dicbq5gs02vsd"]
+[gd_scene load_steps=4 format=3 uid="uid://dicbq5gs02vsd"]
 
 [ext_resource type="Script" path="res://main/main_scene.gd" id="1_aeqew"]
 [ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
-[ext_resource type="AudioStream" uid="uid://c148aj2p8aebs" path="res://ext/sample.wav" id="3_scjr6"]
 [ext_resource type="Script" path="res://main/audio_spectrum_helper.gd" id="4_4uuoc"]
 
 [node name="main_scene" type="Node2D"]
 script = ExtResource("1_aeqew")
+audio_mult_maxv = 10
 
 [node name="BoidParticles" parent="." instance=ExtResource("2_r3d1y")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_scjr6")
 autoplay = true
 bus = &"Music"
 
 [node name="AudioSpectrumHelper" type="Node" parent="."]
 script = ExtResource("4_4uuoc")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(275, 350)
+ok_button_text = "Open"
+file_mode = 0

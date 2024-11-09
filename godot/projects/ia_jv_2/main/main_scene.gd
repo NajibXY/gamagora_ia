@@ -35,7 +35,7 @@ var is_kick = false
 # @export_range(0,100) var cohesion_factor : float = 1.0
 # @export_range(0,100) var separation_factor : float = 2.0
 
-const NUMBER_OF_BOIDS = 40000
+const NUMBER_OF_BOIDS = 30000
 
 var boids_positions = []
 var boids_velocities = []
@@ -60,6 +60,8 @@ var boid_data_buffer : RID
 
 var last_delta = 0.0
 
+@onready var file_dialog : FileDialog = $FileDialog
+@onready var audio_stream_player : AudioStreamPlayer = $AudioStreamPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -78,9 +80,22 @@ func _ready() -> void:
 		setup_computer_shader()
 		update_boids_on_gpu(0)
 
-	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
-	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
+	file_dialog.popup_centered()
+	file_dialog.filters = ["*.mp3 ; MP3 Files", "*.wav ; WAV Files"]
+	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
+	file_dialog.show()
+
 	pass # Replace with function body.
+
+func _on_file_selected(path: String):
+	# Load and play the selected audio file
+	var audio_stream = load(path) as AudioStream
+	if audio_stream:
+		audio_stream_player.stream = audio_stream
+		audio_stream_player.play()
+		var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
+		audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
+	pass
 
 func _on_spectrum_data_received(effects):
 	print("received")
@@ -95,6 +110,14 @@ func generate_boids():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+
+	# Changing File menu ?
+	if Input.is_action_just_pressed("ui_file"):
+		file_dialog.popup_centered()
+		file_dialog.filters = ["*.mp3 ; MP3 Files", "*.wav ; WAV Files"]
+		file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
+		file_dialog.show()
+
 	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(NUMBER_OF_BOIDS)
 	

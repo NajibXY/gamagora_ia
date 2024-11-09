@@ -20,6 +20,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var prev_hz = 0
+	
+	# TODO use effects ?
 	var effects = []
 	# for i in range(1, VU_COUNT + 1):
 		# var hz = i * FREQ_MAX / VU_COUNT;
