@@ -1,5 +1,6 @@
 extends Node2D
 
+# Boid parameters
 @export_range(1,300) var max_velocity : float = 50.0
 @export_range(0,100) var min_velocity : float = 10.0
 @export_range(0,50) var friendly_radius : float = 30.0
@@ -8,9 +9,19 @@ extends Node2D
 @export_range(0,10) var cohesion_factor : float = 1.0
 @export_range(0,50) var separation_factor : float = 2.0
 
+# Audio reaction parameters
+@export_range(1,10) var audio_mult_maxv : int = 1
+@export_range(1,10) var audio_mult_minv : int = 1
+@export_range(1,10) var audio_mult_friendly : int = 1
+@export_range(1,10) var audio_mult_avoiding : int = 1
+@export_range(1,10) var audio_mult_alignment : int = 1
+@export_range(1,10) var audio_mult_cohesion : int = 1
+@export_range(1,10) var audio_mult_separation : int = 1
+@export var stutter_on_kick : bool = false
+
 @export_range(0,10) var Multiplier : float = 5.0
-@export var kick_frequency_min = 50.0  # Minimum frequency for kick
-@export var kick_frequency_max = 150.0  # Maximum frequency for kick
+@export var kick_frequency_min : float = 50.0  # Minimum frequency for kick
+@export var kick_frequency_max : float = 150.0  # Maximum frequency for kick
 @export var kick_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
@@ -22,7 +33,7 @@ var is_kick = false
 # @export_range(0,100) var cohesion_factor : float = 1.0
 # @export_range(0,100) var separation_factor : float = 2.0
 
-const NUMBER_OF_BOIDS = 2000
+const NUMBER_OF_BOIDS = 20000
 
 var boids_positions = []
 var boids_velocities = []
@@ -219,31 +230,29 @@ func generate_parameter_buffer(delta):
 		separation_factor,
 		get_viewport_rect().size.x,
 		get_viewport_rect().size.y,
-		delta
+		delta,
+		false
 		# , pause, boid_color_mode
 		]).to_byte_array()
 	
 	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
 func generate_parameter_buffer_reaction_kick(delta):
-	#todo clamp values
-	var kick_avoiding_radius = 2 * avoiding_radius
-	var kick_min_velocity = 3 * min_velocity
-	var kick_max_velocity = 3 * max_velocity
-	var kick_separation_factor = 5 * separation_factor
+	#todo clamp values ?
 	var params_buffer_bytes : PackedByteArray = PackedFloat32Array(
 		[NUMBER_OF_BOIDS, 
 		IMAGE_SIZE, 
-		friendly_radius,
-		kick_avoiding_radius,
-		kick_min_velocity, 
-		kick_max_velocity,
-		alignment_factor,
-		cohesion_factor,
-		kick_separation_factor,
+		friendly_radius / audio_mult_friendly,
+		avoiding_radius * audio_mult_avoiding,
+		min_velocity * audio_mult_minv, 
+		max_velocity * audio_mult_maxv,
+		alignment_factor / audio_mult_alignment,
+		cohesion_factor / audio_mult_cohesion,
+		separation_factor * audio_mult_separation,
 		get_viewport_rect().size.x,
 		get_viewport_rect().size.y,
-		delta
+		delta,
+		stutter_on_kick
 		# , pause, boid_color_mode
 		]).to_byte_array()
 	

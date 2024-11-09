@@ -24,6 +24,7 @@ layout(set = 0, binding = 2, std430) restrict buffer Params {
     float viewport_x;
     float viewport_y;
     float delta_time;
+    bool is_direction_randomized;
 } params;
 
 layout(rgba16f, binding = 3) uniform image2D boid_data;
@@ -84,10 +85,39 @@ void main() {
     position += velocity * params.delta_time;
     position = vec2(mod(position.x, params.viewport_x), mod(position.y, params.viewport_y));
     
+    // TODO Randomize direction and not stutter ?
+    if (params.is_direction_randomized == true) {
+        float rnd = fract(sin(dot(position, vec2(12.9898, 78.233))) * 43758.5453);
+        if (rnd > 0.5) {
+            velocity = vec2(-0.5*velocity.x, velocity.y);
+        }
+        else {
+            velocity = vec2(velocity.x, -velocity.y);
+        }
+    }
+
     boid_vel.data[index] = velocity;
     boid_pos.data[index] = position;
 
     ivec2 pixel_position = ivec2(int(mod(index, params.image_size)), int(index / params.image_size));
     imageStore(boid_data, pixel_position, vec4(position.x, position.y, rotation, 0));
-
 }
+
+// // Simple random function to generate a pseudo-random float based on a vec2 input
+// float random(vec2 vec) {
+//     return fract(sin(dot(vec, vec2(12.9898, 78.233))) * 43758.5453);
+// }
+
+// vec2 randomizeDirection(vec2 pos, vec2 vel) {
+//     // Calculate the magnitude of the speed vector
+//     float magnitude = length(vel);
+
+//     // Generate a random angle between 0 and 2π
+//     float randomAngle = random(pos) * 2.0 * 3.14159265359;
+
+//     // Convert the angle to a new direction vector
+//     vec2 direction = vec2(cos(randomAngle), sin(randomAngle));
+
+//     // Scale the direction by the original speed magnitude
+//     return direction * magnitude;
+// }
