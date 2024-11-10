@@ -1,8 +1,11 @@
 ## LEFT TODO
+- Resize window
 - Randimize params button
 - Reset params button
-- Variations of colorations : heat, etc 
-- Reactions on other sound componenets than bass : other freqs, bpm ?, etc
+- change sound window size
+- Param number of boids
+- Variations of colorations : heat, etc -- add them as selectable on hud
+- Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
 - Midi control with external device (usb ?)
 * Add MP3 support

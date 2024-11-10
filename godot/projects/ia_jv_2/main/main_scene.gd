@@ -80,10 +80,8 @@ func _ready() -> void:
 		setup_computer_shader()
 		update_boids_on_gpu(0)
 
-	file_dialog.popup_centered()
-	file_dialog.filters = ["*.ogg ; OGG Files"]
+	display_file_select()
 	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
-	file_dialog.show()
 
 	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
 	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
@@ -124,15 +122,20 @@ func generate_boids():
 		boids_positions.append(Vector2(randf() * get_viewport_rect().size.x, randf() * get_viewport_rect().size.y))
 		boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
 
-
+func display_file_select():
+	var rect_min_size = Vector2(600, 300)
+	file_dialog.size = rect_min_size
+	file_dialog.position = (get_viewport_rect().size - rect_min_size) / 2
+	file_dialog.popup_centered()
+	file_dialog.filters = ["*.ogg ; OGG Files"]
+	file_dialog.show()
+########################################################### UPDATE ###########################################################
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 
 	# Changing File menu ?
 	if Input.is_action_just_pressed("ui_file"):
-		file_dialog.popup_centered()
-		file_dialog.filters = ["*.ogg ; OGG Files"]
-		file_dialog.show()
+		display_file_select()
 
 	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(NUMBER_OF_BOIDS)
