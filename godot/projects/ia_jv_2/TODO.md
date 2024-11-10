@@ -1,9 +1,15 @@
 ## LEFT TODO
-- Add MP3 support
-- Add @export variables to the UI
-- Variations of colorations
-- Grid optimization 
-- Reactions on other sound componenets than bass
+- Randimize params button
+- Reset params button
+- Variations of colorations : heat, etc 
+- Reactions on other sound componenets than bass : other freqs, bpm ?, etc
+- Grid optimization
+* Add MP3 support
++ Add @export variables to the UI
+
+- ergonomy
+    - cursor color
+    - mp3/wav to ogg conversion with a scrript using ffmpeg
 
 - Make list of ogg examples, with mp3 to ogg converter script access
 - Compile and export web
