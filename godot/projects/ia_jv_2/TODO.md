@@ -12,6 +12,7 @@
     - cursor color
     - mp3/wav to ogg conversion with a scrript using ffmpeg
 
+- Use example from photos/videos taken at splntr's
 - Make list of ogg examples, with mp3 to ogg converter script access
 - Compile and export web
 
