@@ -4,6 +4,7 @@
 - Variations of colorations : heat, etc 
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc
 - Grid optimization
+- Midi control with external device (usb ?)
 * Add MP3 support
 + Add @export variables to the UI
 
