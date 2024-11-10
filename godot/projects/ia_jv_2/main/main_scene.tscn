@@ -237,7 +237,6 @@ size_flags_vertical = 4
 theme = ExtResource("5_wwd6s")
 min_value = 1.0
 max_value = 20.0
-step = 0.5
 value = 10.0
 
 [node name="HBoxMinVelMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -263,7 +262,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxFriRadMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -289,7 +287,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxAvoRadMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -315,7 +312,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxAliFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -341,7 +337,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxCohFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -367,7 +362,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxSepFacMul" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -393,7 +387,6 @@ layout_mode = 2
 size_flags_vertical = 4
 min_value = 1.0
 max_value = 10.0
-step = 0.5
 value = 1.0
 
 [node name="HBoxStuOnKick" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
