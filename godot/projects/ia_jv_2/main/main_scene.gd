@@ -2,7 +2,7 @@ extends Node2D
 
 # Boid parameters
 @export_category("Boid Parameters")
-@export_range(1,10) var NUMBER_OF_BOIDS : int = 30000
+@export_range(1,50000) var number_of_boids : int = 30000
 @export_range(1,300) var max_velocity : float = 50.0
 @export_range(0,100) var min_velocity : float = 10.0
 @export_range(0,50) var friendly_radius : float = 30.0
@@ -13,7 +13,7 @@ extends Node2D
 
 # Audio reaction parameters
 @export_category("Audio Reaction Parameters")
-@export_range(1,10) var audio_mult_maxv : int = 10
+@export_range(1,20) var audio_mult_maxv : int = 10
 @export_range(1,10) var audio_mult_minv : int = 1
 @export_range(1,10) var audio_mult_friendly : int = 1
 @export_range(1,10) var audio_mult_avoiding : int = 1
@@ -39,7 +39,7 @@ var is_kick = false
 var boids_positions = []
 var boids_velocities = []
 
-var IMAGE_SIZE = int(ceil(sqrt(NUMBER_OF_BOIDS)))
+var IMAGE_SIZE = int(ceil(sqrt(number_of_boids)))
 var boid_data : Image
 var boid_data_texture : ImageTexture
 
@@ -61,10 +61,11 @@ var last_delta = 0.0
 
 @onready var file_dialog : FileDialog = $FileDialog
 @onready var audio_stream_player : AudioStreamPlayer = $AudioStreamPlayer
+var canvas_node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# for i in range(NUMBER_OF_BOIDS):
+	# for i in range(number_of_boids):
 	# 	print("Boid position: ", boids_positions[i], " // Boid velocity: ", boids_velocities[i])
 
 	boid_data = Image.create(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH)
@@ -72,7 +73,7 @@ func _ready() -> void:
 
 	generate_boids()
 
-	$BoidParticles.amount = NUMBER_OF_BOIDS
+	$BoidParticles.amount = number_of_boids
 	$BoidParticles.process_material.set_shader_parameter("boid_data", boid_data_texture)
 
 	if SIMULATE_GPU:
@@ -85,6 +86,7 @@ func _ready() -> void:
 	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
 	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
 
+	canvas_node = get_node("/root/main_scene/CanvasLayer")
 	pass # Replace with function body.
 
 func _on_file_selected(path: String):
@@ -117,7 +119,7 @@ func _on_spectrum_data_received(effects):
 	pass
 
 func generate_boids():
-	for i in range(NUMBER_OF_BOIDS):
+	for i in range(number_of_boids):
 		boids_positions.append(Vector2(randf() * get_viewport_rect().size.x, randf() * get_viewport_rect().size.y))
 		boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
 
@@ -135,9 +137,13 @@ func _process(delta: float) -> void:
 	# Changing File menu ?
 	if Input.is_action_just_pressed("ui_file"):
 		display_file_select()
+	elif Input.is_action_just_pressed("randomize_params"):
+		randomize_parameters()
+	elif Input.is_action_just_pressed("reset_params"):
+		reset_parameters()
 
 	last_delta = delta
-	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(NUMBER_OF_BOIDS)
+	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(number_of_boids)
 	
 	if SIMULATE_GPU:
 		sync_boids_on_gpu()
@@ -156,13 +162,13 @@ func update_data_texture():
 		var data := rd.texture_get_data(boid_data_buffer, 0)
 		boid_data.set_data(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH, data)
 	else:
-		for i in range(NUMBER_OF_BOIDS):
+		for i in range(number_of_boids):
 			var pixel_pos = Vector2(int(i / float(IMAGE_SIZE)), int(i % IMAGE_SIZE))
 			boid_data.set_pixel(pixel_pos.x, pixel_pos.y, Color(boids_positions[i].x, boids_positions[i].y, boids_velocities[i].angle(), 0))
 	boid_data_texture.update(boid_data)
 
 func update_data_on_cpu(delta: float):
-	for i in NUMBER_OF_BOIDS:
+	for i in number_of_boids:
 		# Get the boid position and velocity
 		var boid_pos = boids_positions[i]
 		var boid_vel = boids_velocities[i]
@@ -173,7 +179,7 @@ func update_data_on_cpu(delta: float):
 		var separation_vec = Vector2.ZERO
 		var num_friends = 0
 		var num_avoids = 0 
-		for j in NUMBER_OF_BOIDS:
+		for j in number_of_boids:
 			if i != j:
 				var other_boid_pos = boids_positions[j]
 				var other_boid_vel = boids_velocities[j]
@@ -262,7 +268,7 @@ func generate_uniform(data_buffer, type, binding):
 
 func generate_parameter_buffer(delta):
 	var params_buffer_bytes : PackedByteArray = PackedFloat32Array(
-		[NUMBER_OF_BOIDS, 
+		[number_of_boids, 
 		IMAGE_SIZE, 
 		friendly_radius,
 		avoiding_radius,
@@ -283,7 +289,7 @@ func generate_parameter_buffer(delta):
 func generate_parameter_buffer_reaction_kick(delta):
 	#todo clamp values ?
 	var params_buffer_bytes : PackedByteArray = PackedFloat32Array(
-		[NUMBER_OF_BOIDS, 
+		[number_of_boids, 
 		IMAGE_SIZE, 
 		friendly_radius / audio_mult_friendly,
 		#todo maybe divide for avoid radius ?
@@ -315,7 +321,7 @@ func update_boids_on_gpu(delta):
 		rd.compute_list_bind_compute_pipeline(compute_list, boid_pipeline)
 		rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
 
-		rd.compute_list_dispatch(compute_list, ceil(NUMBER_OF_BOIDS/1024.), 1, 1)
+		rd.compute_list_dispatch(compute_list, ceil(number_of_boids/1024.), 1, 1)
 		rd.compute_list_end()
 		rd.submit()
 		is_kick = false
@@ -330,7 +336,7 @@ func update_boids_on_gpu(delta):
 		rd.compute_list_bind_compute_pipeline(compute_list, boid_pipeline)
 		rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
 
-		rd.compute_list_dispatch(compute_list, ceil(NUMBER_OF_BOIDS/1024.), 1, 1)
+		rd.compute_list_dispatch(compute_list, ceil(number_of_boids/1024.), 1, 1)
 		rd.compute_list_end()
 		rd.submit()
 
@@ -355,15 +361,63 @@ func update_boids_number(value):
 	# boid_data = Image.create(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH)
 	# boid_data_texture = ImageTexture.create_from_image(boid_data)
 
-	if value < NUMBER_OF_BOIDS:
+	if value < number_of_boids:
 		boids_positions.resize(value)
 		boids_velocities.resize(value)
 	else:
-		for i in range(value - NUMBER_OF_BOIDS):
+		randomize()
+		for i in range(value - number_of_boids):
 			boids_positions.append(Vector2(randf() * get_viewport_rect().size.x, randf() * get_viewport_rect().size.y))
 			boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
 
 	$BoidParticles.amount = value
 
-	NUMBER_OF_BOIDS = value
+	number_of_boids = value
+	pass
+
+func reset_parameters():
+	number_of_boids = 30000
+
+	max_velocity = 50.0
+	min_velocity = 10.0
+	friendly_radius = 30.0
+	avoiding_radius = 15.0
+	alignment_factor = 10.0
+	cohesion_factor = 1.0
+	separation_factor = 2.0
+
+	audio_mult_maxv = 10
+	audio_mult_minv = 1
+	audio_mult_friendly = 1
+	audio_mult_avoiding = 1
+	audio_mult_alignment = 1
+	audio_mult_cohesion = 1
+	audio_mult_separation = 1
+	stutter_on_kick = false
+
+	canvas_node.set_parameters()
+	pass
+
+func randomize_parameters():
+	randomize()
+	# number_of_boids = randi() % 50000 + 1
+
+	max_velocity = randf() * 300 + 1
+	min_velocity = randf() * 100
+	friendly_radius = randf() * 50
+	avoiding_radius = randf() * 50
+	alignment_factor = randf() * 50
+	cohesion_factor = randf() * 10
+	separation_factor = randf() * 50
+
+	audio_mult_maxv = randi() % 20 + 1
+	audio_mult_minv = randi() % 10 + 1
+	audio_mult_friendly = randi() % 10 + 1
+	audio_mult_avoiding = randi() % 10 + 1
+	audio_mult_alignment = randi() % 10 + 1
+	audio_mult_cohesion = randi() % 10 + 1
+	audio_mult_separation = randi() % 10 + 1
+	stutter_on_kick = randi() % 2 == 1
+
+	canvas_node.set_parameters()
 	pass

@@ -73,11 +73,31 @@ func update_separation_factor_mul (value) :
 	boid_manager.audio_mult_separation = value
 
 func update_stutter_on_kick (checked: bool) :
-	print(checked)
 	boid_manager.stutter_on_kick = checked
 
 ##############################################################################################################
 
+func set_parameters() :
+	$VBoxContainer/HBoxNumBoi/HSlider.value = boid_manager.number_of_boids
+
+	$VBoxContainer/HBoxMaxVel/HSlider.value = boid_manager.max_velocity
+	$VBoxContainer/HBoxMinVel/HSlider.value = boid_manager.min_velocity
+	$VBoxContainer/HBoxFriRad/HSlider.value = boid_manager.friendly_radius
+	$VBoxContainer/HBoxAvoRad/HSlider.value = boid_manager.avoiding_radius
+	$VBoxContainer/HBoxAliFac/HSlider.value = boid_manager.alignment_factor
+	$VBoxContainer/HBoxCohFac/HSlider.value = boid_manager.cohesion_factor
+	$VBoxContainer/HBoxSepFac/HSlider.value = boid_manager.separation_factor
+
+	$VBoxContainer/HBoxMaxVelMul/HSlider.value = boid_manager.audio_mult_maxv
+	$VBoxContainer/HBoxMinVelMul/HSlider.value = boid_manager.audio_mult_minv
+	$VBoxContainer/HBoxFriRadMul/HSlider.value = boid_manager.audio_mult_friendly
+	$VBoxContainer/HBoxAvoRadMul/HSlider.value = boid_manager.audio_mult_avoiding
+	$VBoxContainer/HBoxAliFacMul/HSlider.value = boid_manager.audio_mult_alignment
+	$VBoxContainer/HBoxCohFacMul/HSlider.value = boid_manager.audio_mult_cohesion
+	$VBoxContainer/HBoxSepFacMul/HSlider.value = boid_manager.audio_mult_separation
+
+	$VBoxContainer/HBoxStuOnKick/CheckButton.button_pressed = boid_manager.stutter_on_kick
+	pass
 
 ##TOFDO: Add the rest of the sliders, frequency, threshhold etc ?
 
