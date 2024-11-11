@@ -349,3 +349,21 @@ func _exit_tree():
 		rd.free_rid(boid_pipeline)
 		rd.free()
 	pass
+
+func update_boids_number(value):
+	# IMAGE_SIZE = int(ceil(sqrt(value)))
+	# boid_data = Image.create(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH)
+	# boid_data_texture = ImageTexture.create_from_image(boid_data)
+
+	if value < NUMBER_OF_BOIDS:
+		boids_positions.resize(value)
+		boids_velocities.resize(value)
+	else:
+		for i in range(value - NUMBER_OF_BOIDS):
+			boids_positions.append(Vector2(randf() * get_viewport_rect().size.x, randf() * get_viewport_rect().size.y))
+			boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
+
+	$BoidParticles.amount = value
+
+	NUMBER_OF_BOIDS = value
+	pass

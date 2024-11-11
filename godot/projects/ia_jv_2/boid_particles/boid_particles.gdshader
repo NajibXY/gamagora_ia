@@ -4,6 +4,10 @@ shader_type particles;
 uniform sampler2D boid_data;
 uniform vec2 scale = vec2(.5, .5);
 
+// TODO fine tune
+// uniform vec2 rescale = vec2(.75, .75);
+uniform vec2 rescale = vec2(1, 1);
+
 void process() {
 	// Called every frame on existing particles (according to the Fixed FPS property).
 	ivec2 pos_image_size = textureSize(boid_data, 0);
@@ -18,6 +22,8 @@ void process() {
 	
 	scale_rot_mat[0] *= scale.x;
 	scale_rot_mat[1] *= scale.y;
+	// scale_rot_mat[0] *= rescale;
+	// scale_rot_mat[1] *= rescale;
 	
 	TRANSFORM[0].xy = scale_rot_mat[0];
 	TRANSFORM[1].xy = scale_rot_mat[1];

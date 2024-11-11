@@ -4,6 +4,8 @@ extends CanvasLayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$VBoxContainer/HBoxNumBoi/HSlider.value_changed.connect(update_boids_number)
+
 	$VBoxContainer/HBoxMaxVel/HSlider.value_changed.connect(update_max_velocity)
 	$VBoxContainer/HBoxMinVel/HSlider.value_changed.connect(update_min_velocity)
 	$VBoxContainer/HBoxFriRad/HSlider.value_changed.connect(update_friendly_radius)
@@ -22,6 +24,9 @@ func _ready() -> void:
 
 	$VBoxContainer/HBoxStuOnKick/CheckButton.toggled.connect(update_stutter_on_kick)
 	pass # Replace with function body.
+
+func update_boids_number (value) :
+	boid_manager.update_boids_number(value)
 
 func update_max_velocity (value) :
 	boid_manager.max_velocity = value

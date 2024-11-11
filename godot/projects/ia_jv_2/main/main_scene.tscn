@@ -33,6 +33,32 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("5_wwd6s")
 
+[node name="HBoxNumBoi" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+modulate = Color(0, 1, 0, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/HBoxNumBoi"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "boids number"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer/HBoxNumBoi"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("5_wwd6s")
+min_value = 1.0
+max_value = 50000.0
+value = 30000.0
+
 [node name="HBoxMaxVel" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 modulate = Color(0, 1, 0, 0.972549)
 layout_mode = 2

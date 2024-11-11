@@ -1,9 +1,9 @@
 ## LEFT TODO
-- Resize window
-- Randimize params button
+
++ Resize window
++ Param number of boids
+- Randomize params button
 - Reset params button
-- change sound window size
-- Param number of boids
 - Variations of colorations : heat, etc -- add them as selectable on hud
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
