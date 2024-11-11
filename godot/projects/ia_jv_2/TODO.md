@@ -2,12 +2,13 @@
 
 + Resize window
 + Param number of boids
-- Randomize params button
-- Reset params button
++ Randomize params button
++ Reset params button
 - Variations of colorations : heat, etc -- add them as selectable on hud
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
 - Midi control with external device (usb ?)
+- Read OS audio directly ?
 * Add MP3 support
 + Add @export variables to the UI
 

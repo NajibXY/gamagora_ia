@@ -3,10 +3,11 @@ shader_type particles;
 
 uniform sampler2D boid_data;
 uniform vec2 scale = vec2(.5, .5);
+uniform vec4 current_color : source_color;
+
 
 // TODO fine tune
 // uniform vec2 rescale = vec2(.75, .75);
-uniform vec2 rescale = vec2(1, 1);
 
 void process() {
 	// Called every frame on existing particles (according to the Fixed FPS property).
@@ -28,5 +29,7 @@ void process() {
 	TRANSFORM[0].xy = scale_rot_mat[0];
 	TRANSFORM[1].xy = scale_rot_mat[1];
 	TRANSFORM[3].xy = vec2(boid_pos_rot.r, boid_pos_rot.g); 
+
+	COLOR = current_color;
 
 }

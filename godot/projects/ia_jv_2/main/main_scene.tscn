@@ -1,15 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://dicbq5gs02vsd"]
+[gd_scene load_steps=8 format=3 uid="uid://dicbq5gs02vsd"]
 
 [ext_resource type="Script" path="res://main/main_scene.gd" id="1_aeqew"]
 [ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
+[ext_resource type="Shader" path="res://boid_particles/boid_particles.gdshader" id="3_tfgtf"]
 [ext_resource type="Script" path="res://main/audio_spectrum_helper.gd" id="4_4uuoc"]
 [ext_resource type="Script" path="res://main/canvas_layer.gd" id="4_mpmnp"]
 [ext_resource type="Theme" uid="uid://dpqw51icpu1na" path="res://main/main_scene.tres" id="5_wwd6s"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n0im4"]
+shader = ExtResource("3_tfgtf")
+shader_parameter/scale = Vector2(0.5, 0.5)
+shader_parameter/current_color = Color(0.433228, 0.57172, 1, 1)
 
 [node name="main_scene" type="Node2D"]
 script = ExtResource("1_aeqew")
 
 [node name="BoidParticles" parent="." instance=ExtResource("2_r3d1y")]
+process_material = SubResource("ShaderMaterial_n0im4")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 autoplay = true

@@ -28,6 +28,14 @@ extends Node2D
 @export var kick_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
+@export_category("Render Parameters")
+@export var boid_color = Color(Color.WHITE) :
+	set(new_color):
+		boid_color = new_color
+		if is_inside_tree():
+			$BoidParticles.process_material.set_shader_parameter("current_color", boid_color)
+	
+
 # @export_range(0,100) var max_velocity : float = 50.0
 # @export_range(0,100) var min_velocity : float = 10.0
 # @export_range(0,50) var friendly_radius : float = 30.0
