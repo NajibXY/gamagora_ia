@@ -12,6 +12,7 @@
 shader = ExtResource("3_tfgtf")
 shader_parameter/scale = Vector2(0.5, 0.5)
 shader_parameter/current_color = Color(0.433228, 0.57172, 1, 1)
+shader_parameter/rescale = Vector2(1, 1)
 shader_parameter/heading_sampler = ExtResource("4_75hnm")
 
 [node name="main_scene" type="Node2D"]

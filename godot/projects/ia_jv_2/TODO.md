@@ -8,10 +8,13 @@
     + rgb palette
     + test other palettes
         + pastel
-    - heat     
-    - radio choice with hud options
+    - heat      
+    - 2 radio choices with hud options
+        - Palettes
+        - Coloration mode
+    - Parameters on scale and rescale of the gdshader
+    - Parameter stutter_ratio
     - ...
-    - stutter_ratio
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
 - Midi control with external device (usb ?)
