@@ -3,6 +3,7 @@ shader_type particles;
 
 uniform sampler2D boid_data;
 uniform sampler2D heading_sampler;
+uniform bool is_stuttering;
 
 uniform vec4 current_color : source_color;
 
@@ -24,8 +25,14 @@ void process() {
 	
 	scale_rot_mat[0] *= scale.x;
 	scale_rot_mat[1] *= scale.y;
-	scale_rot_mat[0] *= rescale;
-	scale_rot_mat[1] *= rescale;
+	
+	if (is_stuttering) {
+		// float rnd_enter = fract(sin(dot(boid_pos_rot.rg, vec2(27.2626, 88.932))) * 54676.4224);
+		// if (rnd_enter > 0.5) {
+		scale_rot_mat[0] *= rescale;
+		scale_rot_mat[1] *= rescale;
+		// }
+	}
 	
 	TRANSFORM[0].xy = scale_rot_mat[0];
 	TRANSFORM[1].xy = scale_rot_mat[1];

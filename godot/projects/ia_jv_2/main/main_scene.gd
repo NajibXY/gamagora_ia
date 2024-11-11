@@ -83,6 +83,7 @@ func _ready() -> void:
 
 	$BoidParticles.amount = number_of_boids
 	$BoidParticles.process_material.set_shader_parameter("boid_data", boid_data_texture)
+	$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
 
 	if SIMULATE_GPU:
 		setup_computer_shader()
@@ -123,6 +124,8 @@ func _on_file_selected(path: String):
 
 func _on_spectrum_data_received(effects):
 	# print("received")
+	## TODO adapt
+	$BoidParticles.process_material.set_shader_parameter("is_stuttering", true)
 	is_kick = true
 	pass
 
@@ -332,6 +335,8 @@ func update_boids_on_gpu(delta):
 		rd.compute_list_dispatch(compute_list, ceil(number_of_boids/1024.), 1, 1)
 		rd.compute_list_end()
 		rd.submit()
+
+		$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
 		is_kick = false
 	else:
 		rd.free_rid(params_buffer)

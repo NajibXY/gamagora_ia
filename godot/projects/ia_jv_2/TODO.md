@@ -12,7 +12,8 @@
     - 2 radio choices with hud options
         - Palettes
         - Coloration mode
-    - Parameters on scale and rescale of the gdshader
+    - Parameters on valeus of scale and values of rescale of the gdshader
+        - Rescale on stutter option
     - Parameter stutter_ratio
     - ...
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
