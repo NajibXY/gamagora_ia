@@ -11,12 +11,21 @@
     - heat      
     - 2 radio choices with hud options
         - Palettes
+            - Monochromatic with choice ?
+            - RGB
+            - Pastel
+            - Synthwave
+            - Imported
         - Coloration mode
-    - Parameters on valeus of scale and values of rescale of the gdshader
+            - Direction
+            - Heat
+            - ...
+    - Parameters on valeus of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
         - Rescale on stutter option
     - Parameter stutter_ratio
     - ...
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
+    - Mode BPM ? input with a key ?
 - Grid optimization
 - Midi control with external device (usb ?)
 * Add MP3 support

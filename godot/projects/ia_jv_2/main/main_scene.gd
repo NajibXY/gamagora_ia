@@ -125,7 +125,7 @@ func _on_file_selected(path: String):
 func _on_spectrum_data_received(effects):
 	# print("received")
 	## TODO adapt
-	$BoidParticles.process_material.set_shader_parameter("is_stuttering", true)
+	$BoidParticles.process_material.set_shader_parameter("is_stuttering", stutter_on_kick)
 	is_kick = true
 	pass
 
@@ -336,8 +336,9 @@ func update_boids_on_gpu(delta):
 		rd.compute_list_end()
 		rd.submit()
 
-		$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
+		$BoidParticles.process_material.set_shader_parameter("is_stuttering", stutter_on_kick)
 		is_kick = false
+		$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
 	else:
 		rd.free_rid(params_buffer)
 		params_buffer = generate_parameter_buffer(delta)
