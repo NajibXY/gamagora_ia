@@ -87,7 +87,10 @@ void main() {
     position = vec2(mod(position.x, params.viewport_x), mod(position.y, params.viewport_y));
     
     // TODO Randomize direction and not stutter ?
-    if (params.is_direction_randomized == true) {
+    // 1 chance on 4 to stutter
+    // TODO set this as paramater (stutter_ratio) ? fine tune ?
+    float rnd_enter = fract(sin(dot(position, vec2(27.2626, 88.932))) * 54676.4224);
+    if (rnd_enter > 0.875 && params.is_direction_randomized == true) {
         float rnd = fract(sin(dot(position, vec2(12.9898, 78.233))) * 43758.5453);
         if (rnd > 0.5) {
             velocity = vec2(-0.5*velocity.x, velocity.y);

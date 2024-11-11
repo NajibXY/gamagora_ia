@@ -6,11 +6,12 @@
 + Reset params button
 - Variations of colorations : heat, etc -- add them as selectable on hud
     + rgb palette
-    - test other palettes
-    - heat
-        - pastel
-    - choice with hud options
+    + test other palettes
+        + pastel
+    - heat     
+    - radio choice with hud options
     - ...
+    - stutter_ratio
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
 - Midi control with external device (usb ?)
