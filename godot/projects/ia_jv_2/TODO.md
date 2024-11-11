@@ -5,23 +5,35 @@
 + Randomize params button
 + Reset params button
 - Variations of colorations : heat, etc -- add them as selectable on hud
+    + rgb palette
+    - test other palettes
+    - heat
+        - pastel
+    - choice with hud options
+    - ...
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
 - Grid optimization
 - Midi control with external device (usb ?)
-- Read OS audio directly ?
 * Add MP3 support
 + Add @export variables to the UI
 
+
 - ergonomy
-    - cursor color
-    - mp3/wav to ogg conversion with a scrript using ffmpeg
+    - make parameters and cursor clearer 
+    - mp3/wav to ogg conversion with a script using ffmpeg
+    - Read OS audio directly ?
+
+#### Rendu
 
 - Use example from photos/videos taken at splntr's
 - Make list of ogg examples, with mp3 to ogg converter script access
-- Compile and export web
+- Compile and export web ?
 
 #### Variation
+- import / change dynamically of color palettes
+- stutter fix for colors
 - Reaction on voice input -- DB !
+- Export video directly for other softs (resolume ?)
 
 
 ### Utils

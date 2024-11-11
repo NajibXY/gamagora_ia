@@ -3,6 +3,7 @@ shader_type particles;
 
 uniform sampler2D boid_data;
 uniform vec2 scale = vec2(.5, .5);
+uniform sampler2D heading_sampler;
 uniform vec4 current_color : source_color;
 
 
@@ -30,6 +31,6 @@ void process() {
 	TRANSFORM[1].xy = scale_rot_mat[1];
 	TRANSFORM[3].xy = vec2(boid_pos_rot.r, boid_pos_rot.g); 
 
-	COLOR = current_color;
+	COLOR = texture(heading_sampler, vec2(0, degrees(boid_pos_rot.b / 360.0)));
 
 }
