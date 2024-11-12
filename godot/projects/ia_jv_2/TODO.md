@@ -8,15 +8,17 @@
     + rgb palette
     + test other palettes
         + pastel
-    - heat      
+    + heat      
     - 2 radio choices with hud options
         - Palettes
-            - Monochromatic with choice ?
+            - Monochromatic with color choice ?
             - RGB
             - Pastel
             - Synthwave
+            - Summer Heat
             - Imported
         - Coloration mode
+            - Monochromatic
             - Direction
             - Heat
             - ...
