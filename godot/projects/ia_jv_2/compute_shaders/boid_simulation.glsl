@@ -104,7 +104,8 @@ void main() {
     boid_pos.data[index] = position;
 
     ivec2 pixel_position = ivec2(int(mod(index, params.image_size)), int(index / params.image_size));
-    imageStore(boid_data, pixel_position, vec4(position.x, position.y, rotation, 0));
+    //todo num_friends or other things ?
+    imageStore(boid_data, pixel_position, vec4(position.x, position.y, rotation, num_friends));
 }
 
 // // Simple random function to generate a pseudo-random float based on a vec2 input

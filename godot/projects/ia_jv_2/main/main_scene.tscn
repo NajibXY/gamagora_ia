@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dicbq5gs02vsd"]
+[gd_scene load_steps=10 format=3 uid="uid://dicbq5gs02vsd"]
 
 [ext_resource type="Script" path="res://main/main_scene.gd" id="1_aeqew"]
 [ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
@@ -6,15 +6,19 @@
 [ext_resource type="Script" path="res://main/audio_spectrum_helper.gd" id="4_4uuoc"]
 [ext_resource type="Texture2D" uid="uid://cwa3mvoqi73pk" path="res://boid_particles/heading_texture_map.png" id="4_k6xhp"]
 [ext_resource type="Script" path="res://main/canvas_layer.gd" id="4_mpmnp"]
+[ext_resource type="Texture2D" uid="uid://dsmavn8us0356" path="res://boid_particles/heat_color_scheme.png" id="5_ruqis"]
 [ext_resource type="Theme" uid="uid://dpqw51icpu1na" path="res://main/main_scene.tres" id="5_wwd6s"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n0im4"]
 shader = ExtResource("3_tfgtf")
+shader_parameter/color_mode = 0
+shader_parameter/max_friends = 50
 shader_parameter/is_stuttering = false
-shader_parameter/current_color = Color(0.433228, 0.57172, 1, 1)
+shader_parameter/current_color = Color(1, 1, 1, 1)
 shader_parameter/rescale = Vector2(1, 1)
 shader_parameter/scale = Vector2(0.5, 0.5)
 shader_parameter/heading_sampler = ExtResource("4_k6xhp")
+shader_parameter/heat_sampler = ExtResource("5_ruqis")
 
 [node name="main_scene" type="Node2D"]
 script = ExtResource("1_aeqew")
@@ -312,7 +316,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
 theme_override_constants/line_spacing = 0
 theme_override_font_sizes/font_size = 19
-text = "friend. radius mult."
+text = "friend. radius div."
 horizontal_alignment = 3
 vertical_alignment = 1
 justification_flags = 161
@@ -337,7 +341,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
 theme_override_constants/line_spacing = 0
 theme_override_font_sizes/font_size = 19
-text = "avoid. radius mult."
+text = "avoid. radius div."
 horizontal_alignment = 3
 vertical_alignment = 1
 justification_flags = 161
@@ -362,7 +366,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
 theme_override_constants/line_spacing = 0
 theme_override_font_sizes/font_size = 19
-text = "align. factor mult."
+text = "align. factor div."
 horizontal_alignment = 3
 vertical_alignment = 1
 justification_flags = 161
@@ -387,7 +391,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
 theme_override_constants/line_spacing = 0
 theme_override_font_sizes/font_size = 19
-text = "cohes. factor mult."
+text = "cohes. factor div."
 horizontal_alignment = 3
 vertical_alignment = 1
 justification_flags = 161

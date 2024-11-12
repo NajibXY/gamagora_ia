@@ -34,6 +34,26 @@ var is_kick = false
 		boid_color = new_color
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("current_color", boid_color)
+
+##TODO MAKE HUD
+enum BoidColorMode {
+	MONO = 0,
+	HEADING = 1,
+	HEAT = 2
+}
+
+@export var boid_color_mode : BoidColorMode = BoidColorMode.MONO :
+	set(new_mode):
+		boid_color_mode = new_mode
+		if is_inside_tree():
+			$BoidParticles.process_material.set_shader_parameter("color_mode", boid_color_mode)
+
+##TODO FINE TUNE
+@export var max_friends = 50 :
+	set(new_max):
+		max_friends = new_max
+		if is_inside_tree():
+			$BoidParticles.process_material.set_shader_parameter("max_friends", max_friends)
 	
 
 # @export_range(0,100) var max_velocity : float = 50.0
@@ -84,6 +104,9 @@ func _ready() -> void:
 	$BoidParticles.amount = number_of_boids
 	$BoidParticles.process_material.set_shader_parameter("boid_data", boid_data_texture)
 	$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
+	$BoidParticles.process_material.set_shader_parameter("current_color", boid_color)
+	$BoidParticles.process_material.set_shader_parameter("color_mode", boid_color_mode)
+	$BoidParticles.process_material.set_shader_parameter("max_friends", max_friends)
 
 	if SIMULATE_GPU:
 		setup_computer_shader()
@@ -298,13 +321,17 @@ func generate_parameter_buffer(delta):
 	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
 func generate_parameter_buffer_reaction_kick(delta):
-	#todo clamp values ?
+	#todo finetune, clamp values ?
+	var friendly_radius_kick = friendly_radius / audio_mult_friendly
+	if (boid_color_mode == BoidColorMode.HEAT):
+		friendly_radius_kick = friendly_radius
+
 	var params_buffer_bytes : PackedByteArray = PackedFloat32Array(
 		[number_of_boids, 
 		IMAGE_SIZE, 
-		friendly_radius / audio_mult_friendly,
-		#todo maybe divide for avoid radius ?
-		avoiding_radius * audio_mult_avoiding,
+		friendly_radius_kick,
+		#todo maybe mult for avoid radius ?
+		avoiding_radius / audio_mult_avoiding,
 		min_velocity * audio_mult_minv, 
 		max_velocity * audio_mult_maxv,
 		alignment_factor / audio_mult_alignment,
