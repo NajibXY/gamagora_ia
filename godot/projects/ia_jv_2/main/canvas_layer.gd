@@ -23,7 +23,12 @@ func _ready() -> void:
 	$VBoxContainer/HBoxSepFacMul/HSlider.value_changed.connect(update_separation_factor_mul)
 
 	$VBoxContainer/HBoxStuOnKick/CheckButton.toggled.connect(update_stutter_on_kick)
+
+	$VBoxContainer2/HBoxColMod/OptionButton.item_selected.connect(update_color_mode)
 	pass # Replace with function body.
+
+func update_color_mode(value) :
+	boid_manager.boid_color_mode = value
 
 func update_boids_number (value) :
 	boid_manager.update_boids_number(value)

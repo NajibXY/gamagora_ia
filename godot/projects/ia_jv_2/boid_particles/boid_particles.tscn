@@ -5,6 +5,11 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2rgx3"]
 shader = ExtResource("1_swlfm")
+shader_parameter/color_mode = null
+shader_parameter/max_friends = null
+shader_parameter/is_stuttering = null
+shader_parameter/current_color = null
+shader_parameter/rescale = Vector2(1, 1)
 shader_parameter/scale = Vector2(0.5, 0.5)
 
 [node name="BoidParticles" type="GPUParticles2D"]
