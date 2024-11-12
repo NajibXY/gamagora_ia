@@ -28,6 +28,7 @@
     - ...
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
     - Mode BPM ? input with a key ?
+- Export / Import presets
 - Input background ?
 - Grid optimization
 - Midi control with external device (usb ?)
