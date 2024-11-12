@@ -25,7 +25,25 @@ func _ready() -> void:
 	$VBoxContainer/HBoxStuOnKick/CheckButton.toggled.connect(update_stutter_on_kick)
 
 	$VBoxContainer2/HBoxColMod/OptionButton.item_selected.connect(update_color_mode)
+
+	$VBoxContainer2/HBoxColPal/OptionButton.item_selected.connect(update_color_palette)
+	nurture_palettes()
 	pass # Replace with function body.
+
+func nurture_palettes():
+	var option_button = $VBoxContainer2/HBoxColPal/OptionButton
+	# For name in //res://ext/palettes/*.png
+	var dir = DirAccess.open("res://ext/palettes")
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if file_name.ends_with(".png"):
+			option_button.add_item(file_name, 0)
+		file_name = dir.get_next()
+	dir.list_dir_end()
+
+func update_color_palette(value) :
+	boid_manager.update_color_palette($VBoxContainer2/HBoxColPal/OptionButton.get_item_text(value)) 
 
 func update_color_mode(value) :
 	boid_manager.boid_color_mode = value

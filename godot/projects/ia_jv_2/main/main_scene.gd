@@ -462,3 +462,12 @@ func randomize_parameters():
 
 	canvas_node.set_parameters()
 	pass
+
+func update_color_palette(value) :
+	# Compressed texture 2D
+	## Create texture 2D from file at this index
+	print(value)
+	var texture = load("res://ext/palettes/" + value) as CompressedTexture2D
+	print(texture)
+	$BoidParticles.process_material.set_shader_parameter("t_sampler", texture)
+	pass

@@ -9,19 +9,15 @@
     + test other palettes
         + pastel
     + heat      
-    - 2 radio choices with hud options
-        - Palettes
-            - Monochromatic with color choice ?
-            - RGB
-            - Pastel
-            - Synthwave
-            - Summer Heat
-            - Imported
-        - Coloration mode
-            - Monochromatic
-            - Direction
-            - Heat
-            - ...
+    + 2 radio choices with hud options
+        + Palettes
+            - Imported !!!!
+            - Monochromatic with color choice ? Serves as Modulate ?
+        + Coloration mode
+            + Monochromatic
+            + Direction
+            + Heat
+            + ...
     - Parameters on valeus of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
         - Rescale on stutter option
     - Parameter stutter_ratio

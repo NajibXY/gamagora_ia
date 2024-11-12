@@ -3,8 +3,8 @@ shader_type particles;
 //todo
 uniform uint color_mode;
 
-uniform sampler2D heading_sampler;
-uniform sampler2D heat_sampler;
+uniform sampler2D t_sampler;
+
 uniform uint max_friends;
 
 uniform sampler2D boid_data;
@@ -46,17 +46,17 @@ void process() {
 	// TODO: adapt the color to the color mode
 	//COLOR = texture(heading_sampler, vec2(0, degrees(boid_pos_rot.b / 360.0)));
 	// Color on number of friends
-	COLOR = texture(heat_sampler, clamp(vec2(0, boid_pos_rot.a / float(max_friends)), .01, .99));
+	COLOR = texture(t_sampler, clamp(vec2(0, boid_pos_rot.a / float(max_friends)), .01, .99));
 	
 	switch (color_mode) {
 		case 0: // Mono current color
 			COLOR = current_color;
 			break;
 		case 1: // Heading
-			COLOR = texture(heading_sampler, vec2(0, degrees(boid_pos_rot.b / 360.0)));
+			COLOR = texture(t_sampler, vec2(0, degrees(boid_pos_rot.b / 360.0)));
 			break;
 		case 2: // Heat
-			COLOR = texture(heat_sampler, clamp(vec2(0, boid_pos_rot.a / float(max_friends)), .01, .99));
+			COLOR = texture(t_sampler, clamp(vec2(0, boid_pos_rot.a / float(max_friends)), .01, .99));
 			break;
 	}
 		
