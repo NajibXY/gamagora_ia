@@ -15,7 +15,7 @@ shader_parameter/max_friends = 50
 shader_parameter/is_stuttering = false
 shader_parameter/current_color = Color(1, 1, 1, 1)
 shader_parameter/rescale = Vector2(1, 1)
-shader_parameter/scale = Vector2(0.2, 0.5)
+shader_parameter/scale = Vector2(0.5, 0.5)
 shader_parameter/t_sampler = ExtResource("4_k6xhp")
 
 [node name="main_scene" type="Node2D"]
@@ -509,3 +509,11 @@ justification_flags = 161
 [node name="OptionButton" type="OptionButton" parent="CanvasLayer/VBoxContainer2/HBoxColPal"]
 layout_mode = 2
 focus_mode = 0
+
+[node name="FileDialogPalette" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a File"
+size = Vector2i(275, 350)
+ok_button_text = "Open"
+file_mode = 0
+access = 2

@@ -88,6 +88,7 @@ var boid_data_buffer : RID
 var last_delta = 0.0
 
 @onready var file_dialog : FileDialog = $FileDialog
+@onready var file_dialog_palette : FileDialog = $FileDialogPalette
 @onready var audio_stream_player : AudioStreamPlayer = $AudioStreamPlayer
 var canvas_node
 
@@ -114,6 +115,8 @@ func _ready() -> void:
 
 	display_file_select()
 	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
+
+	file_dialog_palette.connect("file_selected", Callable(self, "_on_file_selected_palette"))
 
 	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
 	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
@@ -145,6 +148,27 @@ func _on_file_selected(path: String):
 	audio_stream_player.play()
 	pass
 
+## TODO DELETE OPTION
+func _on_file_selected_palette(path: String):
+	# Store in res://ext/palettes
+	# Load and store in res://ext/palettes
+	var palettes_container = get_node("/root/main_scene/CanvasLayer/VBoxContainer2/HBoxColPal/OptionButton")
+	
+	var file_name = path.get_file().get_basename()+".png"
+	
+	# DO store palette
+	var file = FileAccess.open("res://ext/palettes/" + file_name, FileAccess.WRITE)
+	if file:
+		var image = Image.new()
+		image.load(path)
+		image.save_png(file.get_path())
+		file.close()
+	# Add to OptionButton
+	palettes_container.add_item(file_name, 0)
+	palettes_container.select(palettes_container.item_count-1)
+	update_color_palette(file.get_path())
+	pass
+
 func _on_spectrum_data_received(effects):
 	# print("received")
 	## TODO adapt
@@ -158,12 +182,24 @@ func generate_boids():
 		boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
 
 func display_file_select():
+	file_dialog_palette.hide()
 	var rect_min_size = Vector2(600, 300)
+	file_dialog.title = "SELECT OGG FILE"
 	file_dialog.size = rect_min_size
 	file_dialog.position = (get_viewport_rect().size - rect_min_size) / 2
 	file_dialog.popup_centered()
 	file_dialog.filters = ["*.ogg ; OGG Files"]
 	file_dialog.show()
+
+func display_file_select_palette():
+	file_dialog.hide()
+	var rect_min_size = Vector2(600, 300)
+	file_dialog_palette.title = "SELECT PNG COLOR PALETTE FILE"
+	file_dialog_palette.size = rect_min_size
+	file_dialog_palette.position = (get_viewport_rect().size - rect_min_size) / 2
+	file_dialog_palette.popup_centered()
+	file_dialog_palette.filters = ["*.png ; PNG Files"]
+	file_dialog_palette.show()
 ########################################################### UPDATE ###########################################################
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -171,6 +207,8 @@ func _process(delta: float) -> void:
 	# Changing File menu ?
 	if Input.is_action_just_pressed("ui_file"):
 		display_file_select()
+	elif Input.is_action_just_pressed("ui_palette"):
+		display_file_select_palette()
 	elif Input.is_action_just_pressed("randomize_params"):
 		randomize_parameters()
 	elif Input.is_action_just_pressed("reset_params"):
@@ -467,7 +505,7 @@ func update_color_palette(value) :
 	# Compressed texture 2D
 	## Create texture 2D from file at this index
 	print(value)
-	var texture = load("res://ext/palettes/" + value) as CompressedTexture2D
+	var texture = load(value) as CompressedTexture2D
 	print(texture)
 	$BoidParticles.process_material.set_shader_parameter("t_sampler", texture)
 	pass

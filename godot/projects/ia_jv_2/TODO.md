@@ -18,7 +18,7 @@
             + Direction
             + Heat
             + ...
-    - Parameters on valeus of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
+    - Parameters on values of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
         - Rescale on stutter option
     - Parameter stutter_ratio
     - ...

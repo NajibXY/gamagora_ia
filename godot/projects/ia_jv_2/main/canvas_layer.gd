@@ -43,10 +43,12 @@ func nurture_palettes():
 	dir.list_dir_end()
 
 func update_color_palette(value) :
-	boid_manager.update_color_palette($VBoxContainer2/HBoxColPal/OptionButton.get_item_text(value)) 
+	boid_manager.update_color_palette("res://ext/palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text(value)) 
+	boid_manager.boid_color_mode = $VBoxContainer2/HBoxColMod/OptionButton.selected
 
 func update_color_mode(value) :
 	boid_manager.boid_color_mode = value
+	boid_manager.update_color_palette("res://ext/palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text($VBoxContainer2/HBoxColPal/OptionButton.selected))
 
 func update_boids_number (value) :
 	boid_manager.update_boids_number(value)
