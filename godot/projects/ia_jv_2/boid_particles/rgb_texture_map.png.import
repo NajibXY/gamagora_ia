@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chio6yyq6q08e"
-path="res://.godot/imported/ice-cream-gb-1x.png-8a30c0361fbeea3e3b2c6814fcc505ed.ctex"
+uid="uid://cwa3mvoqi73pk"
+path="res://.godot/imported/rgb_texture_map.png-4eb452181e67d55d9624eb50139339d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://boid_particles/ice-cream-gb-1x.png"
-dest_files=["res://.godot/imported/ice-cream-gb-1x.png-8a30c0361fbeea3e3b2c6814fcc505ed.ctex"]
+source_file="res://boid_particles/rgb_texture_map.png"
+dest_files=["res://.godot/imported/rgb_texture_map.png-4eb452181e67d55d9624eb50139339d7.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7a6jh60o43jw"
-path="res://.godot/imported/synthwave-9-1x.png-1feea9873aa18c456716fce3ffa7fffb.ctex"
+uid="uid://dsmavn8us0356"
+path="res://.godot/imported/summer_heat_texture_map.png-2aef16d321b34173e4dae1591e8f92aa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://boid_particles/synthwave-9-1x.png"
-dest_files=["res://.godot/imported/synthwave-9-1x.png-1feea9873aa18c456716fce3ffa7fffb.ctex"]
+source_file="res://boid_particles/summer_heat_texture_map.png"
+dest_files=["res://.godot/imported/summer_heat_texture_map.png-2aef16d321b34173e4dae1591e8f92aa.ctex"]
 
 [params]
 
