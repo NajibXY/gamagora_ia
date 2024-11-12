@@ -155,19 +155,48 @@ func _on_file_selected_palette(path: String):
 	var palettes_container = get_node("/root/main_scene/CanvasLayer/VBoxContainer2/HBoxColPal/OptionButton")
 	
 	var file_name = path.get_file().get_basename()+".png"
-	
+	if check_if_exists(file_name):
+		print("File already exists")
+		file_name = file_name.replace(".png", "_"+str(randi())+".png")
 	# DO store palette
-	var file = FileAccess.open("res://ext/palettes/" + file_name, FileAccess.WRITE)
-	if file:
-		var image = Image.new()
-		image.load(path)
-		image.save_png(file.get_path())
-		file.close()
+	# var image = Image.new()
+	# image.load(path)
+	# image.save_png(path)
+	var source_file = FileAccess.open(path, FileAccess.ModeFlags.READ)
+	var dest_file = FileAccess.open("res://ext/palettes/" + file_name, FileAccess.ModeFlags.WRITE)
+	if dest_file == null:
+		print("Failed to open destination file:", "res://ext/palettes/" + file_name)
+		source_file.close()
+		return
+		
+	# Read the data from the source file and write it to the destination file
+	var file_data = source_file.get_buffer(source_file.get_length())
+	dest_file.store_buffer(file_data)
+		
+	# Close both files
+	source_file.close()
+	dest_file.close()
+
 	# Add to OptionButton
-	palettes_container.add_item(file_name, 0)
-	palettes_container.select(palettes_container.item_count-1)
-	update_color_palette(file.get_path())
+	canvas_node.nurture_palettes()
+	# Set to the index of file_name
+	for i in range(palettes_container.get_item_count()):
+		if palettes_container.get_item_text(i) == file_name:
+			palettes_container.select(i)
+			break
+	update_color_palette(path)
 	pass
+
+func check_if_exists(file_name):
+	var dir = DirAccess.open("res://ext/palettes")
+	dir.list_dir_begin()
+	var file = dir.get_next()
+	while file != "":
+		if file == file_name:
+			return true
+		file = dir.get_next()
+	dir.list_dir_end()
+	return false
 
 func _on_spectrum_data_received(effects):
 	# print("received")

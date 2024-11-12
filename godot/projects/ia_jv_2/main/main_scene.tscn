@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cp5vlha7wns7v" path="res://boid_particles/boid_particles.tscn" id="2_r3d1y"]
 [ext_resource type="Shader" path="res://boid_particles/boid_particles.gdshader" id="3_tfgtf"]
 [ext_resource type="Script" path="res://main/audio_spectrum_helper.gd" id="4_4uuoc"]
-[ext_resource type="Texture2D" uid="uid://cwa3mvoqi73pk" path="res://ext/palettes/rgb_texture_map.png" id="4_k6xhp"]
+[ext_resource type="Texture2D" uid="uid://dxfuywvhheu8a" path="res://ext/palettes_for_test/rgb_texture_map.png" id="4_k6xhp"]
 [ext_resource type="Script" path="res://main/canvas_layer.gd" id="4_mpmnp"]
 [ext_resource type="Theme" uid="uid://dpqw51icpu1na" path="res://main/main_scene.tres" id="5_wwd6s"]
 

@@ -32,6 +32,7 @@ func _ready() -> void:
 
 func nurture_palettes():
 	var option_button = $VBoxContainer2/HBoxColPal/OptionButton
+	$VBoxContainer2/HBoxColPal/OptionButton.clear()
 	# For name in //res://ext/palettes/*.png
 	var dir = DirAccess.open("res://ext/palettes")
 	dir.list_dir_begin()
