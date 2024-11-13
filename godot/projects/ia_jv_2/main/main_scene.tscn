@@ -447,6 +447,7 @@ justification_flags = 161
 
 [node name="CheckButton" type="CheckButton" parent="CanvasLayer/VBoxContainer/HBoxStuOnKick"]
 layout_mode = 2
+focus_mode = 0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = -1
