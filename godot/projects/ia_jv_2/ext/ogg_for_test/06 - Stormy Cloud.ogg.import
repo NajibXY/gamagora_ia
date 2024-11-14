@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bjhw45j2vjdpv"
+path="res://.godot/imported/06 - Stormy Cloud.ogg-cf709686eda78199bc71e63b8bb66f1b.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/06 - Stormy Cloud.ogg"
+dest_files=["res://.godot/imported/06 - Stormy Cloud.ogg-cf709686eda78199bc71e63b8bb66f1b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://3boeogojq3is"
+path="res://.godot/imported/05 Shallow Then Halo.ogg-d82c5f5741220d51f1151cb533f882e0.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/05 Shallow Then Halo.ogg"
+dest_files=["res://.godot/imported/05 Shallow Then Halo.ogg-d82c5f5741220d51f1151cb533f882e0.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

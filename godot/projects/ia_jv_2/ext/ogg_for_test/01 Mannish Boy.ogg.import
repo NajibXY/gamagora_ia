@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cibsxl2abi5h6"
+path="res://.godot/imported/01 Mannish Boy.ogg-058c50a88cb3ccf00164056fdf9061e8.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/01 Mannish Boy.ogg"
+dest_files=["res://.godot/imported/01 Mannish Boy.ogg-058c50a88cb3ccf00164056fdf9061e8.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

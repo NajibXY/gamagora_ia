@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b0utx47wkunh4"
+path="res://.godot/imported/03 Times Up Part II.ogg-b29a83ed75cad18a52e4798f602e0ab1.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/03 Times Up Part II.ogg"
+dest_files=["res://.godot/imported/03 Times Up Part II.ogg-b29a83ed75cad18a52e4798f602e0ab1.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

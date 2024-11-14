@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://ddruhor6qncjr"
+path="res://.godot/imported/DJ Krush - Song 2.ogg-2ee0bfe13ee95a0707d3b584a51aa141.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/DJ Krush - Song 2.ogg"
+dest_files=["res://.godot/imported/DJ Krush - Song 2.ogg-2ee0bfe13ee95a0707d3b584a51aa141.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
