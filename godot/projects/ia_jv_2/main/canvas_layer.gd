@@ -4,6 +4,10 @@ extends CanvasLayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Creating palette dir
+	var dir = DirAccess.open("user://")
+	dir.make_dir("palettes") 
+	
 	$VBoxContainer/HBoxNumBoi/HSlider.value_changed.connect(update_boids_number)
 
 	$VBoxContainer/HBoxMaxVel/HSlider.value_changed.connect(update_max_velocity)
@@ -70,7 +74,7 @@ func nurture_palettes():
 	var option_button = $VBoxContainer2/HBoxColPal/OptionButton
 	$VBoxContainer2/HBoxColPal/OptionButton.clear()
 	# For name in //res://ext/palettes/*.png
-	var dir = DirAccess.open("user://ext/palettes")
+	var dir = DirAccess.open("user://palettes")
 	dir.list_dir_begin()
 	var file_name = dir.get_next()
 	while file_name != "":
@@ -80,12 +84,12 @@ func nurture_palettes():
 	dir.list_dir_end()
 
 func update_color_palette(value) :
-	boid_manager.update_color_palette("res://ext/palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text(value)) 
+	boid_manager.update_color_palette("user://palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text(value)) 
 	boid_manager.boid_color_mode = $VBoxContainer2/HBoxColMod/OptionButton.selected
 
 func update_color_mode(value) :
 	boid_manager.boid_color_mode = value
-	boid_manager.update_color_palette("res://ext/palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text($VBoxContainer2/HBoxColPal/OptionButton.selected))
+	boid_manager.update_color_palette("user://palettes/" + $VBoxContainer2/HBoxColPal/OptionButton.get_item_text($VBoxContainer2/HBoxColPal/OptionButton.selected))
 
 func update_boids_number (value) :
 	boid_manager.update_boids_number(value)

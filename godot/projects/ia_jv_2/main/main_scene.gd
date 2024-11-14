@@ -103,7 +103,7 @@ var canvas_node
 func _ready() -> void:
 	# for i in range(number_of_boids):
 	# 	print("Boid position: ", boids_positions[i], " // Boid velocity: ", boids_velocities[i])
-
+	
 	boid_data = Image.create(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH)
 	boid_data_texture = ImageTexture.create_from_image(boid_data)
 
@@ -164,15 +164,16 @@ func _on_file_selected_palette(path: String):
 	var file_name = path.get_file().get_basename()+".png"
 	if check_if_exists(file_name):
 		print("File already exists")
-		file_name = file_name.replace(".png", "_"+str(randi())+".png")
+		file_name = str(file_name).replace(".png", "_"+str(randi())+".png")
 	# DO store palette
 	# var image = Image.new()
 	# image.load(path)
 	# image.save_png(path)
+	print(path)
 	var source_file = FileAccess.open(path, FileAccess.ModeFlags.READ)
-	var dest_file = FileAccess.open("res://ext/palettes/" + file_name, FileAccess.ModeFlags.WRITE)
+	var dest_file = FileAccess.open("user://palettes/" + file_name, FileAccess.ModeFlags.WRITE)
 	if dest_file == null:
-		print("Failed to open destination file:", "res://ext/palettes/" + file_name)
+		print("Failed to open destination file:", "user://palettes/" + file_name)
 		source_file.close()
 		return
 		
@@ -191,11 +192,11 @@ func _on_file_selected_palette(path: String):
 		if palettes_container.get_item_text(i) == file_name:
 			palettes_container.select(i)
 			break
-	update_color_palette(path)
+	update_color_palette("user://palettes/" + file_name)
 	pass
 
 func check_if_exists(file_name):
-	var dir = DirAccess.open("res://ext/palettes")
+	var dir = DirAccess.open("user://palettes")
 	dir.list_dir_begin()
 	var file = dir.get_next()
 	while file != "":
@@ -605,9 +606,19 @@ func update_color_palette(value) :
 	# Compressed texture 2D
 	## Create texture 2D from file at this index
 	print(value)
-	var texture = load(value) as CompressedTexture2D
-	print(texture)
-	$BoidParticles.process_material.set_shader_parameter("t_sampler", texture)
+
+	var file = FileAccess.open(value, FileAccess.READ) 
+	var fsize = file.get_length()
+	var data = file.get_buffer(fsize)
+	file.close()
+	
+	var image = Image.new()
+	image.load_png_from_buffer(data)
+	
+	var image_texture = ImageTexture.create_from_image(image) 
+	
+	print(image_texture)
+	$BoidParticles.process_material.set_shader_parameter("t_sampler", image_texture)
 	pass
 
 func update_scale_x(value) :
