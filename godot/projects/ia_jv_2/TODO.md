@@ -44,6 +44,7 @@
 + Add @export variables to the UI
 
 #### Interface
+    - Able rescale option ?
     - Init --> Popup help with commands and EPILEPSY WARNING !!
     + J to export json (fix format ?)
         - Popup light message saved
