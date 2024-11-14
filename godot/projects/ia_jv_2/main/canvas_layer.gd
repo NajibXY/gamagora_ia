@@ -145,6 +145,11 @@ func set_parameters() :
 	$VBoxContainer/HBoxSepFacMul/HSlider.value = boid_manager.audio_mult_separation
 
 	$VBoxContainer/HBoxStuOnKick/CheckButton.button_pressed = boid_manager.stutter_on_kick
+	$VBoxContainer2/HBoxBoiXSca/HSlider.value = boid_manager.boid_scale_x
+	$VBoxContainer2/HBoxBoiYSca/HSlider.value = boid_manager.boid_scale_y
+	$VBoxContainer2/HBoxBoiXRes/HSlider.value = boid_manager.boid_rescale_x
+	$VBoxContainer2/HBoxBoiYRes/HSlider.value = boid_manager.boid_rescale_y
+
 	pass
 
 ##TOFDO: Add the rest of the sliders, frequency, threshhold etc ?

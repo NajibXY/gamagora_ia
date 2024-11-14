@@ -28,6 +28,7 @@ extends Node2D
 @export var kick_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
+# Render parameters
 @export_category("Render Parameters")
 @export var boid_color = Color(Color.WHITE) :
 	set(new_color):
@@ -54,6 +55,12 @@ enum BoidColorMode {
 		max_friends = new_max
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("max_friends", max_friends)
+
+# Shader parameters
+var boid_scale_x = 0.5
+var boid_scale_y = 0.5
+var boid_rescale_x = 1.0
+var boid_rescale_y = 1.0
 	
 
 # @export_range(0,100) var max_velocity : float = 50.0
@@ -503,6 +510,12 @@ func reset_parameters():
 	audio_mult_separation = 1
 	stutter_on_kick = false
 
+	# Shader params
+	boid_scale_x = 0.5
+	boid_scale_y = 0.5
+	boid_rescale_x = 1.0
+	boid_rescale_y = 1.0
+
 	canvas_node.set_parameters()
 	pass
 
@@ -527,6 +540,7 @@ func randomize_parameters():
 	audio_mult_separation = randi() % 10 + 1
 	stutter_on_kick = randi() % 2 == 1
 
+	# todo scaling params randomization on activated
 	canvas_node.set_parameters()
 	pass
 
@@ -541,18 +555,20 @@ func update_color_palette(value) :
 
 func update_scale_x(value) :
 	$BoidParticles.process_material.set_shader_parameter("scale", Vector2(value, $BoidParticles.process_material.get_shader_parameter("scale").y))
+	boid_scale_x = value
 	pass
 
 func update_scale_y(value) :
 	$BoidParticles.process_material.set_shader_parameter("scale", Vector2($BoidParticles.process_material.get_shader_parameter("scale").x, value))
+	boid_scale_y = value
 	pass
 
 func update_rescale_x(value) :
 	$BoidParticles.process_material.set_shader_parameter("rescale", Vector2(value, $BoidParticles.process_material.get_shader_parameter("rescale").y))
-	print($BoidParticles.process_material.get_shader_parameter("rescale"))
+	boid_rescale_x = value
 	pass
 
 func update_rescale_y(value) :
 	$BoidParticles.process_material.set_shader_parameter("rescale", Vector2($BoidParticles.process_material.get_shader_parameter("rescale").x, value))
-	print($BoidParticles.process_material.get_shader_parameter("rescale"))
+	boid_rescale_y = value
 	pass
