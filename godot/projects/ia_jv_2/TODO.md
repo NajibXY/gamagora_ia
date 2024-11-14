@@ -18,13 +18,20 @@
             + Direction
             + Heat
             + ...
+    - Download palettes
+    - Download music
     - Parameters on values of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
-        - Rescale on stutter option
-    - Parameter stutter_ratio
+    - Mono color choice
+    - Rescale on stutter option
+    - Color by friends_group_id ?
+    - Parameter stutter_ratio ?
     - ...
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
+    - https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
     - Mode BPM ? input with a key ?
-- Export / Import presets
+- Export/import json conf
+- Export / Import presets and palettes
+    - Import all palettes from a specific file on exe
 - Input background ?
 - Grid optimization
 - Midi control with external device (usb ?)
