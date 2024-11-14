@@ -542,19 +542,61 @@ func randomize_parameters():
 	stutter_on_kick = randi() % 2 == 1
 
 	if able_random_scale:
-		## TODO fine tune
-		# var random_int = randi() % 2
-		boid_scale_x = randf_range(0.1, 10.0)
-		boid_scale_x = float(int(boid_scale_x * 10)) / 10
-		boid_scale_y = randf_range(0.1, 10.0)
-		boid_scale_y = float(int(boid_scale_y * 10)) / 10
-		# var random_int_2 = randi() % 2
-		boid_rescale_x = randf_range(0.1, 10.0)
-		boid_rescale_x = float(int(boid_scale_y * 10)) / 10
-		boid_rescale_y = randf_range(0.1, 10.0)
-		boid_rescale_y = float(int(boid_scale_y * 10)) / 10
+		randomize_scalings()
 
 	canvas_node.set_parameters()
+	pass
+
+func randomize_scalings():
+	## TODO fine tune
+	var random_int = randi() % 2
+	var max_scale
+	if random_int == 0:
+		max_scale = 1.0
+	else:
+		max_scale = 10.0
+	
+	var random_int_2 = randi() % 2
+	var max_scale_2
+	if random_int_2 == 0:
+		max_scale_2 = 1.0
+	else:
+		max_scale_2 = 10.0
+
+	var random_int_3 = randi() % 2
+	var max_scale_3
+	if random_int_3 == 0:
+		max_scale_3 = 1.0
+	else:
+		max_scale_3 = 10.0
+	
+	var random_int_4 = randi() % 2
+	var max_scale_4
+	if random_int_4 == 0:
+		max_scale_4 = 1.0
+	else:
+		max_scale_4 = 10.0
+
+	boid_scale_x = randf_range(0.1, max_scale)
+	if boid_scale_x > 5:
+		boid_scale_y = randf_range(0.1, max_scale_2/5)
+	else:
+		boid_scale_y = randf_range(0.1, max_scale_2)
+		if boid_scale_y > 0.5:
+			boid_scale_x = randf_range(0.1, max_scale/5)
+	boid_scale_x = float(int(boid_scale_x * 10)) / 10
+	boid_scale_y = float(int(boid_scale_y * 10)) / 10
+
+	# var random_int_2 = randi() % 2
+	boid_rescale_x = randf_range(0.1, max_scale_3)
+	if boid_rescale_x > 5:
+		boid_rescale_y = randf_range(0.1, max_scale_4/5)
+	else:
+		boid_rescale_y = randf_range(0.1, max_scale_4)
+		if boid_rescale_y > 0.5:
+			boid_rescale_x = randf_range(0.1, max_scale_3/5)
+	boid_rescale_x = float(int(boid_rescale_x * 10)) / 10
+	boid_rescale_y = float(int(boid_rescale_y * 10)) / 10
 	pass
 
 func update_color_palette(value) :

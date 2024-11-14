@@ -19,10 +19,10 @@
             + Heat
             + ...
     - Download palettes
-    - Download music
-    - Parameters on values of scale and values of rescale of the gdshader WITH 0.01 steps up to 10 or 15 !!
+    + Download music
+    + Parameters on values of scale and values of rescale of the gdshader WITH 0.1 steps up to 10 or 15 !!
     - Mono color choice
-    - Rescale on stutter option
+    + Rescale on kick
     - Color by friends_group_id ?
     - Parameter stutter_ratio ?
     - ...
