@@ -12,6 +12,7 @@
     + 2 radio choices with hud options
         + Palettes
             - Imported !!!!
+            - Write .import file in C:\Users\nelkhadir\AppData\Roaming\Godot\app_userdata\BOIIIIIIIIIII\ext\palettes
             - Monochromatic with color choice ? Serves as Modulate ?
         + Coloration mode
             + Monochromatic
