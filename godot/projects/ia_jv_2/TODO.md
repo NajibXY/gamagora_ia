@@ -11,8 +11,8 @@
     + heat      
     + 2 radio choices with hud options
         + Palettes
-            - Imported !!!!
-            - Write .import file in C:\Users\nelkhadir\AppData\Roaming\Godot\app_userdata\BOIIIIIIIIIII\ext\palettes
+            + Imported !!!!
+            + Write .import file in C:\Users\nelkhadir\AppData\Roaming\Godot\app_userdata\BOIIIIIIIIIII\ext\palettes
             - Monochromatic with color choice ? Serves as Modulate ?
         + Coloration mode
             + Monochromatic
@@ -22,7 +22,6 @@
     - Download palettes
     + Download music
     + Parameters on values of scale and values of rescale of the gdshader WITH 0.1 steps up to 10 or 15 !!
-    - Mono color choice
     + Rescale on kick
     - Color by friends_group_id ?
     - Parameter stutter_ratio ?
@@ -44,8 +43,16 @@
 * Add MP3 support
 + Add @export variables to the UI
 
+#### Interface
+    - Init --> Popup help with commands and EPILEPSY WARNING !!
+    + J to export json (fix format ?)
+        - Popup light message saved
+    - I to import json
+    - H to Hide hud button
+    - Escape for help (inputs etc)
+        - Popup help with commands
 
-- ergonomy
+#### Ergonomy
     - make parameters and cursor clearer 
     - mp3/wav to ogg conversion with a script using ffmpeg
     - Read OS audio directly ?
