@@ -249,6 +249,8 @@ func _process(delta: float) -> void:
 		randomize_parameters()
 	elif Input.is_action_just_pressed("reset_params"):
 		reset_parameters()
+	elif Input.is_action_just_pressed("export_json"):
+		config_to_json()
 
 	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(number_of_boids)
@@ -631,3 +633,62 @@ func update_rescale_y(value) :
 func update_able_random_scale(value):
 	able_random_scale = value
 	pass
+
+func config_to_json():
+	var data_to_send = []
+	data_to_send.append("number_of_boids:"+ str(number_of_boids))
+	data_to_send.append("max_velocity:"+ str(max_velocity))
+	data_to_send.append("min_velocity:"+ str(min_velocity))
+	data_to_send.append("friendly_radius:"+ str(friendly_radius))
+	data_to_send.append("avoiding_radius:"+ str(avoiding_radius))
+	data_to_send.append("alignment_factor:"+ str(alignment_factor))
+	data_to_send.append("friendly_radius:"+ str(friendly_radius))
+	data_to_send.append("cohesion_factor:"+ str(cohesion_factor))
+	data_to_send.append("friendly_radius:"+ str(friendly_radius))
+	data_to_send.append("separation_factor:"+ str(separation_factor))
+	data_to_send.append("audio_mult_maxv:"+ str(audio_mult_maxv))
+	data_to_send.append("audio_mult_minv:"+ str(audio_mult_minv))
+	data_to_send.append("audio_mult_friendly:"+ str(audio_mult_friendly))
+	data_to_send.append("audio_mult_avoiding:"+ str(audio_mult_avoiding))
+	data_to_send.append("audio_mult_alignment:"+ str(audio_mult_alignment))
+	data_to_send.append("audio_mult_avoiding:"+ str(audio_mult_avoiding))
+	data_to_send.append("audio_mult_cohesion:"+ str(audio_mult_cohesion))
+	data_to_send.append("audio_mult_separation:"+ str(audio_mult_separation))
+	data_to_send.append("stutter_on_kick:"+ str(stutter_on_kick))
+	data_to_send.append("kick_frequency_min:"+ str(kick_frequency_min))
+	data_to_send.append("kick_frequency_max:"+ str(kick_frequency_max))
+	data_to_send.append("kick_threshold:"+ str(kick_threshold))
+	data_to_send.append("boid_color_mode:"+ str(boid_color_mode))
+	data_to_send.append("max_friends:"+ str(max_friends))
+	data_to_send.append("boid_scale_x:"+ str(boid_scale_x))
+	data_to_send.append("boid_scale_y:"+ str(boid_scale_y))
+	data_to_send.append("boid_rescale_x:"+ str(boid_rescale_x))
+	data_to_send.append("boid_rescale_y:"+ str(boid_rescale_y))
+	data_to_send.append("able_random_scale:"+ str(able_random_scale))
+
+	var json_string = JSON.stringify(data_to_send)
+	# Save data
+	# ...
+	# Retrieve data
+	var json = JSON.new()
+	var error = json.parse(json_string)
+	if error == OK:
+		var data_received = json.data
+		if typeof(data_received) == TYPE_ARRAY:
+			print(data_received) # Prints array
+			# Save to file
+			save_file(json_string)
+		else:
+			print("Unexpected data")
+	else:
+		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+	pass
+
+func save_file(content):
+	# time stamp
+	var date = Time.get_time_string_from_system()
+	var file_name = "exported_config_"+date +".json"
+	file_name = str(file_name).replace(":", "_")
+	print(file_name)
+	var file = FileAccess.open("user://"+file_name, FileAccess.WRITE)
+	file.store_string(content)

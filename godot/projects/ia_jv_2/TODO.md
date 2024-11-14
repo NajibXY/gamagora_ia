@@ -51,9 +51,10 @@
 - Compile and export web ?
 
 #### Variation
+- OS Master input as mic input (godot limitation)
+- Reaction on voice input -- DB !
 - import / change dynamically of color palettes
 - stutter fix for colors
-- Reaction on voice input -- DB !
 - Export video directly for other softs (resolume ?)
 
 
