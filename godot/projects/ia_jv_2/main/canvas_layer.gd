@@ -14,6 +14,8 @@ func _ready() -> void:
 	$VBoxContainer/HBoxCohFac/HSlider.value_changed.connect(update_cohesion_factor)
 	$VBoxContainer/HBoxSepFac/HSlider.value_changed.connect(update_separation_factor)
 
+	####################################################################################
+
 	$VBoxContainer/HBoxMaxVelMul/HSlider.value_changed.connect(update_max_velocity_mul)
 	$VBoxContainer/HBoxMinVelMul/HSlider.value_changed.connect(update_min_velocity_mul)
 	$VBoxContainer/HBoxFriRadMul/HSlider.value_changed.connect(update_friendly_radius_mul)
@@ -24,15 +26,23 @@ func _ready() -> void:
 
 	$VBoxContainer/HBoxStuOnKick/CheckButton.toggled.connect(update_stutter_on_kick)
 
+	####################################################################################
 
 	$VBoxContainer2/HBoxColMod/OptionButton.item_selected.connect(update_color_mode)
 	$VBoxContainer2/HBoxColPal/OptionButton.item_selected.connect(update_color_palette)
+
+	nurture_palettes()
+
+	####################################################################################
 
 	$VBoxContainer2/HBoxBoiXSca/HSlider.value_changed.connect(update_boid_scale_x)
 	$VBoxContainer2/HBoxBoiYSca/HSlider.value_changed.connect(update_boid_scale_y)
 	$VBoxContainer2/HBoxBoiXRes/HSlider.value_changed.connect(update_boid_rescale_x)
 	$VBoxContainer2/HBoxBoiYRes/HSlider.value_changed.connect(update_boid_rescale_y)
-	nurture_palettes()
+
+	$VBoxContainer2/HBoxRanSca/CheckButton.toggled.connect(update_able_random_scale)
+
+	####################################################################################
 	pass # Replace with function body.
 
 func update_boid_scale_x(value) :
@@ -49,6 +59,10 @@ func update_boid_rescale_x(value) :
 
 func update_boid_rescale_y(value) :
 	boid_manager.update_rescale_y(value)
+	pass
+
+func update_able_random_scale(value) :
+	boid_manager.update_able_random_scale(value)
 	pass
 
 
@@ -150,6 +164,7 @@ func set_parameters() :
 	$VBoxContainer2/HBoxBoiXRes/HSlider.value = boid_manager.boid_rescale_x
 	$VBoxContainer2/HBoxBoiYRes/HSlider.value = boid_manager.boid_rescale_y
 
+	$VBoxContainer2/HBoxRanSca/CheckButton.button_pressed = boid_manager.able_random_scale
 	pass
 
 ##TOFDO: Add the rest of the sliders, frequency, threshhold etc ?

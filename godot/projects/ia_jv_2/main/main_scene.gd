@@ -61,7 +61,7 @@ var boid_scale_x = 0.5
 var boid_scale_y = 0.5
 var boid_rescale_x = 1.0
 var boid_rescale_y = 1.0
-	
+var able_random_scale = false
 
 # @export_range(0,100) var max_velocity : float = 50.0
 # @export_range(0,100) var min_velocity : float = 10.0
@@ -515,6 +515,7 @@ func reset_parameters():
 	boid_scale_y = 0.5
 	boid_rescale_x = 1.0
 	boid_rescale_y = 1.0
+	able_random_scale = false
 
 	canvas_node.set_parameters()
 	pass
@@ -540,7 +541,19 @@ func randomize_parameters():
 	audio_mult_separation = randi() % 10 + 1
 	stutter_on_kick = randi() % 2 == 1
 
-	# todo scaling params randomization on activated
+	if able_random_scale:
+		## TODO fine tune
+		# var random_int = randi() % 2
+		boid_scale_x = randf_range(0.1, 10.0)
+		boid_scale_x = float(int(boid_scale_x * 10)) / 10
+		boid_scale_y = randf_range(0.1, 10.0)
+		boid_scale_y = float(int(boid_scale_y * 10)) / 10
+		# var random_int_2 = randi() % 2
+		boid_rescale_x = randf_range(0.1, 10.0)
+		boid_rescale_x = float(int(boid_scale_y * 10)) / 10
+		boid_rescale_y = randf_range(0.1, 10.0)
+		boid_rescale_y = float(int(boid_scale_y * 10)) / 10
+
 	canvas_node.set_parameters()
 	pass
 
@@ -571,4 +584,8 @@ func update_rescale_x(value) :
 func update_rescale_y(value) :
 	$BoidParticles.process_material.set_shader_parameter("rescale", Vector2($BoidParticles.process_material.get_shader_parameter("rescale").x, value))
 	boid_rescale_y = value
+	pass
+
+func update_able_random_scale(value):
+	able_random_scale = value
 	pass
