@@ -26,10 +26,15 @@
     - Color by friends_group_id ?
     - Parameter stutter_ratio ?
     - ...
+    
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
     - https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
     - Mode BPM ? input with a key ?
+
 - Export/import json conf
+    + Exported json
+    - Pop up
+    - Import json
 - Export / Import presets and palettes
     - Import all palettes from a specific file on exe
 - Input background ?
