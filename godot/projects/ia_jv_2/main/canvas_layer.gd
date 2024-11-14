@@ -24,11 +24,33 @@ func _ready() -> void:
 
 	$VBoxContainer/HBoxStuOnKick/CheckButton.toggled.connect(update_stutter_on_kick)
 
-	$VBoxContainer2/HBoxColMod/OptionButton.item_selected.connect(update_color_mode)
 
+	$VBoxContainer2/HBoxColMod/OptionButton.item_selected.connect(update_color_mode)
 	$VBoxContainer2/HBoxColPal/OptionButton.item_selected.connect(update_color_palette)
+
+	$VBoxContainer2/HBoxBoiXSca/HSlider.value_changed.connect(update_boid_scale_x)
+	$VBoxContainer2/HBoxBoiYSca/HSlider.value_changed.connect(update_boid_scale_y)
+	$VBoxContainer2/HBoxBoiXRes/HSlider.value_changed.connect(update_boid_rescale_x)
+	$VBoxContainer2/HBoxBoiYRes/HSlider.value_changed.connect(update_boid_rescale_y)
 	nurture_palettes()
 	pass # Replace with function body.
+
+func update_boid_scale_x(value) :
+	boid_manager.update_scale_x(value)
+	pass
+
+func update_boid_scale_y(value) :
+	boid_manager.update_scale_y(value)
+	pass
+
+func update_boid_rescale_x(value) :
+	boid_manager.update_rescale_x(value)
+	pass
+
+func update_boid_rescale_y(value) :
+	boid_manager.update_rescale_y(value)
+	pass
+
 
 func nurture_palettes():
 	var option_button = $VBoxContainer2/HBoxColPal/OptionButton

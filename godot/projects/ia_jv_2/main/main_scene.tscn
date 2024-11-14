@@ -12,7 +12,7 @@
 shader = ExtResource("3_tfgtf")
 shader_parameter/color_mode = 0
 shader_parameter/max_friends = 50
-shader_parameter/is_stuttering = false
+shader_parameter/is_kick = null
 shader_parameter/current_color = Color(1, 1, 1, 1)
 shader_parameter/rescale = Vector2(1, 1)
 shader_parameter/scale = Vector2(0.5, 0.5)
@@ -32,6 +32,14 @@ bus = &"Music"
 script = ExtResource("4_4uuoc")
 
 [node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+size = Vector2i(275, 350)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+
+[node name="FileDialogPalette" type="FileDialog" parent="."]
+auto_translate_mode = 1
 title = "Open a File"
 size = Vector2i(275, 350)
 ok_button_text = "Open"
@@ -511,10 +519,106 @@ justification_flags = 161
 layout_mode = 2
 focus_mode = 0
 
-[node name="FileDialogPalette" type="FileDialog" parent="."]
-auto_translate_mode = 1
-title = "Open a File"
-size = Vector2i(275, 350)
-ok_button_text = "Open"
-file_mode = 0
-access = 2
+[node name="HBoxBoiXSca" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer2/HBoxBoiXSca"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "boids x scale"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer2/HBoxBoiXSca"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 0.5
+
+[node name="HBoxBoiYSca" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer2/HBoxBoiYSca"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "boids y scale"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer2/HBoxBoiYSca"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 0.5
+
+[node name="HBoxBoiXRes" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer2/HBoxBoiXRes"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "boids x rescale"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer2/HBoxBoiXRes"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="HBoxBoiYRes" type="HBoxContainer" parent="CanvasLayer/VBoxContainer2"]
+modulate = Color(0, 0.983703, 0.548688, 0.972549)
+layout_mode = 2
+theme = ExtResource("5_wwd6s")
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer2/HBoxBoiYRes"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.211765, 0.270588, 0.309804, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 19
+text = "boids y rescale"
+horizontal_alignment = 3
+vertical_alignment = 1
+justification_flags = 161
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/VBoxContainer2/HBoxBoiYRes"]
+custom_minimum_size = Vector2(200, 10)
+layout_direction = 1
+layout_mode = 2
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0

@@ -201,8 +201,8 @@ func check_if_exists(file_name):
 func _on_spectrum_data_received(effects):
 	# print("received")
 	## TODO adapt
-	$BoidParticles.process_material.set_shader_parameter("is_stuttering", stutter_on_kick)
 	is_kick = true
+	$BoidParticles.process_material.set_shader_parameter("is_kick", is_kick)
 	pass
 
 func generate_boids():
@@ -430,9 +430,9 @@ func update_boids_on_gpu(delta):
 		rd.compute_list_end()
 		rd.submit()
 
-		$BoidParticles.process_material.set_shader_parameter("is_stuttering", stutter_on_kick)
+		$BoidParticles.process_material.set_shader_parameter("is_kick", is_kick)
 		is_kick = false
-		$BoidParticles.process_material.set_shader_parameter("is_stuttering", false)
+		$BoidParticles.process_material.set_shader_parameter("is_kick", is_kick)
 	else:
 		rd.free_rid(params_buffer)
 		params_buffer = generate_parameter_buffer(delta)
@@ -537,4 +537,22 @@ func update_color_palette(value) :
 	var texture = load(value) as CompressedTexture2D
 	print(texture)
 	$BoidParticles.process_material.set_shader_parameter("t_sampler", texture)
+	pass
+
+func update_scale_x(value) :
+	$BoidParticles.process_material.set_shader_parameter("scale", Vector2(value, $BoidParticles.process_material.get_shader_parameter("scale").y))
+	pass
+
+func update_scale_y(value) :
+	$BoidParticles.process_material.set_shader_parameter("scale", Vector2($BoidParticles.process_material.get_shader_parameter("scale").x, value))
+	pass
+
+func update_rescale_x(value) :
+	$BoidParticles.process_material.set_shader_parameter("rescale", Vector2(value, $BoidParticles.process_material.get_shader_parameter("rescale").y))
+	print($BoidParticles.process_material.get_shader_parameter("rescale"))
+	pass
+
+func update_rescale_y(value) :
+	$BoidParticles.process_material.set_shader_parameter("rescale", Vector2($BoidParticles.process_material.get_shader_parameter("rescale").x, value))
+	print($BoidParticles.process_material.get_shader_parameter("rescale"))
 	pass
