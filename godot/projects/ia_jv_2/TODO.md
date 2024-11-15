@@ -1,10 +1,10 @@
-## LEFT TODO
+## TODO
 
 + Resize window
 + Param number of boids
 + Randomize params button
 + Reset params button
-- Variations of colorations : heat, etc -- add them as selectable on hud
++ Variations of colorations : heat, etc -- add them as selectable on hud
     + rgb palette
     + test other palettes
         + pastel
@@ -19,25 +19,33 @@
             + Direction
             + Heat
             + ...
-    - Download palettes
     + Download music
     + Parameters on values of scale and values of rescale of the gdshader WITH 0.1 steps up to 10 or 15 !!
     + Rescale on kick
-    - Color by friends_group_id ?
-    - Parameter stutter_ratio ?
-    - ...
-    
+
+#### Color
+
+- Add mono color picker
+- Download base palettes and stick them to project
+- Color by friends_group_id ?
+
+#### React
+
+- Parameter stutter_ratio ?
 - Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
     - https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
     - Mode BPM ? input with a key ?
 
-- Export/import json conf
-    + Exported json
-    - Pop up
+#### Conf
+
+- import json conf
++ Exported json
+    - Popup light message saved
     - Import json
-- Export / Import presets and palettes
-    - Import all palettes from a specific file on exe
 - Input background ?
+
+#### Optimization
+
 - Grid optimization
 - Midi control with external device (usb ?)
 * Add MP3 support
@@ -54,9 +62,11 @@
         - Popup help with commands
 
 #### Ergonomy
-    - make parameters and cursor clearer 
-    - mp3/wav to ogg conversion with a script using ffmpeg
-    - Read OS audio directly ?
+
+- make parameters and cursor clearer 
+- mp3/wav to ogg conversion with a script using ffmpeg
+- Read OS audio directly ?
+- import multiple palettes at once
 
 #### Rendu
 
@@ -65,6 +75,7 @@
 - Compile and export web ?
 
 #### Variation
+
 - OS Master input as mic input (godot limitation)
 - Reaction on voice input -- DB !
 - import / change dynamically of color palettes
@@ -73,6 +84,7 @@
 
 
 ### Utils
+
 https://superuser.com/questions/273797/convert-mp3-to-ogg-vorbis
 for f in ./*.mp3; do ffmpeg -i "$f" -c:a libvorbis -q:a 8 "${f/%mp3/ogg}"; done
 
