@@ -8,7 +8,6 @@
 [ext_resource type="Theme" uid="uid://dpqw51icpu1na" path="res://main/main_scene.tres" id="5_wwd6s"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_1qouw"]
-load_path = "res://.godot/imported/rgb_texture_map.png-44edd61f9e1568a48da0814db87b890d.ctex"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n0im4"]
 shader = ExtResource("3_tfgtf")

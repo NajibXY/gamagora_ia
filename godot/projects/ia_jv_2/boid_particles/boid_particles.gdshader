@@ -28,15 +28,20 @@ void process() {
 	mat2 scale_rot_mat = mat2(vec2(cos(boid_pos_rot.b), sin(boid_pos_rot.b)), // First column
 							  vec2(-sin(boid_pos_rot.b), cos(boid_pos_rot.b))); // Second column
 
-	scale_rot_mat[0] *= scale.x;
-	scale_rot_mat[1] *= scale.y;
+
 
 	if (is_kick) {
 		// float rnd_enter = fract(sin(dot(boid_pos_rot.rg, vec2(27.2626, 88.932))) * 54676.4224);
 		// if (rnd_enter > 0.5) {
-		scale_rot_mat[0] *= rescale;
-		scale_rot_mat[1] *= rescale;
+		// minimum clamp to avoid too small scale
+		vec2 rescale_new = vec2(max(rescale.x, 0.1), max(rescale.y, 0.1));
+		scale_rot_mat[0] *= max(rescale_new * scale.x, 0.1);
+		scale_rot_mat[1] *= max(rescale_new * scale.y, 0.1);
 		// }
+	}
+	else {
+		scale_rot_mat[0] *= scale.x;
+		scale_rot_mat[1]*= scale.y;
 	}
 
 	TRANSFORM[0].xy = scale_rot_mat[0];
