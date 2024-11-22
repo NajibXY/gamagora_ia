@@ -34,8 +34,8 @@ func _process(delta: float) -> void:
 		# effect = round(effect * 100) / 100
 		# effects.append(effect)
 		# prev_hz = hz
-	var magnitude = spectrum.get_magnitude_for_frequency_range(main_node.kick_frequency_min, main_node.kick_frequency_max).length()
-	if magnitude > main_node.kick_threshold:
+	var magnitude = spectrum.get_magnitude_for_frequency_range(main_node.min_bass, main_node.max_bass).length()
+	if magnitude > main_node.bass_threshold:
 		# print("Magnitude: ", magnitude)
 		effects.append(magnitude)
 		emit_signal("spectrum_data", effects)

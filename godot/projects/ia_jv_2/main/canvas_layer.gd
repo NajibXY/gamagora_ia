@@ -47,7 +47,27 @@ func _ready() -> void:
 	$VBoxContainer2/HBoxRanSca/CheckButton.toggled.connect(update_able_random_scale)
 
 	####################################################################################
+	$VBoxContainer2/HBoxBasThr/HSlider.value_changed.connect(update_bass_threshold)
+	$VBoxContainer2/HBoxBasMin/HSlider.value_changed.connect(update_min_bass)
+	$VBoxContainer2/HBoxBasMax/HSlider.value_changed.connect(update_max_bass)
+	####################################################################################
+
 	pass # Replace with function body.
+
+func update_bass_threshold(value) :
+	boid_manager.bass_threshold = value
+	pass
+
+func update_min_bass(value) :
+	boid_manager.min_bass = value
+	pass
+
+func update_max_bass(value) :
+	boid_manager.max_bass = value
+	pass
+
+
+
 
 func update_boid_scale_x(value) :
 	boid_manager.update_scale_x(value)

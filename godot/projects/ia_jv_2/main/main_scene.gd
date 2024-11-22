@@ -23,9 +23,9 @@ extends Node2D
 @export var stutter_on_kick : bool = false
 
 @export_range(0,10) var Multiplier : float = 5.0
-@export var kick_frequency_min : float = 50.0  # Minimum frequency for kick
-@export var kick_frequency_max : float = 150.0  # Maximum frequency for kick
-@export var kick_threshold = 0.1  # Adjust this based on sensitivity
+@export var min_bass : float = 50.0  # Minimum frequency for kick
+@export var max_bass : float = 150.0  # Maximum frequency for kick
+@export var bass_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
 # Render parameters
@@ -666,9 +666,9 @@ func config_to_json():
 	data_to_send.append("audio_mult_cohesion:"+ str(audio_mult_cohesion))
 	data_to_send.append("audio_mult_separation:"+ str(audio_mult_separation))
 	data_to_send.append("stutter_on_kick:"+ str(stutter_on_kick))
-	data_to_send.append("kick_frequency_min:"+ str(kick_frequency_min))
-	data_to_send.append("kick_frequency_max:"+ str(kick_frequency_max))
-	data_to_send.append("kick_threshold:"+ str(kick_threshold))
+	data_to_send.append("min_bass:"+ str(min_bass))
+	data_to_send.append("max_bass:"+ str(max_bass))
+	data_to_send.append("bass_threshold:"+ str(bass_threshold))
 	data_to_send.append("boid_color_mode:"+ str(boid_color_mode))
 	data_to_send.append("max_friends:"+ str(max_friends))
 	data_to_send.append("boid_scale_x:"+ str(boid_scale_x))
