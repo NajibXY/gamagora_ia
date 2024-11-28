@@ -107,3 +107,13 @@ func convert_mp3_to_ogg(input_file: String, output_file: String):
         print("Error during conversion: ", result)
     else:
         print("Conversion completed successfully!")
+
+
+
+- %APPDATA%\Godot\app_userdata\[project_name]
+
+## TODO Last
+- Export import json
+- Unattach canva
+- Grid optimization
+- Music react to H fq and other

@@ -23,8 +23,8 @@ extends Node2D
 @export var stutter_on_kick : bool = false
 
 @export_range(0,10) var Multiplier : float = 5.0
-@export var min_bass : float = 50.0  # Minimum frequency for kick
-@export var max_bass : float = 150.0  # Maximum frequency for kick
+@export var bass_min_fq : float = 50.0  # Minimum frequency for kick
+@export var bass_max_fq : float = 150.0  # Maximum frequency for kick
 @export var bass_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
@@ -96,6 +96,7 @@ var last_delta = 0.0
 
 @onready var file_dialog : FileDialog = $FileDialog
 @onready var file_dialog_palette : FileDialog = $FileDialogPalette
+@onready var file_dialog_config : FileDialog = $FileDialogConfig
 @onready var audio_stream_player : AudioStreamPlayer = $AudioStreamPlayer
 var canvas_node
 
@@ -124,6 +125,8 @@ func _ready() -> void:
 	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
 
 	file_dialog_palette.connect("file_selected", Callable(self, "_on_file_selected_palette"))
+
+	file_dialog_config.connect("file_selected", Callable(self, "_on_file_selected_config"))
 
 	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
 	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
@@ -206,6 +209,50 @@ func check_if_exists(file_name):
 	dir.list_dir_end()
 	return false
 
+
+func _on_file_selected_config(path: String):
+	var json_as_text = FileAccess.get_file_as_string(path)
+	var json_as_dict = JSON.parse_string(json_as_text)
+	
+	number_of_boids = int(json_as_dict["number_of_boids"])
+	max_velocity = float(json_as_dict["max_velocity"])
+	min_velocity = float(json_as_dict["min_velocity"])
+	friendly_radius = float(json_as_dict["friendly_radius"])
+	avoiding_radius = float(json_as_dict["avoiding_radius"])
+	alignment_factor = float(json_as_dict["alignment_factor"])
+	cohesion_factor = float(json_as_dict["cohesion_factor"])
+	separation_factor = float(json_as_dict["separation_factor"])
+
+	audio_mult_maxv = int(json_as_dict["audio_mult_maxv"])
+	audio_mult_minv = int(json_as_dict["audio_mult_minv"])
+	audio_mult_friendly = int(json_as_dict["audio_mult_friendly"])
+	audio_mult_avoiding = int(json_as_dict["audio_mult_avoiding"])
+	audio_mult_alignment = int(json_as_dict["audio_mult_alignment"])
+	audio_mult_cohesion = int(json_as_dict["audio_mult_cohesion"])
+	audio_mult_separation = int(json_as_dict["audio_mult_separation"])
+	if str(json_as_dict["stutter_on_kick"]) == "true":
+		stutter_on_kick = true
+	else:
+		stutter_on_kick = false
+
+	## TODO WIP
+	#boid_color_mode = BoidColorMode(int(json_as_dict["boid_color_mode"]))
+	max_friends = int(json_as_dict["max_friends"])
+
+	boid_scale_x = float(json_as_dict["boid_scale_x"])
+	boid_scale_y = float(json_as_dict["boid_scale_y"])
+	boid_rescale_x = float(json_as_dict["boid_rescale_x"])
+	boid_rescale_y = float(json_as_dict["boid_rescale_y"])
+	if str(json_as_dict["able_random_scale"]) == "true":
+		able_random_scale = true
+	else:
+		able_random_scale = false
+
+	bass_threshold = float(json_as_dict["bass_threshold"])
+	bass_min_fq = float(json_as_dict["bass_min_fq"])
+	bass_max_fq = float(json_as_dict["bass_max_fq"])
+	pass
+
 func _on_spectrum_data_received(effects):
 	# print("received")
 	## TODO adapt
@@ -220,6 +267,7 @@ func generate_boids():
 
 func display_file_select():
 	file_dialog_palette.hide()
+	file_dialog_config.hide()
 	var rect_min_size = Vector2(600, 300)
 	file_dialog.title = "SELECT OGG FILE"
 	file_dialog.size = rect_min_size
@@ -230,6 +278,7 @@ func display_file_select():
 
 func display_file_select_palette():
 	file_dialog.hide()
+	file_dialog_config.hide()
 	var rect_min_size = Vector2(600, 300)
 	file_dialog_palette.title = "SELECT PNG COLOR PALETTE FILE"
 	file_dialog_palette.size = rect_min_size
@@ -237,6 +286,17 @@ func display_file_select_palette():
 	file_dialog_palette.popup_centered()
 	file_dialog_palette.filters = ["*.png ; PNG Files"]
 	file_dialog_palette.show()
+
+func display_file_select_config():
+	file_dialog.hide()
+	file_dialog_palette.hide()
+	var rect_min_size = Vector2(600, 300)
+	file_dialog_config.title = "SELECT JSON CONFIG FILE"
+	file_dialog_config.size = rect_min_size
+	file_dialog_config.position = (get_viewport_rect().size - rect_min_size) / 2
+	file_dialog_config.popup_centered()
+	file_dialog_config.filters = ["*.json ; JSON Files"]
+	file_dialog_config.show()
 ########################################################### UPDATE ###########################################################
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -252,6 +312,8 @@ func _process(delta: float) -> void:
 		reset_parameters()
 	elif Input.is_action_just_pressed("export_json"):
 		config_to_json()
+	elif Input.is_action_just_pressed("import_json"):
+		display_file_select_config()
 
 	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(number_of_boids)
@@ -646,36 +708,40 @@ func update_able_random_scale(value):
 	pass
 
 func config_to_json():
-	var data_to_send = []
-	data_to_send.append("number_of_boids:"+ str(number_of_boids))
-	data_to_send.append("max_velocity:"+ str(max_velocity))
-	data_to_send.append("min_velocity:"+ str(min_velocity))
-	data_to_send.append("friendly_radius:"+ str(friendly_radius))
-	data_to_send.append("avoiding_radius:"+ str(avoiding_radius))
-	data_to_send.append("alignment_factor:"+ str(alignment_factor))
-	data_to_send.append("friendly_radius:"+ str(friendly_radius))
-	data_to_send.append("cohesion_factor:"+ str(cohesion_factor))
-	data_to_send.append("friendly_radius:"+ str(friendly_radius))
-	data_to_send.append("separation_factor:"+ str(separation_factor))
-	data_to_send.append("audio_mult_maxv:"+ str(audio_mult_maxv))
-	data_to_send.append("audio_mult_minv:"+ str(audio_mult_minv))
-	data_to_send.append("audio_mult_friendly:"+ str(audio_mult_friendly))
-	data_to_send.append("audio_mult_avoiding:"+ str(audio_mult_avoiding))
-	data_to_send.append("audio_mult_alignment:"+ str(audio_mult_alignment))
-	data_to_send.append("audio_mult_avoiding:"+ str(audio_mult_avoiding))
-	data_to_send.append("audio_mult_cohesion:"+ str(audio_mult_cohesion))
-	data_to_send.append("audio_mult_separation:"+ str(audio_mult_separation))
-	data_to_send.append("stutter_on_kick:"+ str(stutter_on_kick))
-	data_to_send.append("min_bass:"+ str(min_bass))
-	data_to_send.append("max_bass:"+ str(max_bass))
-	data_to_send.append("bass_threshold:"+ str(bass_threshold))
-	data_to_send.append("boid_color_mode:"+ str(boid_color_mode))
-	data_to_send.append("max_friends:"+ str(max_friends))
-	data_to_send.append("boid_scale_x:"+ str(boid_scale_x))
-	data_to_send.append("boid_scale_y:"+ str(boid_scale_y))
-	data_to_send.append("boid_rescale_x:"+ str(boid_rescale_x))
-	data_to_send.append("boid_rescale_y:"+ str(boid_rescale_y))
-	data_to_send.append("able_random_scale:"+ str(able_random_scale))
+	var data_to_send = {}
+	data_to_send["number_of_boids"] = str(number_of_boids)
+	data_to_send["max_velocity"] = str(max_velocity)
+	data_to_send["min_velocity"] = str(min_velocity)
+	data_to_send["friendly_radius"] = str(friendly_radius)
+	data_to_send["avoiding_radius"] = str(avoiding_radius)
+	data_to_send["alignment_factor"] = str(alignment_factor)
+	data_to_send["cohesion_factor"] = str(cohesion_factor)
+	data_to_send["separation_factor"] = str(separation_factor)
+
+	data_to_send["audio_mult_maxv"] = str(audio_mult_maxv)
+	data_to_send["audio_mult_minv"] = str(audio_mult_minv)
+	data_to_send["audio_mult_friendly"] = str(audio_mult_friendly)
+	data_to_send["audio_mult_avoiding"] = str(audio_mult_avoiding)
+	data_to_send["audio_mult_alignment"] = str(audio_mult_alignment)
+	data_to_send["audio_mult_cohesion"] = str(audio_mult_cohesion)
+	data_to_send["audio_mult_separation"] = str(audio_mult_separation)
+	data_to_send["stutter_on_kick"] = str(stutter_on_kick)
+
+	data_to_send["boid_color_mode"] = str(boid_color_mode)
+	data_to_send["max_friends"] = str(max_friends)
+
+	data_to_send["boid_scale_x"] = str(boid_scale_x)
+	data_to_send["boid_scale_y"] = str(boid_scale_y)
+	data_to_send["boid_rescale_x"] = str(boid_rescale_x)
+	data_to_send["boid_rescale_y"] = str(boid_rescale_y)
+	data_to_send["able_random_scale"] = str(able_random_scale)
+
+	data_to_send["bass_threshold"] = str(bass_threshold)
+	data_to_send["bass_min_fq"] = str(bass_min_fq)
+	data_to_send["bass_max_fq"] = str(bass_max_fq)
+
+	print(data_to_send)
+
 
 	var json_string = JSON.stringify(data_to_send)
 	# Save data
@@ -685,7 +751,7 @@ func config_to_json():
 	var error = json.parse(json_string)
 	if error == OK:
 		var data_received = json.data
-		if typeof(data_received) == TYPE_ARRAY:
+		if typeof(data_received) == TYPE_DICTIONARY:
 			print(data_received) # Prints array
 			# Save to file
 			save_file(json_string)

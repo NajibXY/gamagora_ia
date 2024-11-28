@@ -730,3 +730,11 @@ min_value = 50.0
 max_value = 500.0
 step = 10.0
 value = 150.0
+
+[node name="FileDialogConfig" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a File"
+size = Vector2i(275, 350)
+ok_button_text = "Open"
+file_mode = 0
+access = 1

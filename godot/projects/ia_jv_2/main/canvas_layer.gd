@@ -48,8 +48,8 @@ func _ready() -> void:
 
 	####################################################################################
 	$VBoxContainer2/HBoxBasThr/HSlider.value_changed.connect(update_bass_threshold)
-	$VBoxContainer2/HBoxBasMin/HSlider.value_changed.connect(update_min_bass)
-	$VBoxContainer2/HBoxBasMax/HSlider.value_changed.connect(update_max_bass)
+	$VBoxContainer2/HBoxBasMin/HSlider.value_changed.connect(update_bass_min_fq)
+	$VBoxContainer2/HBoxBasMax/HSlider.value_changed.connect(update_bass_max_fq)
 	####################################################################################
 
 	pass # Replace with function body.
@@ -58,12 +58,12 @@ func update_bass_threshold(value) :
 	boid_manager.bass_threshold = value
 	pass
 
-func update_min_bass(value) :
-	boid_manager.min_bass = value
+func update_bass_min_fq(value) :
+	boid_manager.bass_min_fq = value
 	pass
 
-func update_max_bass(value) :
-	boid_manager.max_bass = value
+func update_bass_max_fq(value) :
+	boid_manager.bass_max_fq = value
 	pass
 
 
