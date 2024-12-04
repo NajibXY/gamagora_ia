@@ -189,9 +189,12 @@ func set_parameters() :
 	$VBoxContainer2/HBoxBoiYRes/HSlider.value = boid_manager.boid_rescale_y
 
 	$VBoxContainer2/HBoxRanSca/CheckButton.button_pressed = boid_manager.able_random_scale
-	pass
 
-##TOFDO: Add the rest of the sliders, frequency, threshhold etc ?
+	$VBoxContainer2/HBoxBasThr/HSlider.value = boid_manager.bass_threshold
+	$VBoxContainer2/HBoxBasMin/HSlider.value = boid_manager.bass_min_fq
+	$VBoxContainer2/HBoxBasMax/HSlider.value = boid_manager.bass_max_fq
+
+	$VBoxContainer2/HBoxColMod/OptionButton.select(boid_manager.boid_color_mode)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

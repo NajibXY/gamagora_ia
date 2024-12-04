@@ -36,7 +36,6 @@ var is_kick = false
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("current_color", boid_color)
 
-##TODO MAKE HUD
 enum BoidColorMode {
 	MONO = 0,
 	HEADING = 1,
@@ -49,7 +48,6 @@ enum BoidColorMode {
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("color_mode", boid_color_mode)
 
-##TODO FINE TUNE
 @export var max_friends = 50 :
 	set(new_max):
 		max_friends = new_max
@@ -158,7 +156,6 @@ func _on_file_selected(path: String):
 	audio_stream_player.play()
 	pass
 
-## TODO DELETE OPTION
 func _on_file_selected_palette(path: String):
 	# Store in res://ext/palettes
 	# Load and store in res://ext/palettes
@@ -214,6 +211,8 @@ func _on_file_selected_config(path: String):
 	var json_as_text = FileAccess.get_file_as_string(path)
 	var json_as_dict = JSON.parse_string(json_as_text)
 	
+	print("Import JSON")
+	print(json_as_dict)
 	number_of_boids = int(json_as_dict["number_of_boids"])
 	max_velocity = float(json_as_dict["max_velocity"])
 	min_velocity = float(json_as_dict["min_velocity"])
@@ -235,14 +234,18 @@ func _on_file_selected_config(path: String):
 	else:
 		stutter_on_kick = false
 
-	## TODO WIP
-	#boid_color_mode = BoidColorMode(int(json_as_dict["boid_color_mode"]))
+	boid_color_mode = BoidColorMode.values()[int(json_as_dict["boid_color_mode"])]
 	max_friends = int(json_as_dict["max_friends"])
 
 	boid_scale_x = float(json_as_dict["boid_scale_x"])
+	update_scale_x(boid_scale_x)
 	boid_scale_y = float(json_as_dict["boid_scale_y"])
+	update_scale_y(boid_scale_y)
 	boid_rescale_x = float(json_as_dict["boid_rescale_x"])
+	update_rescale_x(boid_rescale_x)
 	boid_rescale_y = float(json_as_dict["boid_rescale_y"])
+	update_rescale_y(boid_rescale_y)
+
 	if str(json_as_dict["able_random_scale"]) == "true":
 		able_random_scale = true
 	else:
@@ -251,11 +254,11 @@ func _on_file_selected_config(path: String):
 	bass_threshold = float(json_as_dict["bass_threshold"])
 	bass_min_fq = float(json_as_dict["bass_min_fq"])
 	bass_max_fq = float(json_as_dict["bass_max_fq"])
+
+	canvas_node.set_parameters()
 	pass
 
 func _on_spectrum_data_received(effects):
-	# print("received")
-	## TODO adapt
 	is_kick = true
 	$BoidParticles.process_material.set_shader_parameter("is_kick", is_kick)
 	pass
@@ -460,7 +463,6 @@ func generate_parameter_buffer(delta):
 	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
 func generate_parameter_buffer_reaction_kick(delta):
-	#todo finetune, clamp values ?
 	var friendly_radius_kick = friendly_radius / audio_mult_friendly
 	if (boid_color_mode == BoidColorMode.HEAT):
 		friendly_radius_kick = friendly_radius
@@ -469,7 +471,6 @@ func generate_parameter_buffer_reaction_kick(delta):
 		[number_of_boids, 
 		IMAGE_SIZE, 
 		friendly_radius_kick,
-		#todo maybe mult for avoid radius ?
 		avoiding_radius / audio_mult_avoiding,
 		min_velocity * audio_mult_minv, 
 		max_velocity * audio_mult_maxv,
@@ -613,7 +614,6 @@ func randomize_parameters():
 	pass
 
 func randomize_scalings():
-	## TODO fine tune
 	var random_int = randi() % 2
 	var max_scale
 	if random_int == 0:
