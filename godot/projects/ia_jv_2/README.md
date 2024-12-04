@@ -23,9 +23,9 @@ Dans le cadre de cette UE, il fallait développer un prototype de jeu vidéo ou 
 ### Concept de l'application
 L'idée derrière BOIIIIIIIIIII est d'offrir dans sa version actuelle un outil interactif de visualisation des boids, de customization des paramètres de ceux-ci et surtout d'audio-réactivité. Permettant à l'utilisateur novice de l'utiliser comme un lecteur MP3 avec des visuels intéressants à observer : le champs de paramétrage des boids étant infini et la réactivité à l'audio rajoutant une dimension artistiquement intriguante. Mais pour l'utilisateur initié, une version plus avancé de ce projet pourra être utilisé, je l'espère, comme un outil à part entière de VJing (VJ = Visual Jockey, en analogie à DJ).
 
-# TODO METTRE CAPTURE de base
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/default.gif" width="800">
 </br>
 
 ## Détails clés de l'application
@@ -46,41 +46,42 @@ L'application permet un certain nombre d'actions sur le fil :
 
 ### Paramètres des boids
 - Les boids disposent de 8 paramètres toute somme classique pour ce cas d'école :
-# TODO METTRE CAPTURE de paramètres
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params1.png" width="800">
 </br>
 
 ### Paramètres d'audio-reactivité aux basses
 
 #### Multiplicateurs et diviseurs
 - A ces paramètres viennent se rajouter 8 autres, permettant d'agir comme multiplicateur ou diviseur au moment ou les boids réagissent aux basses de la musique jouée :
-# TODO METTRE CAPTURE de paramètres
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params2.png" width="800">
 </br>
+
 - A noter que le paramètre stutter_on_kick fait tourner les boids sur eux-mêmes les faisant initialement prendre une direction aléatoire au moment où ils reprennent leur comportement normale. Au moment des basses cela peut créer des beaux effets visuels.
 
 ### Paramètres de coloration
 - On peut également choisir un mode de coloration, ils sont pour l'instant au nombre de 3 : coloration monochromatique, coloration selon la direction des boids et coloration selon la température (influencée principalement sur le paramètres Friendly Radius).
-# TODO METTRE CAPTURE des color modes et des palettes
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params3.png" width="800">
 </br>
 
 ### Paramètres de scaling et de re-scaling du Material
 - Le triangle des boids peut également être modifié en matières de taille, l'utilisateur peut s'amuser à créer des boids qui ressemblent à des cheveux d'anges, des particules fines, ou des gros triangles moches...
 - Il y a également un paramètre de re-scaling permettant de changer le scale des boids au moment de l'audio-réactivité. Ce paramètre est l'un des plus critiques car il peut très bien donner des résultats magnifiques comme des résultats trop stroboscopique/épileptiques. Gare au mauvais usage !
 - Ils peuvent être bloqués (non randomisables) ou pas grâce au paramètre "able scaling rand"
-# TODO METTRE CAPTURE des scale
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params4.png" width="800">
 </br>
 
 ### Paramètres de seuil de réactivité aux basses (encore en test)
 - Les paramètres les plus récemment ajoutés sont ceux déterminant le seuil de magnitude et la plage de fréquence de l'audio-réactivité aux basses.
 - Ces paramètres permettent notamment de ne pas avoir une bouilli due à une suréactivité aux basses lorsque le style de musique joué est un style riche en basses (typiquement de la Drum & Bass). Permettant de limiter l'audio-réactivité.
-# TODO METTRE CAPTURE des basses
+
 </br>
-  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params5.png" width="800">
 </br>
