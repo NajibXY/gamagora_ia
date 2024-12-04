@@ -10,18 +10,15 @@ const MIN_DB = 60
 var spectrum
 var main_node
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	main_node = get_node("/root/main_scene")
 	spectrum = AudioServer.get_bus_effect_instance(1,0)
-	pass # Replace with function body.
+	pass 
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var prev_hz = 0
 	
-	# TODO use effects ?
+	# TODO use other effects ?
 	var effects = []
 	# for i in range(1, VU_COUNT + 1):
 		# var hz = i * FREQ_MAX / VU_COUNT;
@@ -36,7 +33,6 @@ func _process(delta: float) -> void:
 		# prev_hz = hz
 	var magnitude = spectrum.get_magnitude_for_frequency_range(main_node.bass_min_fq, main_node.bass_max_fq).length()
 	if magnitude > main_node.bass_threshold:
-		# print("Magnitude: ", magnitude)
 		effects.append(magnitude)
 		emit_signal("spectrum_data", effects)
 	

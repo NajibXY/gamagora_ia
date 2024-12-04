@@ -52,7 +52,7 @@ func _ready() -> void:
 	$VBoxContainer2/HBoxBasMax/HSlider.value_changed.connect(update_bass_max_fq)
 	####################################################################################
 
-	pass # Replace with function body.
+	pass 
 
 func update_bass_threshold(value) :
 	boid_manager.bass_threshold = value
@@ -65,9 +65,6 @@ func update_bass_min_fq(value) :
 func update_bass_max_fq(value) :
 	boid_manager.bass_max_fq = value
 	pass
-
-
-
 
 func update_boid_scale_x(value) :
 	boid_manager.update_scale_x(value)
@@ -196,6 +193,6 @@ func set_parameters() :
 
 	$VBoxContainer2/HBoxColMod/OptionButton.select(boid_manager.boid_color_mode)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(delta: float) -> void:
 	pass
