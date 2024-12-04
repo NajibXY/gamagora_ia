@@ -10,7 +10,7 @@ https://github.com/NajibXY
 ## Gamagora 2024/2025 - IA pour le Jeu vidéo
 
 ### Contexte
-Dans le cadre de cet UE, il fallait développer un prototype de jeu vidéo ou une application interactive utilisant le concept des Boids.
+Dans le cadre de cette UE, il fallait développer un prototype de jeu vidéo ou une application interactive utilisant le concept des Boids.
 
 ### Pré-requis et structure du dépôt
 - Le code est ouvrable et réutilisable dans Godot, de préférence la version 4.3
@@ -32,7 +32,7 @@ L'idée derrière BOIIIIIIIIIII est d'offrir dans sa version actuelle un outil i
 
 ### Fichiers de tests
 # TODO
-- Le Zip de l'application [BOIIIIIIIIIII.exe]() est founir avec plusieurs fichiers .ogg et palettes de couleur .png pour tester.
+- Le Zip de l'application [BOIIIIIIIIIII.exe]() est founi avec plusieurs fichiers .ogg et palettes de couleur .png pour tester.
 
 ### Touches et interactivité
 L'application permet un certain nombre d'actions sur le fil :
@@ -80,3 +80,7 @@ L'application permet un certain nombre d'actions sur le fil :
 ### Paramètres de seuil de réactivité aux basses (encore en test)
 - Les paramètres les plus récemment ajoutés sont ceux déterminant le seuil de magnitude et la plage de fréquence de l'audio-réactivité aux basses.
 - Ces paramètres permettent notamment de ne pas avoir une bouilli due à une suréactivité aux basses lorsque le style de musique joué est un style riche en basses (typiquement de la Drum & Bass). Permettant de limiter l'audio-réactivité.
+# TODO METTRE CAPTURE des basses
+</br>
+  <img src="https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_1/readme_assets/capture1.png" width="800">
+</br>
