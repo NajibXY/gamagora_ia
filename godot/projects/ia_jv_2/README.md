@@ -15,8 +15,8 @@ Dans le cadre de cette UE, il fallait développer un prototype de jeu vidéo ou 
 ### Pré-requis et structure du dépôt
 - Le code est ouvrable et réutilisable dans Godot, de préférence la version 4.3
 - L'algorithme de mise à jour des boids en se basant sur les trois facteurs d'alignement, de séparation et de cohésion est implémenté ici [IA_JV1/scenes/scripts/utils](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_2/compute_shaders/boid_simulation.glsl)
-# TODO METTRE LIEN YOUTUBE ET DRIVE
-- Une vidéo de démo est disponible [TODO : mettre lien youtube]()
+
+- Une vidéo de démo est disponible ici : [BOIIIIIIIIIII](https://youtu.be/sZoQeEu2l5o)
 - Ainsi qu'un exécutable pour tester directement le jeu : [BOIIIIIIIIIII.exe]()
 
 
@@ -31,7 +31,6 @@ L'idée derrière BOIIIIIIIIIII est d'offrir dans sa version actuelle un outil i
 ## Détails clés de l'application
 
 ### Fichiers de tests
-# TODO
 - Le Zip de l'application [BOIIIIIIIIIII.exe]() est founi avec plusieurs fichiers .ogg et palettes de couleur .png pour tester.
 
 ### Touches et interactivité
@@ -80,7 +79,7 @@ L'application permet un certain nombre d'actions sur le fil :
 
 ### Paramètres de seuil de réactivité aux basses (encore en test)
 - Les paramètres les plus récemment ajoutés sont ceux déterminant le seuil de magnitude et la plage de fréquence de l'audio-réactivité aux basses.
-- Ces paramètres permettent notamment de ne pas avoir une bouilli due à une suréactivité aux basses lorsque le style de musique joué est un style riche en basses (typiquement de la Drum & Bass). Permettant de limiter l'audio-réactivité.
+- Ces paramètres permettent notamment de ne pas avoir une bouillie due à une suréactivité aux basses lorsque le style de musique joué est un style riche en basses (typiquement de la Drum & Bass). Permettant de limiter l'audio-réactivité.
 
 </br>
   <img src="https://github.com/NajibXY/gamagora_ia/blob/18f9a318d247102a46fcb58e1397f505c858cff0/godot/projects/ia_jv_2/readme_assets/params5.png" width="800">
