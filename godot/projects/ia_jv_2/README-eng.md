@@ -2,7 +2,7 @@
 
 ## [Project Repository](https://github.com/NajibXY/gamagora_ia/tree/main/godot/projects/ia_jv_2)
 
-## English Version [README-eng](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_2/README-eng.md)
+## Original French Version [README](https://github.com/NajibXY/gamagora_ia/blob/main/godot/projects/ia_jv_2/README.md)
 
 ## Author: Najib EL KHADIR  
 https://github.com/NajibXY  
