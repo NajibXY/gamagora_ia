@@ -102,5 +102,3 @@ These parameters help prevent excessive boid movement when playing bass-heavy mu
 </br>  
 
 --- 
-
-Let me know if you'd like any refinements!
