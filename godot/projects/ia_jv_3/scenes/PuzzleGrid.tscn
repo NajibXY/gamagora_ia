@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbojuup6t06qe"]
+
+[ext_resource type="Script" path="res://scripts/grid.gd" id="1_lgirg"]
+
+[node name="PuzzleGrid" type="Node2D"]
+script = ExtResource("1_lgirg")
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(266, 266)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[node name="StartPoint" type="Node2D" parent="."]
+position = Vector2(3, 3)
+
+[node name="EndPoint" type="Node2D" parent="."]
+position = Vector2(262, 261)
