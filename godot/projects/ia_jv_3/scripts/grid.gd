@@ -128,41 +128,47 @@ func _input(event) -> void:
 	# 	queue_redraw()
 	
 	if event is InputEventMouseButton and event.pressed:
+		var mouse_pos = get_viewport().get_mouse_position()
 		if state == State.IDLE:
 		# Move to solving state when the player clicks the grid
 			state = State.SOLVING
 		elif state == State.SOLVING:
-			var mouse_pos = get_viewport().get_mouse_position()
 			# Check if it's near the start point
 			if start_point.distance_to(mouse_pos) < tile_size * 0.5:
 				state = State.DRAWING
 				path_points.clear()
+		elif state == State.DRAWING:
+			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
+				state = State.COMPLETED
+				# TODO TEMP
+				print("Completed")
+
 
 	elif event is InputEventMouseMotion:
 		if state == State.DRAWING:
 			var mouse_pos = get_viewport().get_mouse_position()
-			# Check if it's near the end point
-			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
-				# TODO Check if the path is correct
-				state = State.COMPLETED
-			else:
-				var grid_x = int(mouse_pos.x / tile_size)
-				var grid_y = int(mouse_pos.y / tile_size)
-				var cell_pos = Vector2(grid_x, grid_y) * tile_size
+			# # Check if it's near the end point
+			# if end_point.distance_to(mouse_pos) < tile_size * 0.5:
+			# 	# TODO Check if the path is correct
+			# 	state = State.COMPLETED
+			# else:
+			var grid_x = int(mouse_pos.x / tile_size)
+			var grid_y = int(mouse_pos.y / tile_size)
+			var cell_pos = Vector2(grid_x, grid_y) * tile_size
 
-				# Check if the mouse position is on the border of the cell
-				if (abs(mouse_pos.x - cell_pos.x) < 5 or abs(mouse_pos.x - (cell_pos.x + tile_size)) < 5 or
-					abs(mouse_pos.y - cell_pos.y) < 5 or abs(mouse_pos.y - (cell_pos.y + tile_size)) < 5):
-					
-					# Ensure the path is connected
-					if path_points.size() > 0:
-						var last_point = path_points[path_points.size() - 1]
-						if last_point.distance_to(mouse_pos) <= tile_size * 0.1:
-							path_points.append(mouse_pos)
-							queue_redraw()
-					else:
+			# Check if the mouse position is on the border of the cell
+			if (abs(mouse_pos.x - cell_pos.x) < 5 or abs(mouse_pos.x - (cell_pos.x + tile_size)) < 5 or
+				abs(mouse_pos.y - cell_pos.y) < 5 or abs(mouse_pos.y - (cell_pos.y + tile_size)) < 5):
+				
+				# Ensure the path is connected
+				if path_points.size() > 0:
+					var last_point = path_points[path_points.size() - 1]
+					if last_point.distance_to(mouse_pos) <= tile_size * 0.1:
 						path_points.append(mouse_pos)
 						queue_redraw()
+				else:
+					path_points.append(mouse_pos)
+					queue_redraw()
 
 	# Handle right click
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
