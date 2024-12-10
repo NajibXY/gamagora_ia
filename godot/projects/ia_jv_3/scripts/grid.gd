@@ -59,8 +59,10 @@ func _draw():
 	# Optionally draw start and end points
 	_draw_start_and_end_points()
 
+	## TODO draw empty line2D ? fill it when path_points are not empty
 	for point in path_points:
 		draw_circle(point, tile_size * 0.1, Color.BLUE)
+
 	
 
 
@@ -140,7 +142,7 @@ func _input(event) -> void:
 		elif state == State.DRAWING:
 			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
 				state = State.COMPLETED
-				# TODO TEMP
+				## TODO add Control path TEMP
 				print("Completed")
 
 
