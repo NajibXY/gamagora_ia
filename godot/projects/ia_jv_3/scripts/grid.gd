@@ -134,13 +134,11 @@ func _input(event) -> void:
 		# Move to solving state when the player clicks the grid
 			state = State.SOLVING
 		elif state == State.SOLVING:
-			var mouse_pos = get_global_mouse_position()
+			var mouse_pos = get_viewport().get_mouse_position()
 			# Check if it's near the start point
 			if start_point.distance_to(mouse_pos) < tile_size * 0.5:
 				state = State.DRAWING
 				path_points.clear()
-				path_points.append(start_point)
-				queue_redraw()
 
 	elif event is InputEventMouseMotion:
 		if state == State.DRAWING:
