@@ -1,6 +1,6 @@
 extends Node2D
 
-# Boid parameters
+###################### Boid parameters ########################################################################################
 @export_category("Boid Parameters")
 @export_range(1,50000) var number_of_boids : int = 30000
 @export_range(1,300) var max_velocity : float = 50.0
@@ -11,7 +11,7 @@ extends Node2D
 @export_range(0,10) var cohesion_factor : float = 1.0
 @export_range(0,50) var separation_factor : float = 2.0
 
-# Audio reaction parameters
+###################### Audio reaction parameters ##################################################################
 @export_category("Audio Reaction Parameters")
 @export_range(1,20) var audio_mult_maxv : int = 10
 @export_range(1,10) var audio_mult_minv : int = 1
@@ -28,7 +28,7 @@ extends Node2D
 @export var bass_threshold = 0.1  # Adjust this based on sensitivity
 var is_kick = false
 
-# Render parameters
+###################### Render parameters ########################################################################################
 @export_category("Render Parameters")
 @export var boid_color = Color(Color.WHITE) :
 	set(new_color):
@@ -36,7 +36,6 @@ var is_kick = false
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("current_color", boid_color)
 
-##TODO MAKE HUD
 enum BoidColorMode {
 	MONO = 0,
 	HEADING = 1,
@@ -49,31 +48,22 @@ enum BoidColorMode {
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("color_mode", boid_color_mode)
 
-##TODO FINE TUNE
 @export var max_friends = 50 :
 	set(new_max):
 		max_friends = new_max
 		if is_inside_tree():
 			$BoidParticles.process_material.set_shader_parameter("max_friends", max_friends)
 
-# Shader parameters
+###################### Shader parameters ######################
 var boid_scale_x = 0.5
 var boid_scale_y = 0.5
 var boid_rescale_x = 1.0
 var boid_rescale_y = 1.0
 var able_random_scale = false
 
-# @export_range(0,100) var max_velocity : float = 50.0
-# @export_range(0,100) var min_velocity : float = 10.0
-# @export_range(0,50) var friendly_radius : float = 30.0
-# @export_range(0,50) var avoiding_radius : float = 15.0
-# @export_range(0,100) var alignment_factor : float = 10.0
-# @export_range(0,100) var cohesion_factor : float = 1.0
-# @export_range(0,100) var separation_factor : float = 2.0
-
+###################### Init data for boids ######################
 var boids_positions = []
 var boids_velocities = []
-
 var IMAGE_SIZE = int(ceil(sqrt(number_of_boids)))
 var boid_data : Image
 var boid_data_texture : ImageTexture
@@ -100,11 +90,10 @@ var last_delta = 0.0
 @onready var audio_stream_player : AudioStreamPlayer = $AudioStreamPlayer
 var canvas_node
 
-# Called when the node enters the scene tree for the first time.
+############################################### READY ######################################################################
 func _ready() -> void:
-	# for i in range(number_of_boids):
-	# 	print("Boid position: ", boids_positions[i], " // Boid velocity: ", boids_velocities[i])
 	
+	# Init boids
 	boid_data = Image.create(IMAGE_SIZE, IMAGE_SIZE, false, Image.FORMAT_RGBAH)
 	boid_data_texture = ImageTexture.create_from_image(boid_data)
 
@@ -121,58 +110,38 @@ func _ready() -> void:
 		setup_computer_shader()
 		update_boids_on_gpu(0)
 
+	###################### FILE DIALOG SELECTIONS FOR AUDIO / COLOR PALETTE / IMPORTED JSON CONFIG ######################
 	display_file_select()
 	file_dialog.connect("file_selected", Callable(self, "_on_file_selected"))
-
 	file_dialog_palette.connect("file_selected", Callable(self, "_on_file_selected_palette"))
-
 	file_dialog_config.connect("file_selected", Callable(self, "_on_file_selected_config"))
 
+	# Connect to AudioSpectrumHelper
 	var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
 	audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
 
+	# Connect to CanvasLayer
 	canvas_node = get_node("/root/main_scene/CanvasLayer")
-	pass # Replace with function body.
+	pass
 
+###################### FILE DIALOG METHODS #########################################################################
+####### On Windows, palettes & json configs are stored in %APPDATA%\Roaming\Godot\app_userdata\[project_name] ######
 func _on_file_selected(path: String):
-	# Add support for mp3 and wav files
-	# if path.ends_with(".mp3"):
-
-	# Load and play the selected audio file
-	# var audio_stream
-	# if path.ends_with(".mp3"):
-	# 	audio_stream = load(path) as AudioStreamMP3
-	# elif path.ends_with(".wav"):
-	# 	audio_stream = load(path) as AudioStreamWAV
-	# else:
-	# 	audio_stream = load(path) as AudioStream
-	# var audio_loader = AudioLoader.new()
-	# audio_stream_player.set_stream(audio_loader.loadfile(path))
-	# audio_stream_player.volume_db = 1
-	# audio_stream_player.pitch_scale = 1
-	# audio_stream_player.play()
-	# var audio_spectrum_helper = get_node("/root/main_scene/AudioSpectrumHelper")
-	# audio_spectrum_helper.spectrum_data.connect(Callable(self, "_on_spectrum_data_received"))
-	
+	# Load and play audio
 	audio_stream_player.stream = AudioStreamOggVorbis.load_from_file(path)
 	audio_stream_player.play()
 	pass
 
-## TODO DELETE OPTION
 func _on_file_selected_palette(path: String):
-	# Store in res://ext/palettes
-	# Load and store in res://ext/palettes
+	# Load and store in user://palettes
 	var palettes_container = get_node("/root/main_scene/CanvasLayer/VBoxContainer2/HBoxColPal/OptionButton")
 	
 	var file_name = path.get_file().get_basename()+".png"
 	if check_if_exists(file_name):
 		print("File already exists")
 		file_name = str(file_name).replace(".png", "_"+str(randi())+".png")
-	# DO store palette
-	# var image = Image.new()
-	# image.load(path)
-	# image.save_png(path)
-	print(path)
+	
+	
 	var source_file = FileAccess.open(path, FileAccess.ModeFlags.READ)
 	var dest_file = FileAccess.open("user://palettes/" + file_name, FileAccess.ModeFlags.WRITE)
 	if dest_file == null:
@@ -188,7 +157,7 @@ func _on_file_selected_palette(path: String):
 	source_file.close()
 	dest_file.close()
 
-	# Add to OptionButton
+	# Add to OptionButton of the canvas node
 	canvas_node.nurture_palettes()
 	# Set to the index of file_name
 	for i in range(palettes_container.get_item_count()):
@@ -211,9 +180,12 @@ func check_if_exists(file_name):
 
 
 func _on_file_selected_config(path: String):
+
+	# Load JSON config file, update data and set parameters on canvas and shader
+
 	var json_as_text = FileAccess.get_file_as_string(path)
 	var json_as_dict = JSON.parse_string(json_as_text)
-	
+
 	number_of_boids = int(json_as_dict["number_of_boids"])
 	max_velocity = float(json_as_dict["max_velocity"])
 	min_velocity = float(json_as_dict["min_velocity"])
@@ -235,14 +207,18 @@ func _on_file_selected_config(path: String):
 	else:
 		stutter_on_kick = false
 
-	## TODO WIP
-	#boid_color_mode = BoidColorMode(int(json_as_dict["boid_color_mode"]))
+	boid_color_mode = BoidColorMode.values()[int(json_as_dict["boid_color_mode"])]
 	max_friends = int(json_as_dict["max_friends"])
 
 	boid_scale_x = float(json_as_dict["boid_scale_x"])
+	update_scale_x(boid_scale_x)
 	boid_scale_y = float(json_as_dict["boid_scale_y"])
+	update_scale_y(boid_scale_y)
 	boid_rescale_x = float(json_as_dict["boid_rescale_x"])
+	update_rescale_x(boid_rescale_x)
 	boid_rescale_y = float(json_as_dict["boid_rescale_y"])
+	update_rescale_y(boid_rescale_y)
+
 	if str(json_as_dict["able_random_scale"]) == "true":
 		able_random_scale = true
 	else:
@@ -251,20 +227,24 @@ func _on_file_selected_config(path: String):
 	bass_threshold = float(json_as_dict["bass_threshold"])
 	bass_min_fq = float(json_as_dict["bass_min_fq"])
 	bass_max_fq = float(json_as_dict["bass_max_fq"])
+
+	canvas_node.set_parameters()
 	pass
 
+
+###################### AUDIO SIGNAL RECEIVED ##############################################################
 func _on_spectrum_data_received(effects):
-	# print("received")
-	## TODO adapt
 	is_kick = true
 	$BoidParticles.process_material.set_shader_parameter("is_kick", is_kick)
 	pass
 
+############################################### INIT BOIDS ################################################
 func generate_boids():
 	for i in range(number_of_boids):
 		boids_positions.append(Vector2(randf() * get_viewport_rect().size.x, randf() * get_viewport_rect().size.y))
 		boids_velocities.append(Vector2(randf_range(-1.0, 1.0) * max_velocity, randf_range(-1.0, 1.0) * max_velocity))
 
+############################DISPLAY FILE DIALOGS AND HIDE OTHERS WHEN NEEDED ##############################
 func display_file_select():
 	file_dialog_palette.hide()
 	file_dialog_config.hide()
@@ -297,11 +277,12 @@ func display_file_select_config():
 	file_dialog_config.popup_centered()
 	file_dialog_config.filters = ["*.json ; JSON Files"]
 	file_dialog_config.show()
+
+
 ########################################################### UPDATE ###########################################################
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 
-	# Changing File menu ?
+	# Changing File menu
 	if Input.is_action_just_pressed("ui_file"):
 		display_file_select()
 	elif Input.is_action_just_pressed("ui_palette"):
@@ -315,9 +296,11 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("import_json"):
 		display_file_select_config()
 
+	# Display FPS
 	last_delta = delta
 	get_window().title = "FPS : " + str(Engine.get_frames_per_second()) + " / " + " Boids : " + str(number_of_boids)
 	
+	# Update BOIDS
 	if SIMULATE_GPU:
 		sync_boids_on_gpu()
 	else:
@@ -330,6 +313,7 @@ func _process(delta: float) -> void:
 
 	pass
 
+############################################### UPDATE DATA TEXTURE, DATA ON CPU AND GPU ###############################################
 func update_data_texture():
 	if SIMULATE_GPU:
 		var data := rd.texture_get_data(boid_data_buffer, 0)
@@ -419,7 +403,7 @@ func setup_computer_shader():
 	bindings = [boid_pos_uniform, boid_vel_uniform, params_uniform, boid_data_buffer_uniform]
 
 
-
+############################################## SHADER BUFFER FUNCTIONS ##############################################
 func generate_vec2_buffer(data):
 	var data_buffer_bytes := PackedVector2Array(data).to_byte_array()
 	var data_buffer = rd.storage_buffer_create(data_buffer_bytes.size(), data_buffer_bytes)
@@ -454,13 +438,11 @@ func generate_parameter_buffer(delta):
 		get_viewport_rect().size.y,
 		delta,
 		false
-		# , pause, boid_color_mode
 		]).to_byte_array()
 	
 	return rd.storage_buffer_create(params_buffer_bytes.size(), params_buffer_bytes)
 
 func generate_parameter_buffer_reaction_kick(delta):
-	#todo finetune, clamp values ?
 	var friendly_radius_kick = friendly_radius / audio_mult_friendly
 	if (boid_color_mode == BoidColorMode.HEAT):
 		friendly_radius_kick = friendly_radius
@@ -469,7 +451,6 @@ func generate_parameter_buffer_reaction_kick(delta):
 		[number_of_boids, 
 		IMAGE_SIZE, 
 		friendly_radius_kick,
-		#todo maybe mult for avoid radius ?
 		avoiding_radius / audio_mult_avoiding,
 		min_velocity * audio_mult_minv, 
 		max_velocity * audio_mult_maxv,
@@ -555,6 +536,7 @@ func update_boids_number(value):
 	number_of_boids = value
 	pass
 
+############################################### RESET AND RANDOMIZE PARAMETERS ################################################
 func reset_parameters():
 	number_of_boids = 30000
 
@@ -613,7 +595,7 @@ func randomize_parameters():
 	pass
 
 func randomize_scalings():
-	## TODO fine tune
+	## Some fine tuning was necessary for the randomization of scalings
 	var random_int = randi() % 2
 	var max_scale
 	if random_int == 0:
@@ -649,10 +631,10 @@ func randomize_scalings():
 		boid_scale_y = randf_range(0.1, max_scale_2)
 		if boid_scale_y > 0.5:
 			boid_scale_x = randf_range(0.1, max_scale/5)
+
 	boid_scale_x = float(int(boid_scale_x * 10)) / 10
 	boid_scale_y = float(int(boid_scale_y * 10)) / 10
 
-	# var random_int_2 = randi() % 2
 	boid_rescale_x = randf_range(0.1, max_scale_3)
 	if boid_rescale_x > 5:
 		boid_rescale_y = randf_range(0.1, max_scale_4/5)
@@ -660,15 +642,14 @@ func randomize_scalings():
 		boid_rescale_y = randf_range(0.1, max_scale_4)
 		if boid_rescale_y > 0.5:
 			boid_rescale_x = randf_range(0.1, max_scale_3/5)
+
 	boid_rescale_x = float(int(boid_rescale_x * 10)) / 10
 	boid_rescale_y = float(int(boid_rescale_y * 10)) / 10
 	pass
 
+############################################### UPDATING COLOR PALETTE ON IMPORT AND CHANGE ################################################
 func update_color_palette(value) :
-	# Compressed texture 2D
 	## Create texture 2D from file at this index
-	print(value)
-
 	var file = FileAccess.open(value, FileAccess.READ) 
 	var fsize = file.get_length()
 	var data = file.get_buffer(fsize)
@@ -679,10 +660,10 @@ func update_color_palette(value) :
 	
 	var image_texture = ImageTexture.create_from_image(image) 
 	
-	print(image_texture)
 	$BoidParticles.process_material.set_shader_parameter("t_sampler", image_texture)
 	pass
 
+####################################### UPDATE PARAMETERS FROM EXTERNAL CALLS (Canvas Layer calls) #########################################
 func update_scale_x(value) :
 	$BoidParticles.process_material.set_shader_parameter("scale", Vector2(value, $BoidParticles.process_material.get_shader_parameter("scale").y))
 	boid_scale_x = value
@@ -707,6 +688,7 @@ func update_able_random_scale(value):
 	able_random_scale = value
 	pass
 
+############################################### CONFIG TO JSON EXPORT FUNCTION################################################
 func config_to_json():
 	var data_to_send = {}
 	data_to_send["number_of_boids"] = str(number_of_boids)
@@ -740,20 +722,14 @@ func config_to_json():
 	data_to_send["bass_min_fq"] = str(bass_min_fq)
 	data_to_send["bass_max_fq"] = str(bass_max_fq)
 
-	print(data_to_send)
-
-
 	var json_string = JSON.stringify(data_to_send)
-	# Save data
-	# ...
-	# Retrieve data
+
 	var json = JSON.new()
 	var error = json.parse(json_string)
 	if error == OK:
 		var data_received = json.data
 		if typeof(data_received) == TYPE_DICTIONARY:
-			print(data_received) # Prints array
-			# Save to file
+			# Save to file on user://
 			save_file(json_string)
 		else:
 			print("Unexpected data")
@@ -761,11 +737,11 @@ func config_to_json():
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 	pass
 
+# Save to file on user://
 func save_file(content):
 	# time stamp
 	var date = Time.get_time_string_from_system()
-	var file_name = "exported_config_"+date +".json"
+	var file_name = "exported_config_" + date + ".json"
 	file_name = str(file_name).replace(":", "_")
-	print(file_name)
 	var file = FileAccess.open("user://"+file_name, FileAccess.WRITE)
 	file.store_string(content)

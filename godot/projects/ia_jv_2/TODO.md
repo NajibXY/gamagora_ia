@@ -26,19 +26,19 @@
 #### Color
 
 - Add mono color picker
-- Download base palettes and stick them to project
++ Download base palettes and stick them to project
 - Color by friends_group_id ?
 
 #### React
 
-- Parameter stutter_ratio ?
-- Reactions on other sound componenets than bass : other freqs, bpm ?, etc -- add them as selectable on hud
++ Parameter stutter_ratio ?
+- Reactions on other sound components than bass : other freqs, bpm ?, etc -- add them as selectable on hud
     - https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
     - Mode BPM ? input with a key ?
 
 #### Conf
 
-- import json conf
++ import json conf
 + Exported json
     - Popup light message saved
     - Import json
@@ -52,14 +52,14 @@
 + Add @export variables to the UI
 
 #### Interface
-    - Able rescale option ?
-    - Init --> Popup help with commands and EPILEPSY WARNING !!
-    + J to export json (fix format ?)
-        - Popup light message saved
-    - I to import json
-    - H to Hide hud button
-    - Escape for help (inputs etc)
-        - Popup help with commands
+- Able rescale option ?
+- Init --> Popup help with commands and EPILEPSY WARNING !!
++ J to export json (fix format ?)
+    - Popup light message saved
+- I to import json
+- H to Hide hud button
+- Escape for help (inputs etc)
+    - Popup help with commands
 
 #### Ergonomy
 
