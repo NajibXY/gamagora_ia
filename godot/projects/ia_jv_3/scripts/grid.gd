@@ -18,11 +18,12 @@ var solution_path: Array[Vector2] = []  # Static solution path
 func _ready():
 	# Set up a static grid
 	grid = [
-		[Color.BLACK, Color.WHITE, Color.BLACK, Color.WHITE],
-		[Color.WHITE, Color.BLACK, Color.WHITE, Color.BLACK],
-		[Color.BLACK, Color.WHITE, Color.BLACK, Color.WHITE],
-		[Color.WHITE, Color.BLACK, Color.WHITE, Color.BLACK]
+		[Color.BLACK, Color.WHITE, Color.WHITE, Color.WHITE],
+		[Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.WHITE],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK]
 	]
+	# TODO
 	solution_path = [
 		Vector2(0, 0), Vector2(1, 0), Vector2(1, 1),
 		Vector2(2, 1), Vector2(3, 1), Vector2(3, 2),
@@ -54,6 +55,7 @@ func _draw_tile(grid_pos: Vector2, color: Color):
 	#canvas_item.update()
 	# Offset the tile position by 10 pixels to center it
 	tile_position += Vector2(10, 10)
+
 	var rect = Rect2(tile_position, Vector2(tile_size-10, tile_size-10))
 	draw_rect(rect, color)
 	print("Drawing tile at:", grid_pos, "with color:", color, " at position:", tile_position)
