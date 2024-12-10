@@ -73,7 +73,6 @@ func _draw_tile(grid_pos: Vector2, color: Color):
 
 	var rect = Rect2(tile_position, Vector2(tile_size-10, tile_size-10))
 	draw_rect(rect, color)
-	print("Drawing tile at:", grid_pos, "with color:", color, " at position:", tile_position)
 	# canvas_item.connect("draw", Callable(self, "_draw_rectangle"))
 	# canvas_item.connect("draw", self.Callable("_draw_rectangle"), [position, tile_size, color])
 
@@ -85,7 +84,6 @@ func _draw_grid():
 	
 func _draw_start_and_end_points():
 	# Draw markers for start and end points
-	print("drawing circle")
 	draw_circle(start_point, tile_size * 0.1, Color.RED)
 	draw_circle(end_point, tile_size * 0.1, Color.GREEN)
 
