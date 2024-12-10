@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://d26ssqnhbbicr"
+path="res://.godot/imported/1. Atsushi Kitajo - Full Moon Full Life.ogg-bc405e13284a44b125d71b734851326e.oggvorbisstr"
+
+[deps]
+
+source_file="res://ext/ogg_for_test/1. Atsushi Kitajo - Full Moon Full Life.ogg"
+dest_files=["res://.godot/imported/1. Atsushi Kitajo - Full Moon Full Life.ogg-bc405e13284a44b125d71b734851326e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
