@@ -20,8 +20,11 @@ var possibles_intersects = []
 enum State { IDLE, FOCUS, DRAWING, CHECKING, COMPLETED }
 var state = State.IDLE
 
-var line_color:Color = Color.GREEN
 var opacity_value = 0.1
+var line_color:Color = Color.LIGHT_BLUE
+var point_color = Color.BLUE
+
+var fading = false
 
 func _ready():
 	# Set up a static grid
@@ -34,11 +37,13 @@ func _ready():
 	
 	# Static solution path
 	solution_path = [
-		Vector2(5, 5), Vector2(69, 5), Vector2(69, 69), Vector2(69, 133),
+		Vector2(start_point.x + 2, start_point.y + 2),
+		Vector2(69, 5), Vector2(69, 69), Vector2(69, 133),
 		Vector2(133, 133), Vector2(133, 69), Vector2(133, 5), Vector2(197, 5),
 		Vector2(261, 5), Vector2(261, 69), Vector2(261, 133), Vector2(261, 197),
 		Vector2(197, 197), Vector2(133, 197), Vector2(69, 197), Vector2(5, 197),
-		Vector2(5, 261), Vector2(69, 261), Vector2(133, 261), Vector2(197, 261)
+		Vector2(5, 261), Vector2(69, 261), Vector2(133, 261), Vector2(197, 261),
+		end_point
 	]
 
 	# Intersection coordinates
@@ -63,7 +68,6 @@ func _draw():
 
 	# Drawing points
 	for point in path_points:
-		var point_color = Color.BLUE
 		point_color.a = opacity_value # Set opacity to opacity_value
 		draw_circle(point, tile_size * 0.1, point_color)
 
@@ -105,6 +109,7 @@ func _draw_start_and_end_points():
 	draw_circle(start_point, tile_size * 0.1, Color(1, 0, 0, opacity_value))  # Red with opacity_valueopacity
 	draw_circle(end_point, tile_size * 0.1, Color(0, 1, 0, opacity_value))  # Green with opacity_valueopacity
 
+# Compare the path to the solution path
 func compare_path_to_solution() -> bool:
 	if path_points.size() != solution_path.size():
 		return false
@@ -124,6 +129,14 @@ func _input(event) -> void:
 			queue_redraw()
 
 	elif state == State.FOCUS:
+		fading = false
+		point_color = Color.BLUE
+		line_color = Color.LIGHT_BLUE
+		opacity_value = 1.0
+		$Label.text = "FOCUS"
+		line2D.clear_points()
+		path_points.clear()
+		queue_redraw()
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var mouse_pos = get_viewport().get_mouse_position()
 			# Check if it's near the start point
@@ -143,7 +156,6 @@ func _input(event) -> void:
 						possibles_intersects.append(new_point)
 				queue_redraw()
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			print(state)
 			print("back to idle")
 			state = State.IDLE
 			opacity_value = 0.1
@@ -157,11 +169,7 @@ func _input(event) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var mouse_pos = get_viewport().get_mouse_position()
 			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
-				## TODO add Control path TEMP
 				# If coming from an intersect near end_point
-				print(last_point.distance_to(end_point))
-				print(tile_size+1)
-				print(last_point.distance_to(end_point) <= tile_size+1)
 				if last_point.distance_to(end_point) <= tile_size + 1:
 					# add end_point to path_points
 					path_points.append(end_point)
@@ -195,8 +203,50 @@ func _input(event) -> void:
 			queue_redraw()
 
 	elif state == State.CHECKING:
-		print(compare_path_to_solution())
-	# todo checking and completing
+		if compare_path_to_solution():
+			display_complete()
+		elif fading == false:
+			fading = true
+			fade_from_wrong()
+
+	elif state == State.COMPLETED:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			## TODO generate new puzzle
+			$Label.text = "IDLE"
+			opacity_value = 0.1
+			state = State.IDLE
+			line_color = Color.LIGHT_BLUE
+			point_color = Color.BLUE
+			path_points.clear()
+			# clear line2d
+			line2D.clear_points()
+			queue_redraw()
+	
+func display_complete() -> void:
+	await get_tree().create_timer(1.0).timeout
+	$Label.text = "COMPLETED"
+	point_color = Color.GREEN
+	line_color = Color.GREEN
+	state = State.COMPLETED
+	queue_redraw()
+
+func fade_from_wrong() -> void:
+	# Freeze for 1 seconds and add opacity progressivly
+	if fading == true:
+		opacity_value = 1.0
+		queue_redraw()
+		await get_tree().create_timer(1.0).timeout
+		point_color = Color.ORANGE_RED
+		line_color = Color.ORANGE_RED
+		$Label.text = "Wrong !"
+		while opacity_value > 0.12:
+			print("opacity_value : ", opacity_value)
+			opacity_value -= 0.05
+			queue_redraw()
+			await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.1).timeout
+	state = State.FOCUS
+
 		
 
 	
