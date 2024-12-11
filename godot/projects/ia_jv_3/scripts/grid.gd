@@ -100,13 +100,13 @@ func _draw_start_and_end_points():
 func _input(event) -> void:
 	
 	if state == State.IDLE:
-		if event is InputEventMouseButton and event.pressed:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var mouse_pos = get_viewport().get_mouse_position()
 			# Move to solving state when the player clicks the grid
 			state = State.SOLVING
 
 	elif state == State.SOLVING:
-		if event is InputEventMouseButton and event.pressed:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var mouse_pos = get_viewport().get_mouse_position()
 			# Check if it's near the start point
 			if start_point.distance_to(mouse_pos) < tile_size * 0.5:
@@ -122,9 +122,17 @@ func _input(event) -> void:
 					if last_point.distance_to(new_point) <= tile_size and last_point != new_point and new_point not in path_points:
 						possibles_intersects.append(new_point)
 				queue_redraw()
+		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			print(state)
+			print("back to idle")
+			state = State.IDLE
+			path_points.clear()
+			# clear line2d
+			line2D.clear_points()
+			queue_redraw()
 
 	elif state == State.DRAWING:
-		if event is InputEventMouseButton and event.pressed:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var mouse_pos = get_viewport().get_mouse_position()
 			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
 				## TODO add Control path TEMP
@@ -153,15 +161,16 @@ func _input(event) -> void:
 						print(path_points)
 						queue_redraw()
 						break
-
 		# Handle right click
-		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-			print("reset")
+		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			print("reset to solving")
 			state = State.SOLVING
 			path_points.clear()
 			# clear line2d
 			line2D.clear_points()
 			queue_redraw()
+
+		# todo checking and completng
 
 	
 	
