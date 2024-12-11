@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cbojuup6t06qe"]
+[gd_scene load_steps=3 format=3 uid="uid://cbojuup6t06qe"]
 
 [ext_resource type="Script" path="res://scripts/grid.gd" id="1_lgirg"]
+
+[sub_resource type="Theme" id="Theme_px5s0"]
+default_font_size = 40
 
 [node name="PuzzleGrid" type="Node2D"]
 script = ExtResource("1_lgirg")
@@ -10,7 +13,7 @@ custom_minimum_size = Vector2(266, 266)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 266.0
-offset_bottom = 309.0
+offset_bottom = 319.0
 
 [node name="Line2D" type="Line2D" parent="."]
 
@@ -19,3 +22,13 @@ position = Vector2(3, 3)
 
 [node name="EndPoint" type="Node2D" parent="."]
 position = Vector2(262, 261)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 1.0
+offset_top = 264.0
+offset_right = 266.0
+offset_bottom = 319.0
+theme = SubResource("Theme_px5s0")
+text = "IDLE "
+horizontal_alignment = 1
+vertical_alignment = 1
