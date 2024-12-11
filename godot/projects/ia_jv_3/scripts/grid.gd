@@ -1,5 +1,47 @@
 extends Node2D
 
+## Grids 
+const grid1 = [
+		[Color.WHITE, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK]
+	]
+
+const grid2 = [
+		[Color.WHITE, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK]
+	]
+
+const grid3 = [
+		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE]
+	]
+
+const grid4 = [
+		[Color.WHITE, Color.WHITE, Color.BLACK, Color.BLACK],
+		[Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE],
+		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
+		[Color.BLACK, Color.WHITE, Color.WHITE, Color.BLACK]
+	]
+
+const solution_path1 = [Vector2(5, 5), Vector2(5, 69), Vector2(69, 69), Vector2(69, 5), Vector2(133, 5), Vector2(197, 5), Vector2(261, 5), Vector2(261, 69), Vector2(261, 133), Vector2(261, 197), Vector2(262, 261)]
+
+const solution_path2 = [Vector2(5, 5), Vector2(69, 5), Vector2(69, 69), Vector2(5, 69), Vector2(5, 133), Vector2(5, 197), Vector2(5, 261), Vector2(69, 261), Vector2(69, 197), Vector2(69, 133), Vector2(133, 133), Vector2(133, 197), Vector2(133, 261), Vector2(197, 261), Vector2(262, 261)]
+
+const solution_path3 = [Vector2(5, 5), Vector2(69, 5), Vector2(69, 69), Vector2(69, 133), Vector2(133, 133), Vector2(133, 69), Vector2(133, 5), Vector2(197, 5), Vector2(261, 5), Vector2(261, 69), Vector2(261, 133), Vector2(261, 197), Vector2(197, 197), Vector2(133, 197), Vector2(69, 197), Vector2(5, 197), Vector2(5, 261), Vector2(69, 261), Vector2(133, 261), Vector2(197, 261), Vector2(262, 261)]
+
+const solution_path4 = [Vector2(5, 5), Vector2(69, 5), Vector2(133, 5), Vector2(133, 69), Vector2(197, 69), Vector2(261, 69), Vector2(261, 133), Vector2(197, 133), Vector2(133, 133), Vector2(69, 133), Vector2(5, 133), Vector2(5, 197), Vector2(5, 261), Vector2(69, 261), Vector2(69, 197), Vector2(133, 197), Vector2(197, 197), Vector2(197, 261), Vector2(262, 261)]
+
+const grids = [grid1, grid2, grid3, grid4]
+const solution_paths = [solution_path1, solution_path2, solution_path3, solution_path4]
+
+var current_grid = 0
+
 @onready var line2D = $Line2D  # Reference to the Line2D node
 @export var grid_size = 4  # Grid size (4x4)
 @export var tile_size = 64  # Tile size in pixels
@@ -10,8 +52,8 @@ extends Node2D
 @onready var end_point = $EndPoint.global_position
 
 var grid = []  # Store the static grid
-var path_points: Array[Vector2] = []  # Store the player's drawn path
-var solution_path: Array[Vector2] = []  # Static solution path
+var path_points = []  # Store the player's drawn path
+var solution_path = []  # Static solution path
 
 var intersection_points = []
 var last_point = Vector2(0, 0)
@@ -26,25 +68,14 @@ var point_color = Color.BLUE
 
 var fading = false
 
+var incremented = false
+
 func _ready():
 	# Set up a static grid
-	grid = [
-		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK],
-		[Color.BLACK, Color.WHITE, Color.BLACK, Color.BLACK],
-		[Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK],
-		[Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE]
-	]
+	grid = grids[current_grid]
 	
 	# Static solution path
-	solution_path = [
-		Vector2(start_point.x + 2, start_point.y + 2),
-		Vector2(69, 5), Vector2(69, 69), Vector2(69, 133),
-		Vector2(133, 133), Vector2(133, 69), Vector2(133, 5), Vector2(197, 5),
-		Vector2(261, 5), Vector2(261, 69), Vector2(261, 133), Vector2(261, 197),
-		Vector2(197, 197), Vector2(133, 197), Vector2(69, 197), Vector2(5, 197),
-		Vector2(5, 261), Vector2(69, 261), Vector2(133, 261), Vector2(197, 261),
-		end_point
-	]
+	solution_path = solution_paths[current_grid]
 
 	# Intersection coordinates
 	# Nurture intersection_points with intersections between tiles
@@ -141,7 +172,6 @@ func _input(event) -> void:
 			var mouse_pos = get_viewport().get_mouse_position()
 			# Check if it's near the start point
 			if start_point.distance_to(mouse_pos) < tile_size * 0.5:
-				print("Drawing")
 				state = State.DRAWING
 				opacity_value = 0.6
 				$Label.text = "DRAWING"
@@ -156,7 +186,6 @@ func _input(event) -> void:
 						possibles_intersects.append(new_point)
 				queue_redraw()
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			print("back to idle")
 			state = State.IDLE
 			opacity_value = 0.1
 			$Label.text = "IDLE"
@@ -187,13 +216,10 @@ func _input(event) -> void:
 						for new_point in intersection_points:
 							if last_point.distance_to(new_point) <= tile_size and last_point != new_point and new_point not in path_points:
 								possibles_intersects.append(new_point)
-						print("added point")
-						print(path_points)
 						queue_redraw()
 						break
 		# Handle right click
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			print("reset to FOCUS")
 			$Label.text = "FOCUS"
 			opacity_value = 1.0
 			state = State.FOCUS
@@ -203,7 +229,9 @@ func _input(event) -> void:
 			queue_redraw()
 
 	elif state == State.CHECKING:
+		print(path_points)
 		if compare_path_to_solution():
+			incremented = false
 			display_complete()
 		elif fading == false:
 			fading = true
@@ -215,6 +243,13 @@ func _input(event) -> void:
 			$Label.text = "IDLE"
 			opacity_value = 0.1
 			state = State.IDLE
+			if incremented == false:
+				current_grid += 1
+				if current_grid == grids.size():
+					current_grid = 0
+				grid = grids[current_grid]
+				solution_path = solution_paths[current_grid]
+				incremented = true
 			line_color = Color.LIGHT_BLUE
 			point_color = Color.BLUE
 			path_points.clear()
@@ -240,7 +275,6 @@ func fade_from_wrong() -> void:
 		line_color = Color.ORANGE_RED
 		$Label.text = "Wrong !"
 		while opacity_value > 0.12:
-			print("opacity_value : ", opacity_value)
 			opacity_value -= 0.05
 			queue_redraw()
 			await get_tree().create_timer(0.05).timeout
