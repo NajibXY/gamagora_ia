@@ -9,8 +9,8 @@ script = ExtResource("1_lgirg")
 custom_minimum_size = Vector2(266, 266)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 266.0
+offset_bottom = 309.0
 
 [node name="Line2D" type="Line2D" parent="."]
 

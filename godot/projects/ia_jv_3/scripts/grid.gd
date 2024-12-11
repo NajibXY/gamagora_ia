@@ -13,6 +13,9 @@ var grid = []  # Store the static grid
 var path_points: Array[Vector2] = []  # Store the player's drawn path
 var solution_path: Array[Vector2] = []  # Static solution path
 
+var intersection_points = []
+var last_point = Vector2(0, 0)
+var possibles_intersects = []
 
 enum State { IDLE, SOLVING, DRAWING, COMPLETED }
 var state = State.IDLE
@@ -31,6 +34,14 @@ func _ready():
 		Vector2(2, 1), Vector2(3, 1), Vector2(3, 2),
 		Vector2(3, 3)
 	]
+
+	# Intersection coordinates
+	# Nurture intersection_points with intersections between tiles
+	for y in range(grid_size + 1):
+		for x in range(grid_size + 1):
+			intersection_points.append(Vector2(x * tile_size + 5, y * tile_size +5))
+
+
 
 	# var x_pos = 0
 	# var y_pos = 0
@@ -137,40 +148,67 @@ func _input(event) -> void:
 		elif state == State.SOLVING:
 			# Check if it's near the start point
 			if start_point.distance_to(mouse_pos) < tile_size * 0.5:
+				print("Drawing")
 				state = State.DRAWING
-				path_points.clear()
+				# make last_point the point in the intersection_points that is nearest the start_point
+				var initial_point = Vector2(start_point.x + 2, start_point.y + 2)
+				last_point = initial_point
+				path_points.append(initial_point)
+				# Update possibles_intersects to the new possible points from the last_point
+				possibles_intersects.clear()
+				for new_point in intersection_points:
+					if last_point.distance_to(new_point) < tile_size * 1.5 and last_point != new_point and new_point not in path_points:
+						possibles_intersects.append(new_point)
+				queue_redraw()
+
 		elif state == State.DRAWING:
 			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
 				state = State.COMPLETED
 				## TODO add Control path TEMP
 				print("Completed")
-
-
-	elif event is InputEventMouseMotion:
-		if state == State.DRAWING:
-			var mouse_pos = get_viewport().get_mouse_position()
-			# # Check if it's near the end point
-			# if end_point.distance_to(mouse_pos) < tile_size * 0.5:
-			# 	# TODO Check if the path is correct
-			# 	state = State.COMPLETED
-			# else:
-			var grid_x = int(mouse_pos.x / tile_size)
-			var grid_y = int(mouse_pos.y / tile_size)
-			var cell_pos = Vector2(grid_x, grid_y) * tile_size
-
-			# Check if the mouse position is on the border of the cell
-			if (abs(mouse_pos.x - cell_pos.x) < 5 or abs(mouse_pos.x - (cell_pos.x + tile_size)) < 5 or
-				abs(mouse_pos.y - cell_pos.y) < 5 or abs(mouse_pos.y - (cell_pos.y + tile_size)) < 5):
-				
-				# Ensure the path is connected
-				if path_points.size() > 0:
-					var last_point = path_points[path_points.size() - 1]
-					if last_point.distance_to(mouse_pos) <= tile_size * 0.1:
-						path_points.append(mouse_pos)
+			# else if the click is in possible_intersects
+			else:
+				for point in possibles_intersects:
+					if point.distance_to(mouse_pos) < tile_size * 0.5:
+						path_points.append(point)
+						last_point = point
+						# Update possibles_intersects to the new possible points from the last_point
+						possibles_intersects.clear()
+						for new_point in intersection_points:
+							if last_point.distance_to(new_point) < tile_size * 1.5 and last_point != new_point and new_point not in path_points:
+								possibles_intersects.append(new_point)
+						print("added point")
+						print(path_points)
 						queue_redraw()
-				else:
-					path_points.append(mouse_pos)
-					queue_redraw()
+						break
+			
+
+
+	# elif event is InputEventMouseMotion:
+	# 	if state == State.DRAWING:
+	# 		var mouse_pos = get_viewport().get_mouse_position()
+	# 		# # Check if it's near the end point
+	# 		# if end_point.distance_to(mouse_pos) < tile_size * 0.5:
+	# 		# 	# TODO Check if the path is correct
+	# 		# 	state = State.COMPLETED
+	# 		# else:
+	# 		var grid_x = int(mouse_pos.x / tile_size)
+	# 		var grid_y = int(mouse_pos.y / tile_size)
+	# 		var cell_pos = Vector2(grid_x, grid_y) * tile_size
+
+	# 		# Check if the mouse position is on the border of the cell
+	# 		if (abs(mouse_pos.x - cell_pos.x) < 5 or abs(mouse_pos.x - (cell_pos.x + tile_size)) < 5 or
+	# 			abs(mouse_pos.y - cell_pos.y) < 5 or abs(mouse_pos.y - (cell_pos.y + tile_size)) < 5):
+				
+	# 			# Ensure the path is connected
+	# 			if path_points.size() > 0:
+	# 				var last_point = path_points[path_points.size() - 1]
+	# 				if last_point.distance_to(mouse_pos) <= tile_size * 0.1:
+	# 					path_points.append(mouse_pos)
+	# 					queue_redraw()
+	# 			else:
+	# 				path_points.append(mouse_pos)
+	# 				queue_redraw()
 
 	# Handle right click
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
