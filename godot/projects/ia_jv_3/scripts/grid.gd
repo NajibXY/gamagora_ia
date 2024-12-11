@@ -17,7 +17,7 @@ var intersection_points = []
 var last_point = Vector2(0, 0)
 var possibles_intersects = []
 
-enum State { IDLE, SOLVING, DRAWING, COMPLETED }
+enum State { IDLE, SOLVING, DRAWING, CHECKING, COMPLETED }
 var state = State.IDLE
 
 func _ready():
@@ -40,8 +40,6 @@ func _ready():
 	for y in range(grid_size + 1):
 		for x in range(grid_size + 1):
 			intersection_points.append(Vector2(x * tile_size + 5, y * tile_size +5))
-
-
 
 	# var x_pos = 0
 	# var y_pos = 0
@@ -70,9 +68,21 @@ func _draw():
 	# Optionally draw start and end points
 	_draw_start_and_end_points()
 
-	## TODO draw empty line2D ? fill it when path_points are not empty
+	# Drawing points
 	for point in path_points:
-		draw_circle(point, tile_size * 0.1, Color.BLUE)
+			draw_circle(point, tile_size * 0.1, Color.BLUE)
+
+	# Draw line for path
+	_draw_lines()
+
+func _draw_lines():
+	# Draw lines between path points
+	if path_points.size() > 1:
+		line2D.clear_points()
+		for point in path_points:
+			line2D.add_point(point)
+		line2D.default_color = Color.GREEN
+		line2D.queue_redraw()
 
 	
 
@@ -122,23 +132,6 @@ func _handle_drawing(event):
 	# 	_validate_path()
 
 func _input(event) -> void:
-	# if event is InputEventMouseButton and event.pressed:
-		# Get mouse position in grid coordinates
-	# var mouse_pos = get_viewport().get_mouse_position()
-	# var grid_x = int(mouse_pos.x / tile_size)
-	# var grid_y = int(mouse_pos.y / tile_size)
-
-	# # Check if the click is inside the grid
-	# if grid_x >= 0 and grid_x < grid_size and grid_y >= 0 and grid_y < grid_size:
-	# 	# line.clear_points()
-	# 	# line.add_point(Vector2(grid_x * tile_size, grid_y * tile_size))
-	# 	print("inside grid with x :", grid_x, " y: ", grid_y)
-	# 	# Draw a line in red as outline of cells
-	# 	# draw_line(Vector2(grid_x * tile_size, grid_y * tile_size), Vector2(grid_x * tile_size + tile_size, grid_y * tile_size), Color.RED)
-		
-	# 	print("appending line")
-	# 	lines.append([Vector2(5, 0), Vector2(5, 64)])
-	# 	queue_redraw()
 	
 	if event is InputEventMouseButton and event.pressed:
 		var mouse_pos = get_viewport().get_mouse_position()
@@ -157,15 +150,23 @@ func _input(event) -> void:
 				# Update possibles_intersects to the new possible points from the last_point
 				possibles_intersects.clear()
 				for new_point in intersection_points:
-					if last_point.distance_to(new_point) < tile_size * 1.5 and last_point != new_point and new_point not in path_points:
+					if last_point.distance_to(new_point) <= tile_size and last_point != new_point and new_point not in path_points:
 						possibles_intersects.append(new_point)
 				queue_redraw()
 
 		elif state == State.DRAWING:
 			if end_point.distance_to(mouse_pos) < tile_size * 0.5:
-				state = State.COMPLETED
 				## TODO add Control path TEMP
-				print("Completed")
+				# If coming from an intersect near end_point
+				print(last_point.distance_to(end_point))
+				print(tile_size+1)
+				print(last_point.distance_to(end_point) <= tile_size+1)
+				if last_point.distance_to(end_point) <= tile_size+ 1:
+					# add end_point to path_points
+					path_points.append(end_point)
+					print("Checking solution")
+					queue_redraw()
+					state = State.CHECKING
 			# else if the click is in possible_intersects
 			else:
 				for point in possibles_intersects:
@@ -175,7 +176,7 @@ func _input(event) -> void:
 						# Update possibles_intersects to the new possible points from the last_point
 						possibles_intersects.clear()
 						for new_point in intersection_points:
-							if last_point.distance_to(new_point) < tile_size * 1.5 and last_point != new_point and new_point not in path_points:
+							if last_point.distance_to(new_point) <= tile_size and last_point != new_point and new_point not in path_points:
 								possibles_intersects.append(new_point)
 						print("added point")
 						print(path_points)
@@ -215,6 +216,8 @@ func _input(event) -> void:
 		if state == State.DRAWING:
 			state = State.SOLVING
 			path_points.clear()
+			# clear line2d
+			line2D.clear_points()
 			queue_redraw()
 	
 	
